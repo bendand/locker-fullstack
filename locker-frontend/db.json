@@ -1,0 +1,103 @@
+{
+  "lockers": [
+    {
+      "lockerName": "Uhaul storage locker",
+      "lockerAddress": "123 S 4th St",
+      "lockerContainers": [
+        {
+          "containerName": "kids room",
+          "containerItems": []
+        },
+        {
+          "containerName": "family room",
+          "containerItems": [
+            "lamp",
+            "shoes",
+            "soccer ball",
+            "more items",
+            "another item"
+          ]
+        },
+        {
+          "containerName": "anothalonglonglonglonglonglonglonglong",
+          "containerItems": []
+        },
+        {
+          "containerName": "sdf",
+          "containerItems": []
+        }
+      ],
+      "id": "0b90"
+    },
+    {
+      "lockerName": "My Attic",
+      "lockerAddress": "321 S 1st St",
+      "lockerContainers": [
+        {
+          "containerName": "kitchen",
+          "containerItems": [
+            "kitchen knives",
+            "spatula",
+            "blender",
+            "shower curtain",
+            "shoes",
+            "shoes",
+            "tennis ball",
+            "basketball",
+            "soccer ball",
+            "badminton set",
+            "golf clubs",
+            "bocce"
+          ]
+        },
+        {
+          "containerName": "game room",
+          "containerItems": [
+            "trading cards",
+            "spatula",
+            "board game",
+            "silverware",
+            "2 decks of cards"
+          ]
+        }
+      ],
+      "id": "f0bc"
+    },
+    {
+      "lockerName": "Dad's basement",
+      "lockerAddress": "789 10th St",
+      "lockerContainers": [
+        {
+          "containerName": "kitchen",
+          "containerItems": [
+            "book",
+            "spatula",
+            "board game",
+            "shower curtain"
+          ]
+        },
+        {
+          "containerName": "family room",
+          "containerItems": [
+            "trading cards",
+            "spatula",
+            "board game",
+            "silverware"
+          ]
+        }
+      ],
+      "id": "d5ba"
+    },
+    {
+      "id": "1371",
+      "lockerName": "lockaname",
+      "lockerAddress": "andaddress",
+      "lockerContainers": []
+    }
+  ], 
+
+  "credentials": {
+    "username": "user",
+    "password": 2017070860
+  }
+}
