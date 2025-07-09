@@ -1,7 +1,10 @@
 package com.example.locker_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +25,11 @@ public class User {
 
     @Column(name="passHash")
     private String passHash;
+
+//    look into whether arguments following mappedBy are required
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private final List<Locker> lockers = new ArrayList<>();
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;

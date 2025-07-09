@@ -1,37 +1,52 @@
 package com.example.locker_backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Locker {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+//    consider using @OneToOne or ManyToOne for userId/user relationship
+
     private String name;
-    private final int userId;
+
+    //    look into whether arguments following mappedBy are required
+    @OneToMany(mappedBy = "locker", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private final List<Container> containers = new ArrayList<>();
 
 
-    public Locker(int userId) {
-        this.userId = userId;
-    }
+    @ManyToOne
+    private User user;
 
-    public Locker(String name, int userId) {
+//    public Locker(int userId) {
+//        this.userId = userId;
+//    }
+
+    public Locker(String name, User user) {
         this.name = name;
-        this.userId = userId;
+        this.user = user;
 
     }
 
-    public Locker(int id, String name, int userId) {
+    public Locker(int id, String name, User user) {
         this.id = id;
         this.name = name;
-        this.userId = userId;
+        this.user = user;
     }
+
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) { this.user = user;}
 
 
     public String getName() {

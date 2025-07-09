@@ -45,8 +45,7 @@ public class LockerController {
     // POST a new locker
     // Endpoint http://localhost:8080//{userId}/lockers/add
     @PostMapping("/add")
-    public ResponseEntity<?> createNewLocker(@RequestParam(value="name") String name, @RequestParam(value="userId") int userId) {
-        Locker newLocker = new Locker(name, userId);
+    public ResponseEntity<?> createNewLocker(Locker newLocker) {
         lockerRepository.save(newLocker);
         return new ResponseEntity<>(newLocker, HttpStatus.CREATED); // 201
     }

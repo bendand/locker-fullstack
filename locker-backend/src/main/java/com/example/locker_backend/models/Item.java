@@ -9,6 +9,9 @@ import jakarta.persistence.Id;
 @Entity
 public class Item {
 
+    //    consider using @OneToOne or ManyToOne for container/containerid relationship
+//    consider also
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

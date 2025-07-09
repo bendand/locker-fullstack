@@ -1,13 +1,17 @@
 package com.example.locker_backend.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Container {
+
+    //    consider using @OneToOne or ManyToOne for lockerid/locker relationship
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +19,14 @@ public class Container {
 
     private String name;
     private int userId;
+
+    //    look into whether arguments following mappedBy are required
+    @OneToMany(mappedBy = "containers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private final List<Item> items = new ArrayList<>();
+
+    @ManyToOne
+    private User user;
 
     public Container(int userId) {
         this.userId = userId;
