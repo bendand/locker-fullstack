@@ -42,4 +42,7 @@ public class Locker {
         this.name = name;
     }
 
+    public void setId(int lockerId) {
+        this.id = lockerId;
+    }
 }

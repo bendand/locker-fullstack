@@ -20,7 +20,6 @@ public class User {
         this.name = name;
         this.email = email;
         this.passHash = passHash;
-
     }
 
     public User(int id, String name, String email, String passHash) {
