@@ -3,6 +3,7 @@ import Header from "../Header";
 import Footer from "../Footer";
 import Button from "../elements/button/Button";
 import AddLockerModal from "./AddLockerModal";
+import HomeNav from "../elements/nav/HomeNav";
 import { useRef, useEffect, useState } from "react";
 
 export default function LockerList() {
@@ -36,7 +37,7 @@ export default function LockerList() {
 
     return (
         <>
-            <Header />
+            <HomeNav />
             <main>
                 <div className="lockerlist-container">
                     <span className="lockerlist-header">

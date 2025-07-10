@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import AboutPage from "./About";
+import HomeNav from "./elements/nav/HomeNav";
 
 export default function Header() {
     
@@ -13,6 +14,7 @@ export default function Header() {
                     <Link to={'/about'} element={<AboutPage />}>About Us</Link>
                 </div>
             </nav>
+            <HomeNav />
         </header>
     );
 };

@@ -1,9 +1,12 @@
+@import "tailwindcss";
+
 #root {
   height: 85%;
 }
 
 html {
   height: 100%;
+  width: 100%;
 }
 
 body {
@@ -16,6 +19,7 @@ main {
   display: flex;
   margin-top: 10px;
   text-align: center; 
+
   flex-direction: row;
   justify-content: center;
   height: 100%;
@@ -46,7 +50,7 @@ a:hover {
   justify-content: center;
   align-items: center;
   display: flex;
-  width: 850px;
+  width: 100%;
   align-self: center;
   padding: 20px;
   opacity: 0;
@@ -71,7 +75,7 @@ a:hover {
 
 header {
   padding-bottom: 10px;
-}
+} 
 
 nav {
   border-bottom: 1px solid black;
@@ -79,7 +83,6 @@ nav {
 
 nav > div {
   padding: 0 10px;
-  display: inline-block;
 }
 
 footer {
@@ -93,7 +96,7 @@ ul {
 }
 
 .about-container {
-  width: 75%;
+  width: 100%;
   animation: fadeIn 1s forwards;
 
   @media (width < 600px) {

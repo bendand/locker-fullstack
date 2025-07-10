@@ -5,6 +5,8 @@ import AuthModal from "./AuthModal";
 import { toast } from 'react-toastify';
 import { useRef } from "react";
 import { useNavigate } from "react-router";
+import HomeNav from "./elements/nav/HomeNav";
+import AuthenticatedNav from "./elements/nav/AuthenticatedNav";
 
 
 export default function Home() {
@@ -27,7 +29,7 @@ export default function Home() {
 
     return (
         <>
-            <Header />
+            <HomeNav />
             <GettingStarted
                 onStartAuthentication={handleStartAuth}
             />
