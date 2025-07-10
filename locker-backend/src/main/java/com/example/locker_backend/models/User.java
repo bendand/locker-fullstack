@@ -3,9 +3,7 @@ package com.example.locker_backend.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class User {
@@ -13,6 +11,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+//    possibly need users to serve as admins that can change data and roles of other users
+//    with different permissions for different roles
+    @Column(name="roles")
+    @ElementCollection
+    private Set<String> roles = new HashSet<>();
 
     @Column(name="firstName")
     private String firstName;

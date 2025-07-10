@@ -37,5 +37,27 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User not found");
         }
+
+//        ** alternative implementation using a UserRepository that checks for granted roles **
+//        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        List<GrantedAuthority> roles = new ArrayList<>();
+//
+//        for (String role : user.getRoles()) {
+//            roles.add(new SimpleGrantedAuthority(role));
+//        }
+//
+//        JwtUser jwtUser = new JwtUser();
+//        jwtUser.setUsername(user.getUsername());
+//        jwtUser.setPassword(user.getPassword());
+//        jwtUser.setAuthorities(roles);
+//        jwtUser.setAccountNonExpired(true);
+//        jwtUser.setAccountNonLocked(true);
+//        jwtUser.setApiAccessAllowed(true);
+//        jwtUser.setCredentialsNonExpired(true);
+//        jwtUser.setEnabled(true);
+//
+//        return jwtUser;
+
     }
 }
