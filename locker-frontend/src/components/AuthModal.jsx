@@ -25,7 +25,7 @@ const AuthModal = forwardRef(function AuthModal({
 
 
     return createPortal(
-        <dialog ref={dialog} className='modal'>
+        <dialog ref={dialog}>
             {/* <div>
                 <Button 
                     onClick={onCancel}
