@@ -17,10 +17,10 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private static PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public static UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username.equals("admin")) {
             // Create a JwtUser instance for the admin user
             // This is a hardcoded example; in a real application, you would fetch user details from a database
@@ -59,5 +59,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 //
 //        return jwtUser;
 
+        public static UserDetails validateUser(String username, String password) throws Pass {
+            UserDetails userDetails = loadUserByUsername(username);
+            if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
+                return userDetails;
+            } else {
+                throw new UsernameNotFoundException("Invalid username or password");
+            }
+        }
+
     }
+
 }

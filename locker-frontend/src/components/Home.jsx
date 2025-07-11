@@ -23,8 +23,8 @@ export default function Home() {
 
     function handleAuthenticate() {
         authModal.current.close();
-        toast('Welcome!');
         navigate('/lockerlist');
+        toast('Welcome!');
     }
 
     return (

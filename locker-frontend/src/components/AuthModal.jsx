@@ -1,7 +1,7 @@
 import { forwardRef, useRef, useImperativeHandle } from 'react';
 import { createPortal } from 'react-dom';
 import Button from './elements/button/Button';
-import AuthForm from './elements/form/AuthForm';
+import AuthForm from './elements/form/SignInForm';
 
 
 const AuthModal = forwardRef(function AuthModal({ 

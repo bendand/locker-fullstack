@@ -1,6 +1,7 @@
 package com.example.locker_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Locker {
 
 //    consider using @OneToOne or ManyToOne for userId/user relationship
 
+    @Column(name="name")
     private String name;
 
     //    look into whether arguments following mappedBy are required
@@ -24,6 +26,7 @@ public class Locker {
 
 
     @ManyToOne
+    @JsonManagedReference
     private User user;
 
 //    public Locker(int userId) {

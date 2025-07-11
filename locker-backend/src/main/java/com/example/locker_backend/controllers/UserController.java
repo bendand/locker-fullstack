@@ -1,10 +1,17 @@
 package com.example.locker_backend.controllers;
 
 import com.example.locker_backend.models.User;
+import com.example.locker_backend.models.dto.UserDTO;
 import com.example.locker_backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import com.example.locker_backend.services.CustomUserDetailsService;
 
 @RestController
 @RequestMapping("/users")
@@ -13,6 +20,31 @@ public class UserController {
     // Autowired UserRepository to handle user data operations
     @Autowired
     private UserRepository userRepository;
+
+    // Endpoint to validate if a user exists by username
+    @GetMapping("/validate/{username}")
+    public ResponseEntity<?> validateUser(@RequestBody UserDTO userData) throws UsernameNotFoundException {
+        try {
+            UserDetails userDetails = CustomUserDetailsService.loadUserByUsername(userData.getUsername(), userData.getPassword());
+            // If user is found, return user details
+            System.out.println(userDetails);
+            return ResponseEntity.ok().body("User exists");
+
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+    //  Endpoint to register a new user
+    @PostMapping(value="/register", consumes=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userData) {
+        if (userRepository.existsByUsername(userData.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+        }
+        User newUser = new User(userData.getName(), userData.getEmail(), userData.getPassword(), userData.getUsername());
+        userRepository.save(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // 201 Created
+    }
 
     // Endpoint to get all users
     @GetMapping("")
@@ -27,9 +59,11 @@ public class UserController {
     }
 
     // Endpoint to add a new user
-    @PostMapping("")
-    public User addUser(@RequestBody User user) {
-        return userRepository.save(user);
+    @PostMapping(value="/add", consumes=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addUser(@RequestBody UserDTO userData) {
+        User newUser = new User(userData.getName(), userData.getEmail(), userData.getPassword());
+        userRepository.save(newUser);
+        return ResponseEntity<>(newUser, HttpStatus.CREATED); // 201 Created
     }
 
     // Endpoint to update an existing user
