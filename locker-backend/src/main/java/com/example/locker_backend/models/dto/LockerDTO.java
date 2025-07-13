@@ -1,40 +1,36 @@
 package com.example.locker_backend.models.dto;
 
+import com.example.locker_backend.models.Account;
+
 public class LockerDTO {
-    private String lockerId;
+    private int lockerId;
+    private String name;
     private String location;
-    private boolean isAvailable;
+    private Account account;
 
     public LockerDTO() {
     }
 
-    public LockerDTO(String lockerId, String location, boolean isAvailable) {
+    public LockerDTO(int lockerId, String name, String location, Account account) {
         this.lockerId = lockerId;
+        this.name = name;
         this.location = location;
-        this.isAvailable = isAvailable;
+        this.account = account;
     }
 
-    public String getLockerId() {
-        return lockerId;
-    }
+    public int getLockerId() { return lockerId;}
 
-    public void setLockerId(String lockerId) {
-        this.lockerId = lockerId;
-    }
+    public void setLockerId(int lockerId) { this.lockerId = lockerId;}
 
-    public String getLocation() {
-        return location;
-    }
+    public String getLocation() { return location; }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public void setLocation(String location) { this.location = location;}
 
-    public boolean isAvailable() {
-        return isAvailable;
-    }
+    public String getName() { return name;}
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
+    public void setName(String name) { this.name = name; }
+
+    public Account getAccount() { return account; }
+
+    public void setAccount(Account account) { this.account = account; }
 }

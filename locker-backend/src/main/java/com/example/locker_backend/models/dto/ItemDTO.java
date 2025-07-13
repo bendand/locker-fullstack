@@ -1,26 +1,39 @@
 package com.example.locker_backend.models.dto;
 
+import com.example.locker_backend.models.Account;
+import com.example.locker_backend.models.Container;
+import com.example.locker_backend.models.Locker;
+import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
+
 public class ItemDTO {
-    private String itemId;
+    private int itemId;
     private String name;
-    private String description;
-    private String userId;
+    private VarcharJdbcType description;
+    private int quantity;
+    private Locker locker;
+    private Container container;
+    private Account account;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(String itemId, String name, String description, String userId) {
+    public ItemDTO(int itemId, String name, VarcharJdbcType description,
+                   int quantity, Locker locker,
+                   Container container, Account account) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
-        this.userId = userId;
+        this.quantity = quantity;
+        this.locker = locker;
+        this.container = container;
+        this.account = account;
     }
 
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 
@@ -32,19 +45,43 @@ public class ItemDTO {
         this.name = name;
     }
 
-    public String getDescription() {
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
+    }
+
+    public Container getContainer() {
+        return container;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    public VarcharJdbcType getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(VarcharJdbcType description) {
         this.description = description;
     }
 
-    public String getUserId() {
-        return userId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

@@ -1,13 +1,16 @@
 {
   "name": "locker-frontend",
   "private": true,
+  "chat.mcp.enabled": true,
+  "chat.mcp.discovery.enabled": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mcp": "mcp"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@mui/mcp": "^0.1.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",

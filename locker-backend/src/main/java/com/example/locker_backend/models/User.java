@@ -16,6 +16,9 @@ public class User {
     @JsonBackReference
     private final List<Account> readOnlyAccounts = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Account adminAccount;
+
 //    possibly need users to serve as admins that can change data and roles of other users
 //    with different permissions for different roles
     @Column(name="role")

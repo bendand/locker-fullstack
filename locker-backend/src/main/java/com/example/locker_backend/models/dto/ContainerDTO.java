@@ -1,50 +1,43 @@
 package com.example.locker_backend.models.dto;
 
+import com.example.locker_backend.models.Account;
+import com.example.locker_backend.models.Locker;
+
 public class ContainerDTO {
-    private String containerId;
-    private String lockerId;
-    private String itemId;
-    private String userId;
+    private int containerId;
+    private Locker locker;
+    private Account account;
 
     public ContainerDTO() {
     }
 
-    public ContainerDTO(String containerId, String lockerId, String itemId, String userId) {
+    public ContainerDTO(int containerId, Locker locker, Account account) {
         this.containerId = containerId;
-        this.lockerId = lockerId;
-        this.itemId = itemId;
-        this.userId = userId;
+        this.locker = locker;
+        this.account = account;
     }
 
-    public String getContainerId() {
+    public int getContainerId() {
         return containerId;
     }
 
-    public void setContainerId(String containerId) {
+    public void setContainerId(int containerId) {
         this.containerId = containerId;
     }
 
-    public String getLockerId() {
-        return lockerId;
+    public Locker getLocker() {
+        return locker;
     }
 
-    public void setLockerId(String lockerId) {
-        this.lockerId = lockerId;
+    public void setLocker(Locker locker) {
+        this.locker = locker;
     }
 
-    public String getItemId() {
-        return itemId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
