@@ -19,8 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private static PasswordEncoder passwordEncoder;
 
-    @Override
-    public static UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username.equals("admin")) {
             // Create a JwtUser instance for the admin user
             // This is a hardcoded example; in a real application, you would fetch user details from a database
@@ -37,6 +36,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User not found");
         }
+    }
+
 
 //        ** alternative implementation using a UserRepository that checks for granted roles **
 //        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));

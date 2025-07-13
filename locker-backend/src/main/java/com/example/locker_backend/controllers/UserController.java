@@ -14,7 +14,7 @@ import java.util.List;
 import com.example.locker_backend.services.CustomUserDetailsService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/")
 public class UserController {
 
     // Autowired UserRepository to handle user data operations
@@ -22,10 +22,10 @@ public class UserController {
     private UserRepository userRepository;
 
     // Endpoint to validate if a user exists by username
-    @GetMapping("/validate/{username}")
-    public ResponseEntity<?> validateUser(@RequestBody UserDTO userData) throws UsernameNotFoundException {
+    @GetMapping("/login")
+    public ResponseEntity<?> logIn(@RequestBody UserDTO userData) throws UsernameNotFoundException {
         try {
-            UserDetails userDetails = CustomUserDetailsService.loadUserByUsername(userData.getUsername(), userData.getPassword());
+            UserDetails userDetails = CustomUserDetailsService.loadUserByUsername(userData.getEmail(), userData.getPassword());
             // If user is found, return user details
             System.out.println(userDetails);
             return ResponseEntity.ok().body("User exists");
@@ -38,10 +38,12 @@ public class UserController {
     //  Endpoint to register a new user
     @PostMapping(value="/register", consumes=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userData) {
-        if (userRepository.existsByUsername(userData.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+        System.out.println(userData);
+        if (userRepository.existsByUsername(userData.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User exists with this email");
         }
-        User newUser = new User(userData.getName(), userData.getEmail(), userData.getPassword(), userData.getUsername());
+        User newUser = new User(userData.getFirstName(), userData.getLastName(),
+                                userData.getPassword(), userData.getEmail());
         userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // 201 Created
     }
