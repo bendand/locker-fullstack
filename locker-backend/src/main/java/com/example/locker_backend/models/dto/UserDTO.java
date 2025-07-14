@@ -5,6 +5,7 @@ public class UserDTO {
     private String lastName;
     private String password;
     private String email;
+    private String username;
 
     public UserDTO() {
     }
@@ -14,6 +15,7 @@ public class UserDTO {
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+        this.username = email.substring(0, '@');
     }
 
     public String getFirstName() { return firstName; }
@@ -28,7 +30,14 @@ public class UserDTO {
         return email;
     }
 
-    public void setEmail(String email) { this.email = email; }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        this.username = email.substring(0, '@');
+    }
 
     public String getName() { return firstName + " " + lastName; }
 }

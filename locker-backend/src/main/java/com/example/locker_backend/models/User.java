@@ -21,9 +21,6 @@ public class User {
 
 //    possibly need users to serve as admins that can change data and roles of other users
 //    with different permissions for different roles
-    @Column(name="role")
-//    @ElementCollection what is this?
-    private String role;
 
     @Column(name="firstName")
     private String firstName;
@@ -34,6 +31,9 @@ public class User {
     @Column(name="email")
     private String email;
 
+    @Column(name="username")
+    private String username;
+
     @Column(name="passHash")
     private String passHash;
 
@@ -42,21 +42,21 @@ public class User {
     @JsonBackReference
     private final List<Locker> lockers = new ArrayList<>();
 
-    public User(String firstName, String lastName, String email, String passHash) {
-        this.role = "ADMIN";
+    public User(String firstName, String lastName, String email, String passHash, Account adminAccount) {
+        this.adminAccount = adminAccount;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.passHash = passHash;
+        this.username = email.substring(0, '@');
     }
 
-    public User(String firstName, String lastName, String email, String passHash, String role) {
-        this.role = "ADMIN";
+    public User(String firstName, String lastName, String email, String passHash) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.passHash = passHash;
-        this.role = role;
+        this.username = email.substring(0, '@');
     }
 
     public User(int id, String firstName, String lastName, String email, String passHash) {
@@ -65,6 +65,7 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.passHash = passHash;
+        this.username = email.substring(0, '@');
     }
 
     public String getFirstName() { return firstName; }
@@ -85,7 +86,10 @@ public class User {
 
     public String getEmail() { return email; }
 
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+        this.username = email.substring(0, '@');
+    }
 
     public String fullName() { return firstName + " " + lastName; }
 
@@ -103,14 +107,21 @@ public class User {
         return Objects.hash(id);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return id == user.id && Objects.equals(fullName, user.fullName()) && Objects.equals(email, user.email) && Objects.equals(passHash, user.passHash);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof User user)) return false;
+//        return id == user.id && Objects.equals(this.fullName()) && Objects.equals(email, user.email) && Objects.equals(passHash, user.passHash);
+//    }
 
-    public void setAccount(Account account) {
+    public void setAccount(Account adminAccount) {
+        if (this.adminAccount != null) {
+            this.adminAccount.setAdminUser(null); // Remove previous admin account from user
+        }
+        this.adminAccount = adminAccount;
+        if (adminAccount != null) {
+            adminAccount.setAdminUser(this); // Set the new admin account to this user
+        }
     }
 
     public List<Account> getReadOnlyAccounts() {

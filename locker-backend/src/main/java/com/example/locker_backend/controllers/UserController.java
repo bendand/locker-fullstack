@@ -10,8 +10,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.List;
 import com.example.locker_backend.services.CustomUserDetailsService;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 
 @RestController
 @RequestMapping("/")
@@ -21,11 +33,22 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
     // Endpoint to validate if a user exists by username
-    @GetMapping("/login")
-    public ResponseEntity<?> logIn(@RequestBody UserDTO userData) throws UsernameNotFoundException {
+    @PostMapping("/login")
+    public ResponseEntity<?> logIn(@RequestBody UserDTO userData) throws UsernameNotFoundException, InvalidKeySpecException, NoSuchAlgorithmException {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(userData.getPassword().toCharArray(), salt, 65536, 128);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] hashedPassword = factory.generateSecret(spec).getEncoded();
+        System.out.println(Arrays.toString(hashedPassword));
+
         try {
-            UserDetails userDetails = CustomUserDetailsService.loadUserByUsername(userData.getEmail(), userData.getPassword());
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userData.getUsername());
             // If user is found, return user details
             System.out.println(userDetails);
             return ResponseEntity.ok().body("User exists");
@@ -55,18 +78,18 @@ public class UserController {
     }
 
     // Endpoint to get a user by ID
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable(value = "id") int userId) {
-        return userRepository.findById(userId).orElse(null);
-    }
+//    @GetMapping("/{id}")
+//    public User getUser(@PathVariable(value = "id") int userId) {
+//        return userRepository.findById(userId).orElse(null);
+//    }
 
     // Endpoint to add a new user
-    @PostMapping(value="/add", consumes=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userData) {
-        User newUser = new User(userData.getName(), userData.getEmail(), userData.getPassword());
-        userRepository.save(newUser);
-        return ResponseEntity<>(newUser, HttpStatus.CREATED); // 201 Created
-    }
+//    @PostMapping(value="/add", consumes=MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> addUser(@RequestBody UserDTO userData) {
+//        User newUser = new User(userData.getName(), userData.getEmail(), userData.getPassword());
+//        userRepository.save(newUser);
+//        return ResponseEntity<>(newUser, HttpStatus.CREATED); // 201 Created
+//    }
 
     // Endpoint to update an existing user
     @PutMapping("/{id}")
@@ -76,8 +99,8 @@ public class UserController {
     }
 
     // Endpoint to delete a user by ID
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable(value = "id") int id) {
-        userRepository.findById(id).ifPresent(currUser -> userRepository.deleteById(id));
-    }
+//    @DeleteMapping("/{id}")
+//    public void deleteUser(@PathVariable(value = "id") int id) {
+//        userRepository.findById(id).ifPresent(currUser -> userRepository.deleteById(id));
+//    }
 }

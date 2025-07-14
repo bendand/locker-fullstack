@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String>{
+public interface UserRepository extends JpaRepository<User, Integer>{
 
     // Method to find a user by their username, may need for authentication (seen in Spring Security module)
     Optional<User> findByUsername(String username);

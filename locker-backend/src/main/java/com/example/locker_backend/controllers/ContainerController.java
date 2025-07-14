@@ -20,10 +20,10 @@ public class ContainerController {
     ContainerRepository containerRepository;
 
     // GET the full list of containers for a specific locker
-    // Endpoint is http://localhost:8080/{userId}/{lockerId}/containers
+    // Endpoint is http://localhost:8080/{accountId}/{lockerId}/containers
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllContainersByLockerId(@PathVariable(value="userId") int userId, @PathVariable(value="lockerId") int lockerId) {
-        List<Container> allLockersContainers = containerRepository.findAllById(lockerId);
+    public ResponseEntity<?> getAllContainersByLockerId(@PathVariable(value="accountId") Long accountId, @PathVariable(value="lockerId") int lockerId) {
+        List<Container> allLockersContainers = containerRepository.findAllById(Collections.singleton(lockerId));
         return new ResponseEntity<>(allLockersContainers, HttpStatus.OK); // 200
     }
 

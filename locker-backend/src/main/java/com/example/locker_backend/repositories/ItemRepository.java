@@ -9,9 +9,4 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer>{
-
-    private List<Item> findAllByUserId(int userId) {
-        // This method will be implemented by Spring Data JPA
-        return null; // Placeholder return statement
-    }}
 }

@@ -31,7 +31,7 @@ public class Item {
         this.name = name;
     }
 
-    public Item(String id, int userId, int name, int quantity) {
+    public Item(int id, int userId, String name, int quantity) {
         this.id = id;
         this.userId = userId;
         this.name = name;

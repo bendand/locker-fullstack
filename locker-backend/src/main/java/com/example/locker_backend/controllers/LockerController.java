@@ -19,11 +19,11 @@ public class LockerController {
     @Autowired
     LockerRepository lockerRepository;
 
-    // GET the full list of lockers for a specific user
-    // Endpoint is http://localhost:8080/{userId}/lockers
-    @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllLockersByUserId(@PathVariable(value="userId") int userId) {
-        List<Locker> allLockers = lockerRepository.findAllById(userId);
+    // GET the full list of lockers for a specific account
+    // Endpoint is http://localhost:8080/{accountId}/lockers
+    @GetMapping(value="/{accountId}/lockers", produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllLockersByAccountId(@PathVariable(value="lockerId") int lockerId) {
+        List<Locker> allLockers = lockerRepository.findAllById(Collections.singleton(lockerId));
         return new ResponseEntity<>(allLockers, HttpStatus.OK); // 200
     }
 

@@ -21,10 +21,10 @@ public class ItemController {
     ItemRepository itemRepository;
 
     // GET the full list of items in a specific container
-    // Endpoint is http://localhost:8080/{userId}/{lockerId}/{containerId}/items
+    // Endpoint is http://localhost:8080/{accountId}/{lockerId}/{containerId}/items
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value="userId") int userId, @PathVariable(value="lockerId") int lockerId, @PathVariable(value="containerId") int containerId) {
-        List<Item> allContainersItems = itemRepository.findAllById(containerId);
+    public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value="accountId") int accountId, @PathVariable(value="lockerId") int lockerId, @PathVariable(value="containerId") int containerId) {
+        List<Item> allContainersItems = itemRepository.findAllById(Collections.singleton(containerId));
         return new ResponseEntity<>(allContainersItems, HttpStatus.OK); // 200
     }
 
@@ -44,21 +44,21 @@ public class ItemController {
 
     // POST a new item
     // Endpoint http://localhost:8080/{userId}/{lockerId}/{containerId}/items/add
-    @PostMapping("/add")
-    public ResponseEntity<?> createNewItem(@RequestParam(value="name") String name,
-                                           @RequestParam(value="containerId") int containerId,
-                                           @RequestParam(value="lockerId") int lockerId,
-                                           @RequestParam(value="userId") int userId) {
-        // Validate that the containerId, lockerId, and userId are valid
-        if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
-            String response = "Invalid containerId, lockerId, or userId.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
-        }
-        // Create a new item and save it to the repository
-        Item newItem = new Item(name, containerId, lockerId, userId);
-        itemRepository.save(newItem);
-        return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity<?> createNewItem(@RequestParam(value="name") String name,
+//                                           @RequestParam(value="containerId") int containerId,
+//                                           @RequestParam(value="lockerId") int lockerId,
+//                                           @RequestParam(value="userId") int userId) {
+//        // Validate that the containerId, lockerId, and userId are valid
+//        if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
+//            String response = "Invalid containerId, lockerId, or userId.";
+//            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
+//        }
+//        // Create a new item and save it to the repository
+//        Item newItem = new Item(name, containerId, lockerId, userId);
+//        itemRepository.save(newItem);
+//        return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
+//    }
 
 
     // DELETE an existing item

@@ -60,15 +60,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 //
 //        return jwtUser;
 
-        public static UserDetails validateUser(String username, String password) throws Pass {
-            UserDetails userDetails = loadUserByUsername(username);
-            if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
-                return userDetails;
-            } else {
-                throw new UsernameNotFoundException("Invalid username or password");
-            }
-        }
 
-    }
 
 }
