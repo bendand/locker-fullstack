@@ -6,22 +6,26 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private User adminUser;
+    private User createdBy;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private final List<User> adminUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private final List<User> readOnlyUsers = new ArrayList<>();
 
-    public Account(User adminUser) {
-        this.adminUser = adminUser;
-        adminUser.setAccount(this);
+    public Account(User user) {
+        this.createdBy = user;
     }
 
     public void addReadOnlyUser(User user) {
@@ -29,11 +33,12 @@ public class Account {
         user.addReadOnlyAccount(this); // Set the account for the user
     }
 
-    public void setAdminUser(User user) {
-        if (this.adminUser != null) {
-            this.adminUser.setAccount(null); // Remove previous admin user from account
-        }
-        this.adminUser = user;
-        user.setAccount(this); // Set the new admin user to this account
+    public void addAdminUser(User user) {
+        adminUsers.add(user);
+        user.addAdminAccount(this); // Set the account for the user
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
     }
 }

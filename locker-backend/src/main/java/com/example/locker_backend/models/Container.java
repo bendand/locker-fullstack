@@ -1,6 +1,5 @@
 package com.example.locker_backend.models;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -10,15 +9,11 @@ import java.util.List;
 @Entity
 public class Container {
 
-    //    consider using @OneToOne or ManyToOne for lockerid/locker relationship
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
-    private int userId;
 
     //    look into whether arguments following mappedBy are required
     @OneToMany(mappedBy = "containers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -26,24 +21,23 @@ public class Container {
     private final List<Item> items = new ArrayList<>();
 
     @ManyToOne
-    private User user;
+    private Account account;
 
-    public Container(int userId) {
-        this.userId = userId;
+    public Container(Account account) {
+        this.account = account;
     }
 
-    public Container(String name, int userId) {
+    public Container(String name, Account account) {
         this.name = name;
-        this.userId = userId;
+        this.account = account;
 
     }
 
-    public Container(int id, String name, int userId) {
+    public Container(int id, String name, Account account) {
         this.id = id;
         this.name = name;
-        this.userId = userId;
+        this.account = account;
     }
-
 
     public String getName() {
         return name;
@@ -62,5 +56,10 @@ public class Container {
         this.id = id;
     }
 
+
+    public void addItem(Item item) {
+        items.add(item);
+        item.setContainer(this); // Set the container for the item
+    }
 
 }

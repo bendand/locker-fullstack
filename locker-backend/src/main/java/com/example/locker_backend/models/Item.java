@@ -1,16 +1,16 @@
 package com.example.locker_backend.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Item {
 
     //    consider using @OneToOne or ManyToOne for container/containerid relationship
 //    consider also
+
+    @ManyToOne
+    private Container container;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,5 +62,13 @@ public class Item {
 
     public void setItemId(int itemId) {
         this.id = itemId;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    public Container getContainer() {
+        return container;
     }
 }

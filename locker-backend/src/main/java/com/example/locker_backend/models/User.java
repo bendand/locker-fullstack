@@ -16,11 +16,9 @@ public class User {
     @JsonBackReference
     private final List<Account> readOnlyAccounts = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Account adminAccount;
-
-//    possibly need users to serve as admins that can change data and roles of other users
-//    with different permissions for different roles
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private final List<Account> adminAccounts = new ArrayList<>();
 
     @Column(name="firstName")
     private String firstName;
@@ -34,38 +32,30 @@ public class User {
     @Column(name="username")
     private String username;
 
-    @Column(name="passHash")
-    private String passHash;
+    @Column(length = 255, nullable = false)
+    private String password;
 
-//    look into whether arguments following mappedBy are required
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private final List<Locker> lockers = new ArrayList<>();
 
-    public User(String firstName, String lastName, String email, String passHash, Account adminAccount) {
-        this.adminAccount = adminAccount;
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.passHash = passHash;
+        this.password = password;
         this.username = email.substring(0, '@');
     }
-
-    public User(String firstName, String lastName, String email, String passHash) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.passHash = passHash;
-        this.username = email.substring(0, '@');
-    }
-
-    public User(int id, String firstName, String lastName, String email, String passHash) {
+    public User(String firstName, String lastName, String email, String password, int id) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.passHash = passHash;
+        this.password = password;
         this.username = email.substring(0, '@');
+    }
+
+    public User() {
     }
 
     public String getFirstName() { return firstName; }
@@ -80,9 +70,9 @@ public class User {
 
     public void setId(int id) { this.id = id; }
 
-    public String getPassHash() { return passHash; }
+    public String getPassword() { return password; }
 
-    public void setPassHash(String passHash) { this.passHash = passHash; }
+    public void setPassword(String password) { this.password = password; }
 
     public String getEmail() { return email; }
 
@@ -131,5 +121,14 @@ public class User {
     public void addReadOnlyAccount(Account account) {
         readOnlyAccounts.add(account);
         account.setAdminUser(this);
+    }
+
+    public void addAdminAccount(Account account) {
+        adminAccounts.add(account);
+        account.setAdminUser(this);
+    }
+
+    public List<Account> getAdminAccounts() {
+        return adminAccounts;
     }
 }
