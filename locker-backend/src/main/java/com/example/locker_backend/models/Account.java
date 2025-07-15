@@ -16,11 +16,11 @@ public class Account {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User createdBy;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private final List<User> adminUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private final List<User> readOnlyUsers = new ArrayList<>();
 

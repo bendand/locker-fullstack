@@ -6,34 +6,48 @@ import jakarta.persistence.*;
 @Entity
 public class Item {
 
-    //    consider using @OneToOne or ManyToOne for container/containerid relationship
-//    consider also
-
     @ManyToOne
     private Container container;
+
+    @ManyToOne
+    private Account account;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private final int userId;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "quantity")
     private int quantity;
 
 
-    public Item(int userId, String name) {
-        this.userId = userId;
+    public Item(Account account, Container container, String name, int quantity) {
+        this.account = account;
         this.name = name;
+        this.container = container;
+        this.quantity = quantity; // Default quantity
     }
 
-    public Item(int id, int userId, String name) {
+    public Item(int id, Account account, String name, Container container) {
         this.id = id;
-        this.userId = userId;
+        this.account = account;
         this.name = name;
+        this.container = container;
     }
 
-    public Item(int id, int userId, String name, int quantity) {
+    public Item(int id, Account account, String name, Container container, int quantity) {
+        this.quantity = quantity;
         this.id = id;
-        this.userId = userId;
+        this.account = account;
+        this.name = name;
+        this.container = container;
+    }
+
+    public Item(int id, Account account, String name, int quantity) {
+        this.id = id;
+        this.account = account;
         this.name = name;
         this.quantity = quantity;
     }

@@ -12,12 +12,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonBackReference
+    @Column(name="readOnlyAccounts")
     private final List<Account> readOnlyAccounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonBackReference
+    @Column(name="adminAccounts")
     private final List<Account> adminAccounts = new ArrayList<>();
 
     @Column(name="firstName")
@@ -35,8 +37,9 @@ public class User {
     @Column(length = 255, nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonBackReference
+    @Column(name="lockers")
     private final List<Locker> lockers = new ArrayList<>();
 
     public User(String firstName, String lastName, String email, String password) {
@@ -104,15 +107,15 @@ public class User {
 //        return id == user.id && Objects.equals(this.fullName()) && Objects.equals(email, user.email) && Objects.equals(passHash, user.passHash);
 //    }
 
-    public void setAccount(Account adminAccount) {
-        if (this.adminAccount != null) {
-            this.adminAccount.setAdminUser(null); // Remove previous admin account from user
-        }
-        this.adminAccount = adminAccount;
-        if (adminAccount != null) {
-            adminAccount.setAdminUser(this); // Set the new admin account to this user
-        }
-    }
+//    public void setAccount(Account adminAccount) {
+//        if (this.adminAccount != null) {
+//            this.adminAccount.setAdminUser(null); // Remove previous admin account from user
+//        }
+//        this.adminAccount = adminAccount;
+//        if (adminAccount != null) {
+//            adminAccount.setAdminUser(this); // Set the new admin account to this user
+//        }
+//    }
 
     public List<Account> getReadOnlyAccounts() {
         return readOnlyAccounts;
@@ -120,12 +123,12 @@ public class User {
 
     public void addReadOnlyAccount(Account account) {
         readOnlyAccounts.add(account);
-        account.setAdminUser(this);
+        account.addReadOnlyUser(this);
     }
 
     public void addAdminAccount(Account account) {
         adminAccounts.add(account);
-        account.setAdminUser(this);
+        account.addAdminUser(this);
     }
 
     public List<Account> getAdminAccounts() {

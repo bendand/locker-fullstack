@@ -14,42 +14,45 @@ public class Locker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    consider using @OneToOne or ManyToOne for userId/user relationship
+    @ManyToOne
+    private Account account;
 
     @Column(name="name")
     private String name;
 
     //    look into whether arguments following mappedBy are required
-    @OneToMany(mappedBy = "locker", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+//    @OneToMany(mappedBy = "locker", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonBackReference
+    @Column(name="containers")
     private final List<Container> containers = new ArrayList<>();
 
 
-    @ManyToOne
-    @JsonManagedReference
-    private User user;
+//    @ManyToOne
+//    @JsonManagedReference
+//    private User user;
 
 //    public Locker(int userId) {
 //        this.userId = userId;
 //    }
 
-    public Locker(String name, User user) {
+    public Locker(String name, Account account) {
         this.name = name;
-        this.user = user;
+        this.account = account;
 
     }
 
-    public Locker(int id, String name, User user) {
+    public Locker(int id, String name, Account account) {
         this.id = id;
         this.name = name;
-        this.user = user;
+        this.account = account;
     }
 
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
-    public void setUser(User user) { this.user = user;}
+
+    public void setAccount(Account account) { this.account = account;}
 
 
     public String getName() {
@@ -62,5 +65,9 @@ public class Locker {
 
     public void setId(int lockerId) {
         this.id = lockerId;
+    }
+
+    public int getId() {
+        return id;
     }
 }

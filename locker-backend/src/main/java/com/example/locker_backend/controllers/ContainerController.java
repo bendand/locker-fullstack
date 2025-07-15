@@ -44,12 +44,12 @@ public class ContainerController {
 
     // POST a new container
     // Endpoint http://localhost:8080/{userId}/{lockerId}/containers/add
-    @PostMapping("/add")
-    public ResponseEntity<?> createNewContainer(@RequestParam(value="name") String name, @RequestParam(value="lockerId") int lockerId) {
-        Container newContainer = new Container(name, lockerId);
-        containerRepository.save(newContainer);
-        return new ResponseEntity<>(newContainer, HttpStatus.CREATED); // 201
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity<?> createNewContainer(@RequestParam(value="name") String name, @RequestParam(value="lockerId") int lockerId) {
+//        Container newContainer = new Container(name, lockerId);
+//        containerRepository.save(newContainer);
+//        return new ResponseEntity<>(newContainer, HttpStatus.CREATED); // 201
+//    }
 
 
     // DELETE an existing container

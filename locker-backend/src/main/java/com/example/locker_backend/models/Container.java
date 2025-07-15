@@ -16,7 +16,7 @@ public class Container {
     private String name;
 
     //    look into whether arguments following mappedBy are required
-    @OneToMany(mappedBy = "containers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "containers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private final List<Item> items = new ArrayList<>();
 
@@ -37,6 +37,9 @@ public class Container {
         this.id = id;
         this.name = name;
         this.account = account;
+    }
+
+    public Container(String name, int lockerId) {
     }
 
     public String getName() {
