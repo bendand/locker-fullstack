@@ -1,20 +1,20 @@
 package com.example.locker_backend.models.dto;
 
-import com.example.locker_backend.models.Account;
 import com.example.locker_backend.models.Locker;
+import com.example.locker_backend.models.User;
 
 public class ContainerDTO {
     private int containerId;
     private Locker locker;
-    private Account account;
+    private User user;
 
     public ContainerDTO() {
     }
 
-    public ContainerDTO(int containerId, Locker locker, Account account) {
+    public ContainerDTO(int containerId, Locker locker, User user) {
         this.containerId = containerId;
         this.locker = locker;
-        this.account = account;
+        this.user = user;
     }
 
     public int getContainerId() {
@@ -33,11 +33,11 @@ public class ContainerDTO {
         this.locker = locker;
     }
 
-    public Account getAccount() {
-        return account;
+    public User getUser() {
+        return user;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

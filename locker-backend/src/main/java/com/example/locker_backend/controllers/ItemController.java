@@ -63,7 +63,7 @@ public class ItemController {
 
     // DELETE an existing item
     // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/delete/{itemId}
-    @DeleteMapping(value="/delete/{containerId}", produces=MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value="/delete/{itemId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteItem(@PathVariable(value="containerId") int containerId,
                                              @PathVariable(value="userId") int userId,
                                              @PathVariable(value="lockerId") int lockerId,

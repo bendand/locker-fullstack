@@ -1,5 +1,7 @@
 package com.example.locker_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -10,24 +12,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonBackReference
-
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "creator_id")
-    private Account creatorAccount;
-
-    @Column(name = "hasCreatedAccount")
-    private boolean hasCreatedAccount;
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<UserAccountRelationship> accountRoles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<UserAccountRelationship> readOnlyAccounts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<UserAccountRelationship> adminAccounts = new ArrayList<>();
 
     @Column(name="firstName")
     private String firstName;
@@ -41,18 +25,21 @@ public class User {
     @Column(name="username")
     private String username;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 255, name="password")
     private String password;
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private final List<Locker> lockers = new ArrayList<>();
 
-    public User(String firstName, String lastName, String email, String password, boolean hasCreatedAccount) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.username = email.substring(0, '@');
-        this.hasCreatedAccount = hasCreatedAccount;
-    }
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private final List<Container> containers = new ArrayList<>();
+
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private final List<Item> items = new ArrayList<>();
+
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -60,6 +47,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.username = email.substring(0, '@');
+
     }
 
     public User(String firstName, String lastName, String email, String password, int id) {
@@ -72,6 +60,7 @@ public class User {
     }
 
     public User() {
+        // Default constructor for JPA
     }
 
     public String getFirstName() { return firstName; }
@@ -103,6 +92,39 @@ public class User {
         return (firstName != null && lastName != null) ? (firstName.charAt(0) + "" + lastName.charAt(0)).toUpperCase() : "";
     }
 
+    public void addLocker(Locker locker) {
+        lockers.add(locker);
+        locker.setUser(this);
+    }
+
+    public void addContainer(Container container) {
+        containers.add(container);
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    public List<Locker> getLockers() {
+        return lockers;
+    }
+
+    public List<Container> getContainers() {
+        return containers;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return firstName + " " + lastName + " - " + email;
@@ -112,30 +134,6 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public void setHasCreatedAccount() {
-        this.hasCreatedAccount = true;
-    }
-
-//    public void addAdminAccount(Account account) {
-//        if (!adminAccounts.contains(account)) {
-//            adminAccounts.add(account);
-//            account.addAdminUser(this); // Ensure the relationship is bidirectional
-//        }
-//    }
-//
-//    public void addReadOnlyAccount(Account account) {
-//        if (!readOnlyAccounts.contains(account)) {
-//            readOnlyAccounts.add(account);
-//            account.addReadOnlyUser(this); // Ensure the relationship is bidirectional
-//        }
-//    }
-
-
-//    public List<Account> getReadOnlyAccounts() {
-//        return readOnlyAccounts;
-//    }
-//
 
 
 }

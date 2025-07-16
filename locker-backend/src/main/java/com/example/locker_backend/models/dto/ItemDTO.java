@@ -1,8 +1,9 @@
 package com.example.locker_backend.models.dto;
 
-import com.example.locker_backend.models.Account;
+
 import com.example.locker_backend.models.Container;
 import com.example.locker_backend.models.Locker;
+import com.example.locker_backend.models.User;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 
 public class ItemDTO {
@@ -12,21 +13,21 @@ public class ItemDTO {
     private int quantity;
     private Locker locker;
     private Container container;
-    private Account account;
+    private User user;
 
     public ItemDTO() {
     }
 
     public ItemDTO(int itemId, String name, VarcharJdbcType description,
                    int quantity, Locker locker,
-                   Container container, Account account) {
+                   Container container, User user) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
         this.locker = locker;
         this.container = container;
-        this.account = account;
+        this.user = user;
     }
 
     public int getItemId() {
@@ -77,11 +78,11 @@ public class ItemDTO {
         this.description = description;
     }
 
-    public Account getAccount() {
-        return account;
+    public User getUser() {
+        return user;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

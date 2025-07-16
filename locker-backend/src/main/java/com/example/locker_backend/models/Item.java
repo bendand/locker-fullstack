@@ -7,55 +7,48 @@ import jakarta.persistence.*;
 @Entity
 public class Item {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     @ManyToOne
     @JsonBackReference
-    private Account account;
+    private User user;
 
     @ManyToOne
     @JsonBackReference
     private Container container;
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @Column(name = "name")
     private String name;
 
     @Column(name = "quantity")
-    private int quantity;
+    private int quantity = 1;
 
-
-    public Item(Account account, Container container, String name, int quantity) {
-        this.account = account;
-        this.name = name;
-        this.container = container;
-        this.quantity = quantity; // Default quantity
+    public Item() {
     }
 
-    public Item(int id, Account account, String name, Container container) {
-        this.id = id;
-        this.account = account;
+    public Item(User user, Container container, String name, int quantity) {
+        this.user = user;
         this.name = name;
         this.container = container;
-    }
-
-    public Item(int id, Account account, String name, Container container, int quantity) {
-        this.quantity = quantity;
-        this.id = id;
-        this.account = account;
-        this.name = name;
-        this.container = container;
-    }
-
-    public Item(int id, Account account, String name, int quantity) {
-        this.id = id;
-        this.account = account;
-        this.name = name;
         this.quantity = quantity;
     }
 
+    public Item(int id, User user, String name, Container container) {
+        this.id = id;
+        this.user = user;
+        this.name = name;
+        this.container = container;
+    }
+
+    public Item(int id, User user, String name, Container container, int quantity) {
+        this.quantity = quantity;
+        this.id = id;
+        this.user = user;
+        this.name = name;
+        this.container = container;
+    }
 
     public String getName() {
         return name;
@@ -73,7 +66,6 @@ public class Item {
         this.quantity = quantity;
     }
 
-
     public int getItemId() {
         return id;
     }
@@ -90,11 +82,7 @@ public class Item {
         return container;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public Account getAccount() {
-        return account;
+    public User getUser() {
+        return user;
     }
 }

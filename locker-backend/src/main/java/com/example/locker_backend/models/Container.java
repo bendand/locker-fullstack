@@ -22,28 +22,30 @@ public class Container {
 
     @ManyToOne
     @JsonManagedReference
-    private Account account;
+    private User user;
 
     @ManyToOne
     @JsonManagedReference
     private Locker locker;
 
-    public Container(Account account) {
-        this.account = account;
+    public Container() {
     }
 
-    public Container(String name, Account account) {
+    public Container(User user) {
+        this.user = user;
+    }
+
+    public Container(String name, User user, Locker locker) {
         this.name = name;
-        this.account = account;
+        this.user = user;
+        this.locker = locker;
     }
 
-    public Container(int id, String name, Account account) {
+    public Container(int id, String name, User user, Locker locker) {
         this.id = id;
         this.name = name;
-        this.account = account;
-    }
-
-    public Container(String name, int lockerId) {
+        this.user = user;
+        this.locker = locker;
     }
 
     public String getName() {
@@ -77,11 +79,11 @@ public class Container {
         return locker;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public User getUser() {
+        return user;
     }
 
-    public Account getAccount() {
-        return account;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

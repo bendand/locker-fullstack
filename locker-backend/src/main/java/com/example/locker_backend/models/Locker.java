@@ -16,7 +16,7 @@ public class Locker {
 
     @ManyToOne
     @JsonManagedReference
-    private Account account;
+    private User user;
 
     @Column(name="name")
     private String name;
@@ -26,49 +26,41 @@ public class Locker {
     private final List<Container> containers = new ArrayList<>();
 
 
-    public Locker(Account account) {
-        this.account = account;
+    public Locker() {
     }
 
-    public Locker(String name, Account account) {
+    public Locker(User user) {
+        this.user = user;
+    }
+
+    public Locker(String name, User user) {
         this.name = name;
-        this.account = account;
+        this.user = user;
 
     }
 
-    public Locker(int id, String name, Account account) {
+    public Locker(int id, String name, User user) {
         this.id = id;
         this.name = name;
-        this.account = account;
+        this.user = user;
     }
 
 
-    public Account getAccount() {
-        return account;
-    }
+    public User getUser() { return user; }
 
-    public void setAccount(Account account) { this.account = account;}
-
+    public void setUser(User user) { this.user = user;}
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public void setId(int lockerId) {
-        this.id = lockerId;
-    }
+    public void setId(int lockerId) { this.id = lockerId; }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
-    public List<Container> getContainers() {
-        return containers;
-    }
+    public List<Container> getContainers() { return containers; }
 
     public void addContainer(Container container) {
         containers.add(container);
