@@ -15,25 +15,20 @@ public class Locker {
     private int id;
 
     @ManyToOne
+    @JsonManagedReference
     private Account account;
 
     @Column(name="name")
     private String name;
 
-    //    look into whether arguments following mappedBy are required
-//    @OneToMany(mappedBy = "locker", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonBackReference
-    @Column(name="containers")
+    @OneToMany(mappedBy="locker", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private final List<Container> containers = new ArrayList<>();
 
 
-//    @ManyToOne
-//    @JsonManagedReference
-//    private User user;
-
-//    public Locker(int userId) {
-//        this.userId = userId;
-//    }
+    public Locker(Account account) {
+        this.account = account;
+    }
 
     public Locker(String name, Account account) {
         this.name = name;
@@ -69,5 +64,14 @@ public class Locker {
 
     public int getId() {
         return id;
+    }
+
+    public List<Container> getContainers() {
+        return containers;
+    }
+
+    public void addContainer(Container container) {
+        containers.add(container);
+        container.setLocker(this); // Ensure the container knows its locker
     }
 }

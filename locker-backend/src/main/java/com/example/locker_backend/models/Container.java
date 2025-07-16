@@ -1,6 +1,7 @@
 package com.example.locker_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,13 +16,17 @@ public class Container {
 
     private String name;
 
-    //    look into whether arguments following mappedBy are required
-//    @OneToMany(mappedBy = "containers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "container", cascade = CascadeType.ALL)
     @JsonBackReference
     private final List<Item> items = new ArrayList<>();
 
     @ManyToOne
+    @JsonManagedReference
     private Account account;
+
+    @ManyToOne
+    @JsonManagedReference
+    private Locker locker;
 
     public Container(Account account) {
         this.account = account;
@@ -30,7 +35,6 @@ public class Container {
     public Container(String name, Account account) {
         this.name = name;
         this.account = account;
-
     }
 
     public Container(int id, String name, Account account) {
@@ -65,4 +69,19 @@ public class Container {
         item.setContainer(this); // Set the container for the item
     }
 
+    public void setLocker(Locker locker) {
+        this.locker = locker;
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
 }

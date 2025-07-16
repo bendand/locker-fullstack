@@ -1,6 +1,5 @@
 package com.example.locker_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -11,16 +10,24 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    @JsonBackReference
-    @Column(name="readOnlyAccounts")
-    private final List<Account> readOnlyAccounts = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonBackReference
-    @Column(name="adminAccounts")
-    private final List<Account> adminAccounts = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "creator_id")
+    private Account creatorAccount;
+
+    @Column(name = "hasCreatedAccount")
+    private boolean hasCreatedAccount;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<UserAccountRelationship> accountRoles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<UserAccountRelationship> readOnlyAccounts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<UserAccountRelationship> adminAccounts = new ArrayList<>();
 
     @Column(name="firstName")
     private String firstName;
@@ -37,10 +44,15 @@ public class User {
     @Column(length = 255, nullable = false)
     private String password;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonBackReference
-    @Column(name="lockers")
-    private final List<Locker> lockers = new ArrayList<>();
+
+    public User(String firstName, String lastName, String email, String password, boolean hasCreatedAccount) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.username = email.substring(0, '@');
+        this.hasCreatedAccount = hasCreatedAccount;
+    }
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -49,6 +61,7 @@ public class User {
         this.password = password;
         this.username = email.substring(0, '@');
     }
+
     public User(String firstName, String lastName, String email, String password, int id) {
         this.id = id;
         this.firstName = firstName;
@@ -100,38 +113,29 @@ public class User {
         return Objects.hash(id);
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof User user)) return false;
-//        return id == user.id && Objects.equals(this.fullName()) && Objects.equals(email, user.email) && Objects.equals(passHash, user.passHash);
-//    }
+    public void setHasCreatedAccount() {
+        this.hasCreatedAccount = true;
+    }
 
-//    public void setAccount(Account adminAccount) {
-//        if (this.adminAccount != null) {
-//            this.adminAccount.setAdminUser(null); // Remove previous admin account from user
-//        }
-//        this.adminAccount = adminAccount;
-//        if (adminAccount != null) {
-//            adminAccount.setAdminUser(this); // Set the new admin account to this user
+//    public void addAdminAccount(Account account) {
+//        if (!adminAccounts.contains(account)) {
+//            adminAccounts.add(account);
+//            account.addAdminUser(this); // Ensure the relationship is bidirectional
 //        }
 //    }
+//
+//    public void addReadOnlyAccount(Account account) {
+//        if (!readOnlyAccounts.contains(account)) {
+//            readOnlyAccounts.add(account);
+//            account.addReadOnlyUser(this); // Ensure the relationship is bidirectional
+//        }
+//    }
 
-    public List<Account> getReadOnlyAccounts() {
-        return readOnlyAccounts;
-    }
 
-    public void addReadOnlyAccount(Account account) {
-        readOnlyAccounts.add(account);
-        account.addReadOnlyUser(this);
-    }
+//    public List<Account> getReadOnlyAccounts() {
+//        return readOnlyAccounts;
+//    }
+//
 
-    public void addAdminAccount(Account account) {
-        adminAccounts.add(account);
-        account.addAdminUser(this);
-    }
 
-    public List<Account> getAdminAccounts() {
-        return adminAccounts;
-    }
 }

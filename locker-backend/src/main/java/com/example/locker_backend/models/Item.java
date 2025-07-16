@@ -1,16 +1,20 @@
 package com.example.locker_backend.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 public class Item {
 
     @ManyToOne
-    private Container container;
+    @JsonBackReference
+    private Account account;
 
     @ManyToOne
-    private Account account;
+    @JsonBackReference
+    private Container container;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,5 +88,13 @@ public class Item {
 
     public Container getContainer() {
         return container;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 }
