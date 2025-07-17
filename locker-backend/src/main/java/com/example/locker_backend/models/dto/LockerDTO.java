@@ -1,21 +1,19 @@
 package com.example.locker_backend.models.dto;
 
-import com.example.locker_backend.models.User;
-
 public class LockerDTO {
     private int lockerId;
     private String name;
     private String location;
-    private User user;
+    private int userId;
 
     public LockerDTO() {
     }
 
-    public LockerDTO(int lockerId, String name, String location, User user) {
+    public LockerDTO(int lockerId, String name, String location, int userId) {
         this.lockerId = lockerId;
         this.name = name;
         this.location = location;
-        this.user = user;
+        this.userId = userId;
     }
 
     public int getLockerId() { return lockerId;}
@@ -30,7 +28,7 @@ public class LockerDTO {
 
     public void setName(String name) { this.name = name; }
 
-    public User getAccount() { return user; }
+    public int getUserId() { return userId; }
 
-    public void setUser(User user) { this.user = user; }
+    public void setUserId(int userId) { this.userId = userId; }
 }

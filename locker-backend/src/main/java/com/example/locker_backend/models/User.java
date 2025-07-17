@@ -19,13 +19,13 @@ public class User {
     @Column(name="lastName")
     private String lastName;
 
-    @Column(name="email")
+    @Column(name="email", unique = true)
     private String email;
 
     @Column(name="username")
     private String username;
 
-    @Column(length = 255, name="password")
+    @Column(length = 256, name="password")
     private String password;
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
@@ -46,17 +46,17 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.username = email.substring(0, '@');
+        this.username = email.substring(0, email.indexOf('@'));
 
     }
 
-    public User(String firstName, String lastName, String email, String password, int id) {
+    public User(int id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.username = email.substring(0, '@');
+        this.username = email.substring(0, email.indexOf('@'));
     }
 
     public User() {
@@ -83,7 +83,7 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-        this.username = email.substring(0, '@');
+        this.username = email.substring(0, email.indexOf('@'));
     }
 
     public String fullName() { return firstName + " " + lastName; }
@@ -94,7 +94,6 @@ public class User {
 
     public void addLocker(Locker locker) {
         lockers.add(locker);
-        locker.setUser(this);
     }
 
     public void addContainer(Container container) {
@@ -121,8 +120,8 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String email) {
+        this.username = email.substring(0, email.indexOf('@'));
     }
 
     @Override

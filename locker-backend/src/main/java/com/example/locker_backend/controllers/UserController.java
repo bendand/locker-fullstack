@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -27,118 +28,86 @@ import javax.crypto.spec.PBEKeySpec;
 @RequestMapping("/")
 public class UserController {
 
-    // Autowired UserRepository to handle user data operations
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    // Endpoint to validate if a user exists by username
     @PostMapping("/login")
-    public ResponseEntity<?> logIn(@RequestBody UserDTO userData) throws UsernameNotFoundException, InvalidKeySpecException, NoSuchAlgorithmException {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(userData.getPassword().toCharArray(), salt, 65536, 128);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        byte[] hashedPassword = factory.generateSecret(spec).getEncoded();
-        System.out.println(Arrays.toString(hashedPassword));
-
-        try {
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userData.getUsername());
-            // If user is found, return user details
-            System.out.println(userDetails);
-            return ResponseEntity.ok().body("User exists");
-
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    public ResponseEntity<?> logIn(@RequestBody UserDTO userData) {
+        // Check if user exists in the database
+        User user = userRepository.findByEmail(userData.getEmail());
+        if (user == null) {
+            System.out.println("User not found with this email: " + userData.getEmail());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this email");
         }
+
+        // Hashing password using Pbkdf2PasswordEncoder
+        Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+
+        // Check if the provided password matches the stored password
+        if (!encoder.matches(userData.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+        }
+
+        // If the user exists and the password matches, return a success response
+        return ResponseEntity.ok("Login successful"); // 200 OK
     }
 
     //  Endpoint to register a new user
     @PostMapping(value="/register", consumes=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userData) {
-        System.out.println(userData);
-        if (userRepository.existsByUsername(userData.getEmail())) {
+        if (userRepository.existsByEmail(userData.getEmail())) {
+            System.out.println("User exists with this email: " + userData.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User exists with this email");
         }
+
+        // hashing password using Pbkdf2PasswordEncoder before storing it
+        Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+        String hashedPassword = encoder.encode(userData.getPassword());
+
         User newUser = new User(userData.getFirstName(), userData.getLastName(),
-                                userData.getPassword(), userData.getEmail());
+                                userData.getEmail(), hashedPassword);
+
         userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // 201 Created
     }
 
-    // Endpoint to create an admin account for a user
-//    @PostMapping(value="/createAdmin", consumes=MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> createAdminAccount(@RequestBody AccountDTO accountData,
-//                                                @RequestParam(value = "userId") int userId) {
-//        Account newAccount = new Account(userId);
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
-//        user.setHasCreatedAccount();
-//        UserAccountRelationship userAccountRelationship = new UserAccountRelationship(userId, newAccount.getId(), "admin");
-//
-//        accountRepository.save(newAccount);
-//        userRepository.save(user);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(newAccount); // 201 Created
-//    }
-
-//    @GetMapping(value="/findUserByEmail", produces=MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> findUserByEmail(@RequestParam(value = "email") String email) {
-//        User user = userRepository.findByEmail(email);
-//        if (user != null) {
-//            return ResponseEntity.ok(user); // 200 OK
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email); // 404 Not Found
-//        }
-//    }
-
-//    @PutMapping(value="/addAccountToUser/{userId}", consumes=MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> addAccountToUser(@PathVariable(value = "userEmail") String userEmail,
-//                                              @RequestParam(value = "accountId") int accountId,
-//                                              @RequestParam (value = "accessType") String accessType) {
-//
-//        User user = userRepository.findByEmail(userEmail);
-//
-//        Account account = accountRepository.findById(accountId);
-//
-//        if (accessType.equals("admin")) {
-//            user.addAdminAccount(account);
-//        } else if (accessType.equals("read-only")) {
-//            user.addReadOnlyAccount(account);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid access type");
-//        }
-//
-//        accountRepository.save(account);
-//        userRepository.save(user);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(account); // 201 Created
-//    }
-
-//    @GetMapping(value="/allUserAccounts", produces=MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> getAllUserAccounts(@RequestParam(value = "userId") int userId) {
-//        List<UserAccountRelationship> userAccounts = userAccountRepository.findById(userId)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
-//
-//        System.out.println(userAccounts);
-//        return ResponseEntity.ok(userAccounts); // 200 OK
-//    }
-
-
 
     // Endpoint to update an existing user
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable(value = "id") int userId, @RequestBody User user) {
-        user.setId(userId);
-        return userRepository.save(user);
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable(value = "userId") int userId, @RequestBody UserDTO newUserData) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        // Update user details
+        existingUser.setFirstName(newUserData.getFirstName());
+        existingUser.setLastName(newUserData.getLastName());
+        existingUser.setEmail(newUserData.getEmail());
+        existingUser.setPassword(newUserData.getPassword());
+
+        userRepository.save(existingUser);
+
+        return ResponseEntity.ok(existingUser); // 200 OK
     }
 
     // Endpoint to delete a user by ID
-//    @DeleteMapping("/{id}")
-//    public void deleteUser(@PathVariable(value = "id") int id) {
-//        userRepository.findById(id).ifPresent(currUser -> userRepository.deleteById(id));
-//    }
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "userId") int userId) {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + userId + " not found"); // 404 Not Found
+        }
+
+        return ResponseEntity.ok().body("User with ID " + userId + " deleted successfully"); // 200 OK
+    }
+
+    // Endpoint to get all users
+    @GetMapping("/users/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allUsers = userRepository.findAll();
+        return new ResponseEntity<>(allUsers, HttpStatus.OK); // 200 OK
+    }
 }
