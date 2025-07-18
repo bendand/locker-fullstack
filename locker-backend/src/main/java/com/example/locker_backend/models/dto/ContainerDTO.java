@@ -7,14 +7,13 @@ public class ContainerDTO {
     private int lockerId;
     private int userId;
     private String name;
+    private String description;
 
-    public ContainerDTO() {
-    }
-
-    public ContainerDTO(int lockerId, int userId, String name) {
+    public ContainerDTO(int lockerId, int userId, String name, String description) {
         this.lockerId = lockerId;
         this.userId = userId;
         this.name = name;
+        this.description = description;
     }
 
     public int getLockerId() {
@@ -39,5 +38,13 @@ public class ContainerDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

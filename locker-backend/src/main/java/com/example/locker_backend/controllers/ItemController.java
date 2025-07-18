@@ -2,8 +2,13 @@ package com.example.locker_backend.controllers;
 
 import com.example.locker_backend.models.Container;
 import com.example.locker_backend.models.Item;
+import com.example.locker_backend.models.Locker;
+import com.example.locker_backend.models.User;
+import com.example.locker_backend.models.dto.ItemDTO;
 import com.example.locker_backend.repositories.ContainerRepository;
 import com.example.locker_backend.repositories.ItemRepository;
+import com.example.locker_backend.repositories.LockerRepository;
+import com.example.locker_backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,13 +23,33 @@ import java.util.List;
 public class ItemController {
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    LockerRepository lockerRepository;
+
+    @Autowired
+    ContainerRepository containerRepository;
+
+    @Autowired
     ItemRepository itemRepository;
 
+
     // GET the full list of items in a specific container
-    // Endpoint is http://localhost:8080/{accountId}/{lockerId}/{containerId}/items
+    // Endpoint is http://localhost:8080/{userId}/{lockerId}/{containerId}/items
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value="accountId") int accountId, @PathVariable(value="lockerId") int lockerId, @PathVariable(value="containerId") int containerId) {
-        List<Item> allContainersItems = itemRepository.findAllById(Collections.singleton(containerId));
+    public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value="userId") int userId, @PathVariable(value="lockerId") int lockerId, @PathVariable(value="containerId") int containerId) {
+        if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
+            String response = "Invalid containerId, lockerId, or userId.";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
+        }
+
+        List<Item> allContainersItems = itemRepository.findAllByContainerId(containerId);
+        if (allContainersItems.isEmpty()) {
+            String response = "No items found for container with ID of " + containerId + ".";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+        }
+
         return new ResponseEntity<>(allContainersItems, HttpStatus.OK); // 200
     }
 
@@ -44,45 +69,41 @@ public class ItemController {
 
     // POST a new item
     // Endpoint http://localhost:8080/{userId}/{lockerId}/{containerId}/items/add
-//    @PostMapping("/add")
-//    public ResponseEntity<?> createNewItem(@RequestParam(value="name") String name,
-//                                           @RequestParam(value="containerId") int containerId,
-//                                           @RequestParam(value="lockerId") int lockerId,
-//                                           @RequestParam(value="userId") int userId) {
-//        // Validate that the containerId, lockerId, and userId are valid
-//        if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
-//            String response = "Invalid containerId, lockerId, or userId.";
-//            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
-//        }
-//        // Create a new item and save it to the repository
-//        Item newItem = new Item(name, containerId, lockerId, userId);
-//        itemRepository.save(newItem);
-//        return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
-//    }
-
-
-    // DELETE an existing item
-    // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/delete/{itemId}
-    @DeleteMapping(value="/delete/{itemId}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteItem(@PathVariable(value="containerId") int containerId,
-                                             @PathVariable(value="userId") int userId,
-                                             @PathVariable(value="lockerId") int lockerId,
-                                             @PathVariable(value="itemId") int itemId) {
+    @PostMapping(value="/add", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addItem(@RequestBody ItemDTO itemData) {
         // Validate that the containerId, lockerId, and userId are valid
-        if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
+        if (itemData.getContainerId() <= 0 || itemData.getLockerId() <= 0 || itemData.getUserId() <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
         }
 
-        Item currentItem = itemRepository.findById(containerId).orElse(null);
-        if (currentItem != null) {
-            itemRepository.deleteById(itemId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
-        } else {
-            String response = "Item with ID of " + itemId + " not found.";
+        // Check if the container exists
+        User currentUser = userRepository.findById(itemData.getUserId()).orElse(null);
+        Locker currentLocker = lockerRepository.findById(itemData.getLockerId()).orElse(null);
+        Container currentContainer = containerRepository.findById(itemData.getContainerId()).orElse(null);
+
+        if (currentUser == null || currentLocker == null || currentContainer == null) {
+            String response = "Invalid userId, lockerId, or containerId.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
         }
+
+        // Create a new item and save it to the repository
+        Item newItem = new Item(itemData.getName(), itemData.getQuantity(), currentUser,
+                                currentLocker, currentContainer);
+
+        System.out.println(newItem);
+        itemRepository.save(newItem);
+
+        currentUser.addItem(newItem);
+        currentLocker.addItem(newItem);
+        currentContainer.addItem(newItem);
+        containerRepository.save(currentContainer);
+        return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
+
     }
+    // DELETE an existing item
+    // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/{itemId}
+
 
 
     // PUT to update an existing item

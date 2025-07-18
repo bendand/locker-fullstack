@@ -31,7 +31,7 @@ public class ContainerController {
     public ResponseEntity<?> getAllContainersByLockerId(@PathVariable(value="userId") Long userId, @PathVariable(value="lockerId") int lockerId) {
         List<Container> allLockersContainers = containerRepository.findAllByLockerId(lockerId);
         if (allLockersContainers.isEmpty()) {
-            String response = "No containers found for locker with ID of " + lockerId + ".";
+            String response = "No containers found for locker with locker ID of " + lockerId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
         }
 
@@ -56,8 +56,7 @@ public class ContainerController {
     // POST a new container
     // Endpoint http://localhost:8080/{userId}/{lockerId}/containers/add
     @PostMapping("/add")
-    public ResponseEntity<?> createNewContainer(@RequestBody ContainerDTO containerData) {
-        // Validate that the lockerId and userId are valid
+    public ResponseEntity<?> addContainer(@RequestBody ContainerDTO containerData) {
         if (containerData.getLockerId() <= 0 || containerData.getUserId() <= 0) {
             String response = "Invalid lockerId or userId.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
@@ -67,7 +66,7 @@ public class ContainerController {
         User user = locker != null ? locker.getUser() : null;
 
         // Create a new container and save it to the repository
-        Container newContainer = new Container(containerData.getName(), user, locker);
+        Container newContainer = new Container(containerData.getName(), containerData.getDescription(), user, locker);
         containerRepository.save(newContainer);
 
         // Add the new container to the locker
@@ -76,8 +75,8 @@ public class ContainerController {
 
 
     // DELETE an existing container
-    // Corresponds to http://localhost:8080/{userId}/{lockerId}/containers/delete/{containerId}
-    @DeleteMapping(value="/delete/{containerId}", produces=MediaType.APPLICATION_JSON_VALUE)
+    // Corresponds to http://localhost:8080/{userId}/{lockerId}/containers/{containerId}
+    @DeleteMapping(value="/{containerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteContainer(@PathVariable(value="containerId") int containerId, @PathVariable(value="userId") int userId) {
         Container currentContainer = containerRepository.findById(containerId).orElse(null);
         if (currentContainer != null) {
@@ -92,16 +91,20 @@ public class ContainerController {
 
     // PUT to update an existing container
     // Corresponds to http://localhost:8080/{userId}/{lockerId}/containers/update/{containerId}
-    @PutMapping(value="/update/{containerId}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateContainer(@PathVariable(value="containerId") int containerId, @RequestBody Container updatedContainer) {
+    @PutMapping(value="/{containerId}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateContainer(@PathVariable(value="containerId") int containerId, @RequestBody ContainerDTO updatedContainer) {
         Container currentContainer = containerRepository.findById(containerId).orElse(null);
         if (currentContainer != null) {
-            updatedContainer.setId(containerId); // Ensure the ID is set correctly
-            containerRepository.save(updatedContainer);
-            return new ResponseEntity<>(updatedContainer, HttpStatus.OK); // 200
+            currentContainer.setName(updatedContainer.getName());
+            currentContainer.setDescription(updatedContainer.getDescription());
+
+            // Save the updated container
+            containerRepository.save(currentContainer);
+            return new ResponseEntity<>(currentContainer, HttpStatus.OK); // 200
         } else {
             String response = "Container with ID of " + containerId + " not found.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
         }
+
     }
 }

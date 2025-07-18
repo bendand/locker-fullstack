@@ -19,6 +19,10 @@ public class Item {
     @JsonBackReference
     private Container container;
 
+    @ManyToOne
+    @JsonBackReference
+    private Locker locker;
+
     @Column(name = "name")
     private String name;
 
@@ -28,25 +32,20 @@ public class Item {
     public Item() {
     }
 
-    public Item(User user, Container container, String name, int quantity) {
-        this.user = user;
+    public Item(String name, int quantity, User user, Locker locker, Container container) {
         this.name = name;
-        this.container = container;
         this.quantity = quantity;
-    }
-
-    public Item(int id, User user, String name, Container container) {
-        this.id = id;
         this.user = user;
-        this.name = name;
+        this.locker = locker;
         this.container = container;
     }
 
-    public Item(int id, User user, String name, Container container, int quantity) {
-        this.quantity = quantity;
+    public Item(int id, String name, int quantity, User user, Locker locker, Container container) {
         this.id = id;
-        this.user = user;
         this.name = name;
+        this.quantity = quantity;
+        this.user = user;
+        this.locker = locker;
         this.container = container;
     }
 
@@ -84,5 +83,13 @@ public class Item {
 
     public User getUser() {
         return user;
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
     }
 }

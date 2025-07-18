@@ -1,5 +1,6 @@
 package com.example.locker_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -26,6 +27,10 @@ public class Locker {
     @OneToMany(mappedBy="locker", cascade = CascadeType.ALL)
     @JsonManagedReference
     private final List<Container> containers = new ArrayList<>();
+
+    @OneToMany(mappedBy="locker", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private final List<Item> items = new ArrayList<>();
 
 
     public Locker() {
@@ -75,5 +80,10 @@ public class Locker {
     public void addContainer(Container container) {
         containers.add(container);
         container.setLocker(this); // Ensure the container knows its locker
+    }
+
+    public void addItem(Item newItem) {
+        items.add(newItem);
+        newItem.setLocker(this); // Ensure the item knows its locker
     }
 }

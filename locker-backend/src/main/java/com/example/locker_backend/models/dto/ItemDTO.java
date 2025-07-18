@@ -9,25 +9,20 @@ import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 public class ItemDTO {
     private int itemId;
     private String name;
-    private VarcharJdbcType description;
-    private int quantity;
-    private Locker locker;
-    private Container container;
-    private User user;
+    private String description;
+    private int quantity = 1;
+    private int lockerId;
+    private int containerId;
+    private int userId;
 
-    public ItemDTO() {
-    }
-
-    public ItemDTO(int itemId, String name, VarcharJdbcType description,
-                   int quantity, Locker locker,
-                   Container container, User user) {
+    public ItemDTO (int itemId, String name, String description, int quantity, int lockerId, int containerId, int userId) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
-        this.locker = locker;
-        this.container = container;
-        this.user = user;
+        this.lockerId = lockerId;
+        this.containerId = containerId;
+        this.userId = userId;
     }
 
     public int getItemId() {
@@ -54,35 +49,36 @@ public class ItemDTO {
         this.quantity = quantity;
     }
 
-    public Locker getLocker() {
-        return locker;
-    }
 
-    public void setLocker(Locker locker) {
-        this.locker = locker;
-    }
-
-    public Container getContainer() {
-        return container;
-    }
-
-    public void setContainer(Container container) {
-        this.container = container;
-    }
-
-    public VarcharJdbcType getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(VarcharJdbcType description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
+    public int getLockerId() {
+        return lockerId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setLockerId(int lockerId) {
+        this.lockerId = lockerId;
+    }
+
+    public int getContainerId() {
+        return containerId;
+    }
+
+    public void setContainerId(int containerId) {
+        this.containerId = containerId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

@@ -16,16 +16,18 @@ public class Container {
 
     private String name;
 
+    private String description = "";
+
     @OneToMany(mappedBy = "container", cascade = CascadeType.ALL)
     @JsonBackReference
     private final List<Item> items = new ArrayList<>();
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     private User user;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     private Locker locker;
 
     public Container() {
@@ -37,6 +39,13 @@ public class Container {
 
     public Container(String name, User user, Locker locker) {
         this.name = name;
+        this.user = user;
+        this.locker = locker;
+    }
+
+    public Container(String name, String description, User user, Locker locker) {
+        this.name = name;
+        this.description = description;
         this.user = user;
         this.locker = locker;
     }
@@ -85,5 +94,13 @@ public class Container {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
