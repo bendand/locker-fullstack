@@ -110,4 +110,12 @@ public class UserController {
         List<User> allUsers = userRepository.findAll();
         return new ResponseEntity<>(allUsers, HttpStatus.OK); // 200 OK
     }
+
+    // Endpoint to get a user by ID
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable(value = "userId") int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        return ResponseEntity.ok(user); // 200 OK
+    }
 }

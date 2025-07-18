@@ -4,40 +4,40 @@ import com.example.locker_backend.models.Locker;
 import com.example.locker_backend.models.User;
 
 public class ContainerDTO {
-    private int containerId;
-    private Locker locker;
-    private User user;
+    private int lockerId;
+    private int userId;
+    private String name;
 
     public ContainerDTO() {
     }
 
-    public ContainerDTO(int containerId, Locker locker, User user) {
-        this.containerId = containerId;
-        this.locker = locker;
-        this.user = user;
+    public ContainerDTO(int lockerId, int userId, String name) {
+        this.lockerId = lockerId;
+        this.userId = userId;
+        this.name = name;
     }
 
-    public int getContainerId() {
-        return containerId;
+    public int getLockerId() {
+        return lockerId;
     }
 
-    public void setContainerId(int containerId) {
-        this.containerId = containerId;
+    public void setLockerId(int lockerId) {
+        this.lockerId = lockerId;
     }
 
-    public Locker getLocker() {
-        return locker;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setLocker(Locker locker) {
-        this.locker = locker;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public User getUser() {
-        return user;
+    public String getName() {
+        return name;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setName(String name) {
+        this.name = name;
     }
 }

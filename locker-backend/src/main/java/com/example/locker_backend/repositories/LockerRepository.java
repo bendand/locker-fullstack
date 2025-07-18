@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface LockerRepository extends JpaRepository<Locker, Integer>{
 
-    List<Locker> findAllByUserId(Integer userId);
-
+    List<Locker> findAllByUserId(int userId);
 }

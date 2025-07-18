@@ -29,8 +29,13 @@ public class LockerController {
     // Endpoint is http://localhost:8080/{userId}/lockers
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllLockersByUserId(@PathVariable(value="userId") int userId) {
-        List<Locker> allLockers = lockerRepository.findAllByUserId(userId);
-        return new ResponseEntity<>(allLockers, HttpStatus.OK); // 200
+        List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
+        if (allUsersLockers.isEmpty()) {
+            String response = "No lockers found for user with ID of " + userId + ".";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+        }
+
+        return new ResponseEntity<>(allUsersLockers, HttpStatus.OK); // 200
     }
 
 
@@ -51,46 +56,55 @@ public class LockerController {
     // POST a new locker
     // Endpoint http://localhost:8080/{userId}/lockers/add
     @PostMapping("/add")
-    public ResponseEntity<?> addLocker(@RequestBody LockerDTO lockerData, @PathVariable(value="userId") int userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        System.out.println(user);
+    public ResponseEntity<?> addLocker(@RequestBody LockerDTO lockerData) {
+        User user = userRepository.findById(lockerData.getUserId()).orElse(null);
+        if (user == null) {
+            String response = "User with ID of " + lockerData.getUserId() + " not found.";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+        }
 
         Locker newLocker = new Locker(lockerData.getName(), user, lockerData.getLocation());
-
-        System.out.println(newLocker);
+        lockerRepository.save(newLocker);
 
         return new ResponseEntity<>(newLocker, HttpStatus.CREATED); // 201
     }
 
 
     // DELETE an existing locker
-    // Corresponds to http://localhost:8080/{userId}/lockers/delete/6 (for example)
-//    @DeleteMapping(value="/delete/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> deleteLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId) {
-//        Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
-//        if (currentLocker != null) {
-//            lockerRepository.deleteById(lockerId);
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
-//        } else {
-//            String response = "Locker with ID of " + lockerId + " not found.";
-//            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
-//        }
-//    }
-
+    // Corresponds to http://localhost:8080/{userId}/lockers/{lockerId}
+    @DeleteMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId) {
+        Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
+        System.out.println(currentLocker);
+        if (currentLocker != null) {
+            lockerRepository.deleteById(lockerId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+        } else {
+            String response = "Locker with ID of " + lockerId + " not found.";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+        }
+    }
 
     // PUT to update an existing locker
     // Corresponds to http://localhost:8080/{userId}/lockers/update/{lockerId}
-//    @PutMapping(value="/update/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> updateLocker(@PathVariable(value="lockerId") int lockerId, @RequestBody Locker updatedLocker) {
-//        Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
-//        if (currentLocker != null) {
-//            updatedLocker.setId(lockerId); // Ensure the ID is set correctly
-//            lockerRepository.save(updatedLocker);
-//            return new ResponseEntity<>(updatedLocker, HttpStatus.OK); // 200
-//        } else {
-//            String response = "Locker with ID of " + lockerId + " not found.";
-//            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
-//        }
-//    }
+    @PutMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId, @RequestBody LockerDTO updatedLockerData) {
+        Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
+        if (currentLocker != null) {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                String response = "User with ID of " + userId + " not found.";
+                return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            }
 
+            currentLocker.setName(updatedLockerData.getName());
+            currentLocker.setLocation(updatedLockerData.getLocation());
+            lockerRepository.save(currentLocker);
+
+            return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200
+        } else {
+            String response = "Locker with ID of " + lockerId + " not found.";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+        }
+    }
 }

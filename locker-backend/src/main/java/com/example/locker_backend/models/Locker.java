@@ -58,7 +58,7 @@ public class Locker {
 
     public void setName(String name) { this.name = name; }
 
-    public void setId(int lockerId) { this.id = lockerId; }
+//    public void setId(int lockerId) { this.id = lockerId; }
 
     public int getId() { return id; }
 
