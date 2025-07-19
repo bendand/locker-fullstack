@@ -39,7 +39,6 @@ public class UserController {
         // Check if user exists in the database
         User user = userRepository.findByEmail(userData.getEmail());
         if (user == null) {
-            System.out.println("User not found with this email: " + userData.getEmail());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this email");
         }
 
@@ -59,7 +58,6 @@ public class UserController {
     @PostMapping(value="/register", consumes=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userData) {
         if (userRepository.existsByEmail(userData.getEmail())) {
-            System.out.println("User exists with this email: " + userData.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User exists with this email");
         }
 
@@ -81,14 +79,17 @@ public class UserController {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
+        // hashing password using Pbkdf2PasswordEncoder before storing it
+        Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+        String hashedPassword = encoder.encode(newUserData.getPassword());
+
         // Update user details
         existingUser.setFirstName(newUserData.getFirstName());
         existingUser.setLastName(newUserData.getLastName());
         existingUser.setEmail(newUserData.getEmail());
-        existingUser.setPassword(newUserData.getPassword());
+        existingUser.setPassword(hashedPassword);
 
         userRepository.save(existingUser);
-
         return ResponseEntity.ok(existingUser); // 200 OK
     }
 

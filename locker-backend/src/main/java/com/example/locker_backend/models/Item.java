@@ -92,4 +92,8 @@ public class Item {
     public void setLocker(Locker locker) {
         this.locker = locker;
     }
+
+    public void setUser(User currentUser) {
+        this.user = currentUser;
+    }
 }

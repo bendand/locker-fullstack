@@ -37,8 +37,8 @@ public class ItemController {
 
     // GET the full list of items in a specific container
     // Endpoint is http://localhost:8080/{userId}/{lockerId}/{containerId}/items
-    @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value="userId") int userId, @PathVariable(value="lockerId") int lockerId, @PathVariable(value="containerId") int containerId) {
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value = "userId") int userId, @PathVariable(value = "lockerId") int lockerId, @PathVariable(value = "containerId") int containerId) {
         if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
@@ -56,8 +56,8 @@ public class ItemController {
 
     // GET a single item using its id
     // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/{itemId}
-    @GetMapping(value="/{itemId}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getItemById(@PathVariable(value="itemId") int itemId) {
+    @GetMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getItemById(@PathVariable(value = "itemId") int itemId) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
         if (currentItem != null) {
             return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
@@ -69,7 +69,7 @@ public class ItemController {
 
     // POST a new item
     // Endpoint http://localhost:8080/{userId}/{lockerId}/{containerId}/items/add
-    @PostMapping(value="/add", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addItem(@RequestBody ItemDTO itemData) {
         // Validate that the containerId, lockerId, and userId are valid
         if (itemData.getContainerId() <= 0 || itemData.getLockerId() <= 0 || itemData.getUserId() <= 0) {
@@ -89,46 +89,44 @@ public class ItemController {
 
         // Create a new item and save it to the repository
         Item newItem = new Item(itemData.getName(), itemData.getQuantity(), currentUser,
-                                currentLocker, currentContainer);
+                currentLocker, currentContainer);
 
-        System.out.println(newItem);
         itemRepository.save(newItem);
 
-        currentUser.addItem(newItem);
-        currentLocker.addItem(newItem);
-        currentContainer.addItem(newItem);
-        containerRepository.save(currentContainer);
         return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
-
     }
+
     // DELETE an existing item
     // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/{itemId}
-
-
-
-    // PUT to update an existing item
-    // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/update/{itemId}
-    @PutMapping(value="/update/{itemId}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateItem(@PathVariable(value="itemId") int itemId,
-                                        @PathVariable(value="lockerId") int lockerId,
-                                        @PathVariable(value="userId") int userId,
-                                        @PathVariable(value="containerId") int containerId,
-                                        @RequestBody Item updatedItem) {
-        // Validate that the containerId, lockerId, and userId are valid
-        if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
-            String response = "Invalid containerId, lockerId, or userId.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
-        }
-
+    @DeleteMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteItem(@PathVariable(value = "itemId") int itemId) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
         if (currentItem != null) {
-            updatedItem.setItemId(itemId); // Ensure the ID is set correctly
-            itemRepository.save(updatedItem);
-            return new ResponseEntity<>(updatedItem, HttpStatus.OK); // 200
+            itemRepository.deleteById(itemId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
         } else {
             String response = "Item with ID of " + itemId + " not found.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
         }
     }
 
+
+    // PUT to update an existing item
+    // Corresponds to http://localhost:8080/{userId}/{lockerId}/{containerId}/items/update/{itemId}
+    @PutMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateItem(@PathVariable(value = "itemId") int itemId, @RequestBody ItemDTO updatedItemData) {
+        Item currentItem = itemRepository.findById(itemId).orElse(null);
+        if (currentItem != null) {
+            // Update the item's details
+            currentItem.setName(updatedItemData.getName());
+            currentItem.setQuantity(updatedItemData.getQuantity());
+
+            // Save the updated item
+            itemRepository.save(currentItem);
+            return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
+        } else {
+            String response = "Item with ID of " + itemId + " not found.";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+        }
+    }
 }

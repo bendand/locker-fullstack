@@ -75,7 +75,6 @@ public class LockerController {
     @DeleteMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId) {
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
-        System.out.println(currentLocker);
         if (currentLocker != null) {
             lockerRepository.deleteById(lockerId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
