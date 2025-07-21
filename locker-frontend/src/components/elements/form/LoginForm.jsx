@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../button/Button";
 
-export default function AuthForm({ onAuthenticate }) {
+export default function LoginForm({ onLogin }) {
     const [inputValues, setInputValues] = useState({
         username: '',
         password: ''
