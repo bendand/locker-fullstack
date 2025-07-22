@@ -8,12 +8,14 @@ import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import FormHelperText from '@mui/joy/FormHelperText';
+import { InfoOutlined } from '@mui/icons-material';
 import { useInput } from '../../../hooks/useInput';
 import { isEmail, hasMinLength, hasMaxLength } from '../../../util/validation.js';
 
 
 export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const {value: emailValue, 
         handleInputChange: handleEmailChange, 
@@ -56,28 +58,22 @@ export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
             body: JSON.stringify(formData)
         })
         .then(res => {
-            if (!res.ok) {
-                throw new Error('Network response was not ok');
+            if (res.ok) {
+                return res.json();
+            } else if (res.status === 401) {
+                return 'Credentials are invalid.';
+            } else {        
+                return 'Something went wrong. Please try again later.';
             }
-            setIsSubmitting(false);
-            console.log('Login successful:', res);
-            return res.json();
         })
         .then(res => {
-            if (res.error) {
-                console.error('Error:', res.error);
-                // handle different error cases here
-                setIsSubmitting(false);
-                // if user already exists with the email, show a messsage, 
-                // if any other error, show 'something went wrong'
-
+            setIsSubmitting(false);
+            if (typeof res === 'string') {
+                setErrorMessage(res);
                 return;
             }
-            setIsSubmitting(false);
-            console.log('Registration successful:', res);
-            changeAuthStatus();
-            onAuthenticate();
 
+            onAuthenticate();   
         })
     }
 
@@ -101,6 +97,11 @@ export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
                 <Button disabled>Log In</Button>
                 <Button onClick={changeAuthStatus}>Register</Button>
             </ButtonGroup>
+            {errorMessage && (
+                <FormHelperText sx={{ color: 'red', textAlign: 'center' }}>
+                    {errorMessage}
+                </FormHelperText>
+            )}  
             <Stack spacing={1}>
                 <FormControl
                     name="email"

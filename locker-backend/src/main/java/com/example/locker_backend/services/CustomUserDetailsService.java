@@ -1,5 +1,6 @@
 package com.example.locker_backend.services;
 
+import com.example.locker_backend.models.User;
 import eu.fraho.spring.securityJwt.base.dto.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,6 +37,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User not found");
         }
+    }
+
+    public void setUserDetails(User user) {
     }
 
 

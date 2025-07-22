@@ -28,20 +28,18 @@ public class UserController {
     public ResponseEntity<?> logIn(@RequestBody UserDTO userData) {
         // Check if user exists in the database
         User user = userRepository.findByEmail(userData.getEmail());
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this email");
-        }
-
         // Hashing password using Pbkdf2PasswordEncoder
         Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 
-        // Check if the provided password matches the stored password
-        if (!encoder.matches(userData.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+        if (user == null || !encoder.matches(userData.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid credentials"); // 401 Unauthorized
+        } else {
+            System.out.println("User found and password matches password in database");
+            // If the password matches, set the user details in the custom user details service
+            // customUserDetailsService.setUserDetails(user);
+            // If the user exists and the password matches, return a success response
+            return ResponseEntity.status(HttpStatus.OK).body(user); // 200 OK
         }
-
-        // If the user exists and the password matches, return a success response
-        return ResponseEntity.status(HttpStatus.OK).body(user); // 200 OK
     }
 
     //  Endpoint to register a new user

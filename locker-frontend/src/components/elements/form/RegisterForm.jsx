@@ -15,6 +15,7 @@ import { isEmail, isNotEmpty, hasMinLength, isEqualToOtherValue, hasMaxLength } 
 
 export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const {value: firstNameValue, 
         handleInputChange: handleFirstNameChange, 
@@ -82,23 +83,23 @@ export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
             body: JSON.stringify(formData)
         })
         .then(res => {
-            return res.json();
+            if (res.ok) {
+                return res.json();
+            } else if (res.status === 409) {
+                return 'User already exists with the email: ' + emailValue;
+            } else {
+                return 'Something went wrong. Please try again later.';
+            }
         })
         .then(res => {
-            if (res.error) {
-                console.error('Error:', res.error);
-                // handle different error cases here
-                setIsSubmitting(false);
-                // if user already exists with the email, show a messsage, 
-                // if any other error, show 'something went wrong'
+            setIsSubmitting(false);
 
+            if (typeof res === 'string') {
+                setErrorMessage(res);
                 return;
             }
-            setIsSubmitting(false);
-            console.log('Registration successful:', res);
-            changeAuthStatus();
-            onAuthenticate();
 
+            onAuthenticate();
         })
     }
 
@@ -124,6 +125,11 @@ export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
                 <Button onClick={changeAuthStatus}>Log In</Button>
                 <Button disabled>Register</Button>
             </ButtonGroup>
+            {errorMessage && (
+                <FormHelperText sx={{ color: 'red', textAlign: 'center' }}>
+                    {errorMessage}
+                </FormHelperText>
+            )}
             <Stack spacing={1}>
                 <Stack 
                     direction="row" 
