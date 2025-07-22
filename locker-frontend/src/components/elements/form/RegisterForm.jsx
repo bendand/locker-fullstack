@@ -1,5 +1,6 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ModalClose from '@mui/joy/ModalClose';
-import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Button from '@mui/joy/Button';
 import ButtonGroup from '@mui/joy/ButtonGroup';
@@ -8,8 +9,85 @@ import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import FormHelperText from '@mui/joy/FormHelperText';
+import { InfoOutlined } from '@mui/icons-material';
+import { useInput } from '../../../hooks/useInput';
+import { isEmail, isNotEmpty, hasMinLength, isEqualToOtherValue, hasMaxLength } from '../../../util/validation.js';
 
-export default function RegisterForm({ authStatus }) {
+export default function RegisterForm({ changeAuthStatus }) {
+
+    const {value: firstNameValue, 
+        handleInputChange: handleFirstNameChange, 
+        handleInputBlur: handleFirstNameBlur,
+        hasError: firstNameHasError
+    } = useInput('', (value) => {
+        return isNotEmpty(value);
+    });
+
+    const {value: lastNameValue, 
+        handleInputChange: handleLastNameChange, 
+        handleInputBlur: handleLastNameBlur,
+        hasError: lastNameHasError
+    } = useInput('', (value) => {
+        return isNotEmpty(value);
+    });
+
+    const {value: emailValue, 
+        handleInputChange: handleEmailChange, 
+        handleInputBlur: handleEmailBlur,
+        hasError: emailHasError
+    } = useInput('', (value) => {
+        return isEmail(value);
+    });
+
+    const {value: password1Value,
+            handleInputChange: handlePassword1Change,
+            handleInputBlur: handlePassword1Blur,
+            hasError: password1HasError
+    } = useInput('', (value) => {
+        return hasMinLength(value, 8) && hasMaxLength(value, 40);
+    });
+
+    const {value: password2Value,
+        handleInputChange: handlePassword2Change,
+        handleInputBlur: handlePassword2Blur,
+        hasError: password2HasError
+    } = useInput('', (value) => {
+        return isEqualToOtherValue(value, password1Value);
+    });
+
+
+    function handleSubmit(formData) {
+        console.log('handle submit called');
+        console.log('Form submitted with values:', formData);
+        // const firstName = inputValues.first;
+        // const lastName = inputValues.last;
+        // const email = inputValues.email;
+        // const password1 = inputValues.password1;
+        // const password2 = inputValues.password2;
+
+        // console.log('First Name:', firstName);
+        // console.log('Last Name:', lastName);
+        // console.log('Email:', email);
+        // console.log('Password 1:', password1);
+        // console.log('Password 2:', password2);
+      
+        // fetch('https://locker-api-uoib.onrender.com/credentials')
+        // .then(res => {
+        //     return res.json();
+        // })
+        // .then(credentials => {
+        //     if (credentials.username !== username || credentials.password !== password) {
+
+        //         setInvalidCredentials(true);
+        //         return
+        //     }
+
+        //     onAuthenticate();
+        // })
+    }
+
+
+
     return (
         <Sheet
             variant="outlined"
@@ -27,44 +105,129 @@ export default function RegisterForm({ authStatus }) {
                     justifyContent: 'center'
                 }}
             >
-                <Button>Log In</Button>
-                <Button >Register</Button>
+                <Button onClick={changeAuthStatus}>Log In</Button>
+                <Button disabled>Register</Button>
             </ButtonGroup>
             <Stack spacing={1}>
                 <Stack 
                     direction="row" 
                     spacing={1}
-                    useFlexGap
                     sx={{
                         justifyContent: "center",
-                        alignItems: "center",
-                        flexWrap: 'wrap'
+                        overflow: "auto",
                     }}
                 >
-                    <FormControl>
-                        <FormLabel>First name:</FormLabel>
-                        <Input/>
+                    <FormControl
+                        sx={{
+                            width: 145
+                        }}
+                        name="first"
+                        value={firstNameValue}
+                        error={firstNameHasError}
+                        required 
+                    >
+                        <FormLabel>First name</FormLabel>
+                        <Input
+                            onChange={handleFirstNameChange}
+                            onBlur={handleFirstNameBlur}
+                        />
+                        {firstNameHasError && (
+                            <FormHelperText>
+                                <InfoOutlined />
+                                Please enter your first name.
+                            </FormHelperText>
+                        )}
+
                     </FormControl>
-                        <FormControl>
-                        <FormLabel>Last name:</FormLabel>
-                        <Input/>
+                    <FormControl
+                        sx={{
+                            width: 145
+                        }}
+                        name="last"
+                        value={lastNameValue}
+                        error={lastNameHasError}
+                        required
+                    >
+                        <FormLabel>Last name</FormLabel>
+                        <Input
+                            onChange={handleLastNameChange}
+                            onBlur={handleLastNameBlur}
+                        />
+                        {lastNameHasError && (
+                            <FormHelperText>
+                                <InfoOutlined />
+                                Please enter your last name.
+                            </FormHelperText>
+                        )}
                     </FormControl>
                 </Stack>
-                <FormControl>
-                    <FormLabel>Email:</FormLabel>
-                    <Input placeholder="Placeholder" />
+                <FormControl
+                    name="email"
+                    value={emailValue}
+                    error={emailHasError}
+                    type="email"
+                    required
+                >
+                    <FormLabel>Email</FormLabel>
+                    <Input
+                        onChange={handleEmailChange}
+                        onBlur={handleEmailBlur}
+                    />
+                    {emailHasError && (
+                        <FormHelperText>
+                            <InfoOutlined />
+                            Please enter a valid email address.
+                        </FormHelperText>
+                    )}
                 </FormControl>
-                <FormControl>
-                    <FormLabel>Set password:</FormLabel>
-                    <Input/>
-                    <FormHelperText>Password should be at least 8 characters.</FormHelperText>
+                <FormControl
+                    name="password1"
+                    minLength={8}
+                    maxLength={40}
+                    value={password1Value}
+                    error={password1HasError}
+                    required
+                >
+                    <FormLabel>Enter password</FormLabel>
+                    <Input
+                        type="password"
+                        onChange={handlePassword1Change}
+                        onBlur={handlePassword1Blur}
+                    />
+                    {password1HasError && (
+                        <FormHelperText>
+                            <InfoOutlined />
+                            Password must be 8-40 characters.
+                        </FormHelperText>
+                    )}
                 </FormControl>
-                <FormControl>
-                    <FormLabel>Re-enter password:</FormLabel>
-                    <Input placeholder="Placeholder" />
-                    <FormHelperText>Passwords must match.</FormHelperText>
+                <FormControl
+                    name="password2"
+                    value={password2Value}
+                    error={password2HasError}
+                    minLength={8}
+                    maxLength={40}
+                    required
+                >
+                    <FormLabel>Confirm password</FormLabel>
+                    <Input
+                        type="password"
+                        onChange={handlePassword2Change}
+                        onBlur={handlePassword2Blur}
+                    />
+                    {password2HasError && (
+                        <FormHelperText>
+                            <InfoOutlined />
+                            Passwords must match.
+                        </FormHelperText>
+                    )}
                 </FormControl>
-                <Button type="submit">Submit</Button> 
+                <Button 
+                    type="submit"
+                    onClick={handleSubmit}
+                >
+                    Submit
+                </Button> 
             </Stack>
         </Sheet>      
     );

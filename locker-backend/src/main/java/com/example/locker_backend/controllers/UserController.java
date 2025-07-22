@@ -7,21 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.Arrays;
 import java.util.List;
 import com.example.locker_backend.services.CustomUserDetailsService;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 
 @RestController
@@ -61,6 +50,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User exists with this email");
         }
 
+        System.out.println("User first name: " + userData.getFirstName());
+        System.out.println("User last name: " + userData.getLastName());
+        System.out.println("User email: " + userData.getEmail());
+        System.out.println("User password: " + userData.getPassword());
+
         // hashing password using Pbkdf2PasswordEncoder before storing it
         Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
         String hashedPassword = encoder.encode(userData.getPassword());
@@ -68,7 +62,7 @@ public class UserController {
         User newUser = new User(userData.getFirstName(), userData.getLastName(),
                                 userData.getEmail(), hashedPassword);
 
-        userRepository.save(newUser);
+//        userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // 201 Created
     }
 

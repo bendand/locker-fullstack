@@ -11,6 +11,7 @@ import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import FormHelperText from '@mui/joy/FormHelperText';
+import LoginForm from './elements/form/LoginForm'
 
 
 
@@ -34,26 +35,34 @@ export default function GettingStarted({ onStartAuthentication }) {
                     <p>
                         Locker is your bookkeeper for everything storage-related 
                     </p>
-                    <div className="get-started-button-container">
-                        <button 
-                            className='get-started-button'
-                            onClick={onStartAuthentication}
-                        >
-                            Get Started
-                        </button>
-                    </div>
                     <div>
-                        <Button variant="outlined" color="neutral" onClick={() => setOpen(true)} size="md">
+                        <Button 
+                            variant="outlined" 
+                            color="neutral" 
+                            onClick={() => setAuthStatus('registering')} 
+                            size="md"
+                            >
                             Get Started
                         </Button>
                         <Modal
                             aria-labelledby="modal-title"
                             aria-describedby="modal-desc"
-                            open={open}
-                            onClose={() => setOpen(false)}
+                            open={authStatus !== 'default'}
+                            onClose={() => setAuthStatus('default')}
                             sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                         >
-                            <RegisterForm authStatus={authStatus} />
+                            <div>
+                                {authStatus === 'registering' && (
+                                    <RegisterForm 
+                                        changeAuthStatus={() => setAuthStatus('login')} 
+                                    />
+                                )}
+                                {authStatus === 'login' && (
+                                    <LoginForm
+                                        changeAuthStatus={() => setAuthStatus('registering')} 
+                                    />
+                                )}
+                            </div>
                         </Modal>
                     </div>
                 </div>

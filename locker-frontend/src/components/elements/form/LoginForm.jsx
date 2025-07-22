@@ -1,15 +1,20 @@
 import { useState } from "react";
-import Button from "../button/Button";
+import ModalClose from '@mui/joy/ModalClose';
+import Sheet from '@mui/joy/Sheet';
+import Button from '@mui/joy/Button';
+import ButtonGroup from '@mui/joy/ButtonGroup';
+import Input from '@mui/joy/Input';
+import Stack from '@mui/joy/Stack';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import FormHelperText from '@mui/joy/FormHelperText';
 
-export default function LoginForm({ onLogin }) {
+
+export default function LoginForm({ changeAuthStatus }) {
     const [inputValues, setInputValues] = useState({
-        username: '',
+        email: '',
         password: ''
     });
-    const [invalidCredentials, setInvalidCredentials] = useState(false);
-
-    // validates number password on each keystroke
-    const invalidPassword = isNaN(inputValues.password);
 
     // function that sets new values when inputs are changed
     function handleInputChange(event) {
@@ -44,45 +49,54 @@ export default function LoginForm({ onLogin }) {
     }
 
     return (
-        <form action={handleSubmit} id="locker-form">
-            <div>
-                <h4>Sign In</h4>
-            </div>
-            {invalidCredentials && (
-                <div>
-                    <p>Your credentials are invalid</p>
-                </div>
-            )}
-            <div className="form-input">
-                <label htmlFor="username">Username: </label>
-                <input
-                    type="text" 
-                    name="username" 
-                    value={inputValues.username}
-                    onChange={handleInputChange}
-                    required 
-                />
-            </div>
-            <div className="form-input">
-                <label htmlFor="password">Password: </label>
-                <input
-                    type="password" 
+        <Sheet
+            variant="outlined"
+            sx={{ maxWidth: 350, borderRadius: 'md', p: 3, boxShadow: 'lg' }}
+        >
+        <ModalClose variant="plain" sx={{ m: 1 }} />
+            <ButtonGroup 
+                buttonFlex={1}
+                aria-label="flex button group"
+                sx={{
+                    p: 2,
+                    width: 400,
+                    maxWidth: '100%',
+                    overflow: 'auto',
+                    justifyContent: 'center'
+                }}
+            >
+                <Button disabled>Log In</Button>
+                <Button onClick={changeAuthStatus}>Register</Button>
+            </ButtonGroup>
+            <Stack spacing={1}>
+                <FormControl
+                    onChange={(e) => handleInputChange(e)}
+                    name="email"
+                    type="email"
+                    value={inputValues.email}
+                    required
+                >
+                    <FormLabel>Email</FormLabel>
+                    <Input/>
+                </FormControl>
+                <FormControl
+                    onChange={(e) => handleInputChange(e)}
                     name="password"
+                    type="password"
                     value={inputValues.password}
-                    onChange={handleInputChange}
-                    required 
-                />
-            </div>
-            {invalidPassword && (
-                <div>
-                    <p>
-                        Hint: password is a number
-                    </p>
-                </div>
-            )}
-            <div>
-                <Button type="submit">Submit</Button>
-            </div>
-        </form>
+                    required
+                >
+                    <FormLabel>Password</FormLabel>
+                    <Input/>
+                    <FormHelperText>Password should be at least 8 characters.</FormHelperText>
+                </FormControl>
+                <Button 
+                    type="submit"
+                    onClick={handleSubmit}
+                >
+                    Submit
+                </Button> 
+            </Stack>
+        </Sheet>  
     );
 }
