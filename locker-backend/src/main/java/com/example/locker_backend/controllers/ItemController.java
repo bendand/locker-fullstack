@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/{userId}/{lockerId}/{containerId}/items")
 public class ItemController {
 

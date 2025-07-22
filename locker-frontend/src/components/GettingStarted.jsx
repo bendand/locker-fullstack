@@ -1,24 +1,32 @@
 import { useState } from 'react';
 import RegisterForm from './elements/form/RegisterForm';
+import Toast from './elements/toast/Toast';
 import Modal from '@mui/joy/Modal';
-import ModalClose from '@mui/joy/ModalClose';
-import Typography from '@mui/joy/Typography';
-import Sheet from '@mui/joy/Sheet';
 import Button from '@mui/joy/Button';
-import ButtonGroup from '@mui/joy/ButtonGroup';
-import Input from '@mui/joy/Input';
-import Stack from '@mui/joy/Stack';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import FormHelperText from '@mui/joy/FormHelperText';
 import LoginForm from './elements/form/LoginForm'
 
 
-
-export default function GettingStarted({ onStartAuthentication }) {
-    const [open, setOpen] = useState(false);
+export default function GettingStarted() {
     const [authStatus, setAuthStatus] = useState('default');
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
+    function handleOnRegister() {
+        setAuthStatus('default');
+        setIsRegistered(true);
+        setTimeout(() => {
+            setIsRegistered(false);
+        }, 6000);
+    }
+
+    function handleOnLogin() {
+        setAuthStatus('default');
+        setIsLoggedIn(true);
+        setTimeout(() => {
+            setIsLoggedIn(false);
+        }, 6000);
+    }
 
     return (
         <main>
@@ -55,16 +63,26 @@ export default function GettingStarted({ onStartAuthentication }) {
                                 {authStatus === 'registering' && (
                                     <RegisterForm 
                                         changeAuthStatus={() => setAuthStatus('login')} 
+                                        onAuthenticate={() => handleOnRegister()}
                                     />
                                 )}
                                 {authStatus === 'login' && (
                                     <LoginForm
                                         changeAuthStatus={() => setAuthStatus('registering')} 
+                                        onAuthenticate={() => handleOnLogin()}
                                     />
                                 )}
                             </div>
                         </Modal>
                     </div>
+                </div>
+                <div>
+                    {isRegistered && (
+                        <Toast message="Sucessfully registered"/>
+                    )}
+                    {isLoggedIn && (
+                        <Toast message="Sucessfully logged in"/>
+                    )}  
                 </div>
             </section>
         </main>

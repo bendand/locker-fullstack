@@ -5,7 +5,6 @@ export function useInput(defaultValue, validationFn) {
     const [didEdit, setDidEdit] = useState(false);
 
     const valueIsValid = validationFn(enteredValue);
-    console.log('valueIsValid:', valueIsValid);
 
     function handleInputChange(event) {
         setEnteredValue(event.target.value);

@@ -8,44 +8,77 @@ import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import FormHelperText from '@mui/joy/FormHelperText';
+import { useInput } from '../../../hooks/useInput';
+import { isEmail, hasMinLength, hasMaxLength } from '../../../util/validation.js';
 
 
-export default function LoginForm({ changeAuthStatus }) {
-    const [inputValues, setInputValues] = useState({
-        email: '',
-        password: ''
+export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const {value: emailValue, 
+        handleInputChange: handleEmailChange, 
+        handleInputBlur: handleEmailBlur,
+        hasError: emailHasError
+    } = useInput('', (value) => {
+        return isEmail(value);
     });
 
-    // function that sets new values when inputs are changed
-    function handleInputChange(event) {
-        const { name, value } = event.target;
-        
-        setInputValues(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-    }
+    const {value: passwordValue,
+        handleInputChange: handlePasswordChange,
+        handleInputBlur: handlePasswordBlur,
+        hasError: passwordHasError
+    } = useInput('', (value) => {
+        return hasMinLength(value, 8) && hasMaxLength(value, 40);
+    });
 
-    // uses form data to validate password against credentials stored in json file
-    function handleSubmit(formData) {
-        const username = formData.get("username");
-        const password = Number(formData.get("password"));
+    function handleSubmit() {
+        setIsSubmitting(true);
+        const allFieldsContainValues = emailValue && passwordValue;
+        const anyValuesContainErrors = emailHasError || passwordHasError;
 
-        if (!invalidPassword) {
-            fetch('https://locker-api-uoib.onrender.com/credentials')
-            .then(res => {
-                return res.json();
-            })
-            .then(credentials => {
-                if (credentials.username !== username || credentials.password !== password) {
-
-                    setInvalidCredentials(true);
-                    return
-                }
-
-                onAuthenticate();
-            })
+        if (!allFieldsContainValues || anyValuesContainErrors) {
+            setIsSubmitting(false);
+            return;
         }
+
+        const formData = {
+            email: emailValue,
+            password: passwordValue
+        };
+
+        console.log('Submitting login form with data:', formData);
+
+        fetch('http://localhost:8080/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+            setIsSubmitting(false);
+            console.log('Login successful:', res);
+            return res.json();
+        })
+        .then(res => {
+            if (res.error) {
+                console.error('Error:', res.error);
+                // handle different error cases here
+                setIsSubmitting(false);
+                // if user already exists with the email, show a messsage, 
+                // if any other error, show 'something went wrong'
+
+                return;
+            }
+            setIsSubmitting(false);
+            console.log('Registration successful:', res);
+            changeAuthStatus();
+            onAuthenticate();
+
+        })
     }
 
     return (
@@ -70,29 +103,48 @@ export default function LoginForm({ changeAuthStatus }) {
             </ButtonGroup>
             <Stack spacing={1}>
                 <FormControl
-                    onChange={(e) => handleInputChange(e)}
                     name="email"
-                    type="email"
-                    value={inputValues.email}
+                    value={emailValue}
+                    error={emailHasError}
                     required
                 >
                     <FormLabel>Email</FormLabel>
-                    <Input/>
+                    <Input
+                        type="email"
+                        onChange={handleEmailChange}
+                        onBlur={handleEmailBlur}
+                    />
+                    {emailHasError && (
+                        <FormHelperText>
+                            <InfoOutlined />
+                            Please enter a valid email address.
+                        </FormHelperText>
+                    )}
                 </FormControl>
                 <FormControl
-                    onChange={(e) => handleInputChange(e)}
                     name="password"
                     type="password"
-                    value={inputValues.password}
+                    value={passwordValue}
+                    error={passwordHasError}
                     required
                 >
                     <FormLabel>Password</FormLabel>
-                    <Input/>
-                    <FormHelperText>Password should be at least 8 characters.</FormHelperText>
+                    <Input
+                        type="password"
+                        onChange={handlePasswordChange}
+                        onBlur={handlePasswordBlur}
+                    />
+                    {passwordHasError && (
+                        <FormHelperText>
+                            <InfoOutlined />
+                            Password must be 8-40 characters.
+                        </FormHelperText>
+                    )}
                 </FormControl>
                 <Button 
                     type="submit"
                     onClick={handleSubmit}
+                    loading={isSubmitting}
                 >
                     Submit
                 </Button> 

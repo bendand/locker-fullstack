@@ -14,6 +14,7 @@ import com.example.locker_backend.services.CustomUserDetailsService;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/")
 public class UserController {
 
@@ -40,7 +41,7 @@ public class UserController {
         }
 
         // If the user exists and the password matches, return a success response
-        return ResponseEntity.ok("Login successful"); // 200 OK
+        return ResponseEntity.status(HttpStatus.OK).body(user); // 200 OK
     }
 
     //  Endpoint to register a new user
@@ -50,11 +51,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User exists with this email");
         }
 
-        System.out.println("User first name: " + userData.getFirstName());
-        System.out.println("User last name: " + userData.getLastName());
-        System.out.println("User email: " + userData.getEmail());
-        System.out.println("User password: " + userData.getPassword());
-
         // hashing password using Pbkdf2PasswordEncoder before storing it
         Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
         String hashedPassword = encoder.encode(userData.getPassword());
@@ -62,7 +58,7 @@ public class UserController {
         User newUser = new User(userData.getFirstName(), userData.getLastName(),
                                 userData.getEmail(), hashedPassword);
 
-//        userRepository.save(newUser);
+        userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // 201 Created
     }
 

@@ -13,7 +13,8 @@ import { InfoOutlined } from '@mui/icons-material';
 import { useInput } from '../../../hooks/useInput';
 import { isEmail, isNotEmpty, hasMinLength, isEqualToOtherValue, hasMaxLength } from '../../../util/validation.js';
 
-export default function RegisterForm({ changeAuthStatus }) {
+export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const {value: firstNameValue, 
         handleInputChange: handleFirstNameChange, 
@@ -40,9 +41,9 @@ export default function RegisterForm({ changeAuthStatus }) {
     });
 
     const {value: password1Value,
-            handleInputChange: handlePassword1Change,
-            handleInputBlur: handlePassword1Blur,
-            hasError: password1HasError
+        handleInputChange: handlePassword1Change,
+        handleInputBlur: handlePassword1Blur,
+        hasError: password1HasError
     } = useInput('', (value) => {
         return hasMinLength(value, 8) && hasMaxLength(value, 40);
     });
@@ -56,34 +57,49 @@ export default function RegisterForm({ changeAuthStatus }) {
     });
 
 
-    function handleSubmit(formData) {
-        console.log('handle submit called');
-        console.log('Form submitted with values:', formData);
-        // const firstName = inputValues.first;
-        // const lastName = inputValues.last;
-        // const email = inputValues.email;
-        // const password1 = inputValues.password1;
-        // const password2 = inputValues.password2;
+    function handleSubmit() {
+        setIsSubmitting(true);
+        const allFieldsContainValues = firstNameValue && lastNameValue && emailValue && password1Value && password2Value;
+        const anyValuesContainErrors = firstNameHasError || lastNameHasError || emailHasError || password1HasError || password2HasError;
 
-        // console.log('First Name:', firstName);
-        // console.log('Last Name:', lastName);
-        // console.log('Email:', email);
-        // console.log('Password 1:', password1);
-        // console.log('Password 2:', password2);
-      
-        // fetch('https://locker-api-uoib.onrender.com/credentials')
-        // .then(res => {
-        //     return res.json();
-        // })
-        // .then(credentials => {
-        //     if (credentials.username !== username || credentials.password !== password) {
+        if (!allFieldsContainValues || anyValuesContainErrors) {
+            setIsSubmitting(false);
+            return;
+        }
 
-        //         setInvalidCredentials(true);
-        //         return
-        //     }
+        const formData = {
+            firstName: firstNameValue,
+            lastName: lastNameValue,
+            email: emailValue,
+            password: password1Value
+        };
 
-        //     onAuthenticate();
-        // })
+        fetch('http://localhost:8080/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            if (res.error) {
+                console.error('Error:', res.error);
+                // handle different error cases here
+                setIsSubmitting(false);
+                // if user already exists with the email, show a messsage, 
+                // if any other error, show 'something went wrong'
+
+                return;
+            }
+            setIsSubmitting(false);
+            console.log('Registration successful:', res);
+            changeAuthStatus();
+            onAuthenticate();
+
+        })
     }
 
 
@@ -165,11 +181,11 @@ export default function RegisterForm({ changeAuthStatus }) {
                     name="email"
                     value={emailValue}
                     error={emailHasError}
-                    type="email"
                     required
                 >
                     <FormLabel>Email</FormLabel>
                     <Input
+                        type="email"
                         onChange={handleEmailChange}
                         onBlur={handleEmailBlur}
                     />
@@ -182,8 +198,6 @@ export default function RegisterForm({ changeAuthStatus }) {
                 </FormControl>
                 <FormControl
                     name="password1"
-                    minLength={8}
-                    maxLength={40}
                     value={password1Value}
                     error={password1HasError}
                     required
@@ -205,8 +219,6 @@ export default function RegisterForm({ changeAuthStatus }) {
                     name="password2"
                     value={password2Value}
                     error={password2HasError}
-                    minLength={8}
-                    maxLength={40}
                     required
                 >
                     <FormLabel>Confirm password</FormLabel>
@@ -225,6 +237,7 @@ export default function RegisterForm({ changeAuthStatus }) {
                 <Button 
                     type="submit"
                     onClick={handleSubmit}
+                    loading={isSubmitting}
                 >
                     Submit
                 </Button> 
