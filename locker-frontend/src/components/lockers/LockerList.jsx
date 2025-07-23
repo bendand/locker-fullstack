@@ -1,10 +1,13 @@
 import LockerLabel from "./LockerLabel";
 import Header from "../Header";
 import Footer from "../Footer";
+import BreadCrumb from '../elements/breadcrumb/Breadcrumb'
 import Button from "../elements/button/Button";
 import AddLockerModal from "./AddLockerModal";
 import HomeNav from "../elements/nav/GettingStartedNav";
 import { useRef, useEffect, useState } from "react";
+import GettingStarted from "../GettingStarted";
+import GettingStartedNav from "../elements/nav/GettingStartedNav";
 
 export default function LockerList() {
     const [lockers, setLockers] = useState(null);
@@ -33,7 +36,8 @@ export default function LockerList() {
 
     return (
         <>
-            <HomeNav />
+            <GettingStartedNav user={userId} />
+            <BreadCrumb />
             <main>
                 <div className="lockerlist-container">
                     <span className="lockerlist-header">

@@ -3,9 +3,11 @@ import Footer from "./Footer";
 import GettingStartedNav from "./elements/nav/GettingStartedNav";
 
 export default function About() {
+    const userId = localStorage.getItem('userId');
+
     return (
         <>
-            <GettingStartedNav />
+            <GettingStartedNav user={userId} />
             <main>
                 <div className="about-container">
                     <div className="about-page">

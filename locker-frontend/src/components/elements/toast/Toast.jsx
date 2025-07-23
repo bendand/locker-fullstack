@@ -13,7 +13,7 @@ export default function SnackbarWithDecorators({ message }) {
                 open={open}
                 onClose={() => setOpen(false)}
                 autoHideDuration={6000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 endDecorator={
                     <Button
                         onClick={() => setOpen(false)}

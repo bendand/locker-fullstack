@@ -7,34 +7,31 @@ import Toast from './elements/toast/Toast';
 import Modal from '@mui/joy/Modal';
 import Button from '@mui/joy/Button';
 import LoginForm from './elements/form/LoginForm'
+import { toast } from 'react-toastify';
+
 
 export default function GettingStarted() {
     const [authStatus, setAuthStatus] = useState('default');
-    const [isRegistered, setIsRegistered] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
+    const userId = localStorage.getItem('userId');
 
     function handleOnRegister() {
         setAuthStatus('default');
-        setIsRegistered(true);
+        toast('Registration successful!');
         navigate('/lockerlist');
-        setTimeout(() => {
-            setIsRegistered(false);
-        }, 6000);
     }
 
     function handleOnLogin() {
         setAuthStatus('default');
-        setIsLoggedIn(true);
+        toast('Welcome back!');
         navigate('/lockerlist');
-        setTimeout(() => {
-            setIsLoggedIn(false);
-        }, 6000);
     }
 
     return (
         <>
-            <GettingStartedNav />
+            <GettingStartedNav
+                user={userId}
+            />
             <main>
                 <section className="homepage-content">
                     <div className="left-homepage">
@@ -81,14 +78,6 @@ export default function GettingStarted() {
                                 </div>
                             </Modal>
                         </div>
-                    </div>
-                    <div>
-                        {isRegistered && (
-                            <Toast message="Sucessfully registered"/>
-                        )}
-                        {isLoggedIn && (
-                            <Toast message="Sucessfully logged in"/>
-                        )}  
                     </div>
                 </section>
             </main>
