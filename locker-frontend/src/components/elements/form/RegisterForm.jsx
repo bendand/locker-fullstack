@@ -99,7 +99,10 @@ export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
                 return;
             }
 
-            onAuthenticate();
+            const userId = res.id;
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('userEmail', emailValue);
+            onAuthenticate();   
         })
     }
 

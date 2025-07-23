@@ -73,6 +73,9 @@ export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
                 return;
             }
 
+            const userId = res.id;
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('userEmail', emailValue);
             onAuthenticate();   
         })
     }

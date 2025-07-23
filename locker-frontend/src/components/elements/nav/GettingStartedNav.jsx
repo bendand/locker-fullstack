@@ -5,7 +5,7 @@ import Stack from '@mui/joy/Stack';
 
 import About from '../../About'; 
 
-export default function HomeNav() {
+export default function GettingStartedNav() {
     return (
         <header>
             <Stack
@@ -20,6 +20,8 @@ export default function HomeNav() {
                     <Link 
                         to={'/'}
                         component={RouterLink}
+                        level='title-md'
+                        variant='plain'
                         underline='none'
                     >
                         <h4>Locker</h4>

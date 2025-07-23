@@ -3,21 +3,25 @@ import Header from "../Header";
 import Footer from "../Footer";
 import Button from "../elements/button/Button";
 import AddLockerModal from "./AddLockerModal";
-import HomeNav from "../elements/nav/HomeNav";
+import HomeNav from "../elements/nav/GettingStartedNav";
 import { useRef, useEffect, useState } from "react";
 
 export default function LockerList() {
     const [lockers, setLockers] = useState(null);
-    const modal = useRef();
+    const userId = localStorage.getItem('userId');
 
-    // effect that fectches lockers in json file
+    // effect that fectches lockers from backend
     useEffect(() => {
-        fetch('https://locker-api-uoib.onrender.com/lockers')
+        fetch(`http://localhost:8080/${userId}/lockers`)
         .then(res => {
-            return res.json();
+            if (res.ok) {
+                return res.json();
+            }
+            throw new Error('Failed to fetch lockers');
         })
         .then((data) => {
             setLockers(data);
+            localStorage.setItem('lockers', JSON.stringify(data));
         }); 
 
     }, [lockers]);
@@ -25,14 +29,6 @@ export default function LockerList() {
     // which then updates the locker data
 
 
-    // start add, cancel add functions to open and close modal
-    function handleStartAddLocker() {
-        modal.current.open();
-    }
-
-    function cancelAddLocker() {
-        modal.current.close();
-    }
 
 
     return (
@@ -42,7 +38,7 @@ export default function LockerList() {
                 <div className="lockerlist-container">
                     <span className="lockerlist-header">
                         <strong>My Storage Lockers </strong> 
-                        <Button onClick={handleStartAddLocker}>Add +</Button>
+                        <Button>Add +</Button>
                     </span>
                     <ul> 
                         {lockers && lockers.map((locker, idx) => (
@@ -56,11 +52,6 @@ export default function LockerList() {
                         ))}
                     </ul>
                 </div>
-                <AddLockerModal
-                    ref={modal}
-                    onCancel={cancelAddLocker}
-                    onAdd={setLockers}
-                />
             </main>
             <Footer />
         </>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import AboutPage from "./About";
-import HomeNav from "./elements/nav/HomeNav";
+import HomeNav from "./elements/nav/GettingStartedNav";
 
 export default function Header() {
     
