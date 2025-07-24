@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../../App.jsx";
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
 import Button from '@mui/joy/Button';
@@ -13,9 +14,11 @@ import { useInput } from '../../../hooks/useInput';
 import { isEmail, hasMinLength, hasMaxLength } from '../../../util/validation.js';
 
 
-export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
+export default function LoginForm({ changeAuthStatus, handleValidate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const { setUserId } = useContext(AuthContext);
+
 
     const {value: emailValue, 
         handleInputChange: handleEmailChange, 
@@ -73,10 +76,9 @@ export default function LoginForm({ changeAuthStatus, onAuthenticate }) {
                 return;
             }
 
-            const userId = res.id;
-            localStorage.setItem('userId', userId);
-            localStorage.setItem('userEmail', emailValue);
-            onAuthenticate();   
+            sessionStorage.setItem('userId', res.id);
+            setUserId(res.id);
+            handleValidate();
         })
     }
 

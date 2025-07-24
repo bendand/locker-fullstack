@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import GettingStartedNav from "./elements/nav/GettingStartedNav";
 
 export default function About() {
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
 
     return (
         <>

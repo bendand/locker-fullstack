@@ -18,7 +18,7 @@ import { SearchOutlined, SearchRounded } from '@mui/icons-material';
 import { useState } from 'react';
 
 export default function GettingStartedNav({ user }) {
-    console.log('userId:', user);
+    // console.log('userId:', user);
     const [searchedItems, setSearchedItems] = useState(['nike shoes', 'lampshade', 'full size bedsheet set']);
 
     return (
@@ -36,24 +36,27 @@ export default function GettingStartedNav({ user }) {
                     <Link 
                         to={'/'}
                         component={RouterLink}
-                        level='title-md'
+                        level='title-lg'
                         underline='none'
                         color='black'
                     >
-                        Locker
+                        <h4>Locker</h4>
                     </Link>
                 </div>
-                <Tabs defaultValue={0}>
-                    <TabList>
-                        <Tab
-                            component={RouterLink}
-                            to={'/about'}
-                            sx={{ textTransform: 'none' }}
-                        >
+                <List
+                    role="menubar"
+                    orientation="horizontal"
+                >
+                    <ListItem
+                        role="none"
+                        component={RouterLink}
+                        to={'/about'}
+                    >
+                        <ListItemButton role='menuitem'>
                             About
-                        </Tab>
-                    </TabList>
-                </Tabs>
+                        </ListItemButton>
+                    </ListItem>
+                </List>
             </Stack>
         )}
         {user && (
@@ -87,6 +90,7 @@ export default function GettingStartedNav({ user }) {
                         <ListItem 
                             role="none"
                             component={RouterLink}
+                            to={'/lockerlist'}
                         >
                             <ListItemButton role="menuitem">
                                 My Lockers
@@ -96,6 +100,7 @@ export default function GettingStartedNav({ user }) {
                         <ListItem 
                             role="none"
                             component={RouterLink}
+                            to={'/feedback'}
                         >
                             <ListItemButton role="menuitem">
                                 Leave Feedback
@@ -118,17 +123,6 @@ export default function GettingStartedNav({ user }) {
                     direction="row"
                     spacing={2}
                 >
-                    {/* <FormControl>
-                        <Autocomplete
-                            placeholder="Find an item..."
-                            type='search'
-                            freeSolo
-                            options={searchedItems.map((item) => item)}
-                            disableClearable
-                            endDecorator
-                            size='sm'
-                        />
-                    </FormControl> */}
                     <Person fontSize='xl3' />
                 </Stack>
             </Box>

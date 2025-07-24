@@ -13,7 +13,6 @@ import { toast } from 'react-toastify';
 export default function GettingStarted() {
     const [authStatus, setAuthStatus] = useState('default');
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId');
 
     function handleOnRegister() {
         setAuthStatus('default');
@@ -29,9 +28,7 @@ export default function GettingStarted() {
 
     return (
         <>
-            <GettingStartedNav
-                user={userId}
-            />
+            <GettingStartedNav/>
             <main>
                 <section className="homepage-content">
                     <div className="left-homepage">
@@ -66,13 +63,13 @@ export default function GettingStarted() {
                                     {authStatus === 'registering' && (
                                         <RegisterForm 
                                             changeAuthStatus={() => setAuthStatus('login')} 
-                                            onAuthenticate={() => handleOnRegister()}
+                                            handleValidate={handleOnRegister}
                                         />
                                     )}
                                     {authStatus === 'login' && (
                                         <LoginForm
                                             changeAuthStatus={() => setAuthStatus('registering')} 
-                                            onAuthenticate={() => handleOnLogin()}
+                                            handleValidate={handleOnLogin}
                                         />
                                     )}
                                 </div>

@@ -1,17 +1,19 @@
-import LockerLabel from "./LockerLabel";
+import LockerLabel from "./LockerCard";
 import Header from "../Header";
 import Footer from "../Footer";
 import BreadCrumb from '../elements/breadcrumb/Breadcrumb'
 import Button from "../elements/button/Button";
 import AddLockerModal from "./AddLockerModal";
 import HomeNav from "../elements/nav/GettingStartedNav";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
+import { AuthContext } from '../../App';
 import GettingStarted from "../GettingStarted";
 import GettingStartedNav from "../elements/nav/GettingStartedNav";
 
 export default function LockerList() {
     const [lockers, setLockers] = useState(null);
-    const userId = localStorage.getItem('userId');
+    const { userId, setUserId } = useContext(AuthContext);
+    
 
     // effect that fectches lockers from backend
     useEffect(() => {
@@ -24,7 +26,7 @@ export default function LockerList() {
         })
         .then((data) => {
             setLockers(data);
-            localStorage.setItem('lockers', JSON.stringify(data));
+            sessionStorage.setItem('lockers', JSON.stringify(data));
         }); 
 
     }, [lockers]);
@@ -37,25 +39,8 @@ export default function LockerList() {
     return (
         <>
             <GettingStartedNav user={userId} />
-            <BreadCrumb />
             <main>
-                <div className="lockerlist-container">
-                    <span className="lockerlist-header">
-                        <strong>My Storage Lockers </strong> 
-                        <Button>Add +</Button>
-                    </span>
-                    <ul> 
-                        {lockers && lockers.map((locker, idx) => (
-                            <li key={idx}>
-                                <LockerLabel 
-                                    lockerId={locker.id}
-                                    lockerName={locker.lockerName} 
-                                    lockerAddress={locker.lockerAddress}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <BreadCrumb />
             </main>
             <Footer />
         </>

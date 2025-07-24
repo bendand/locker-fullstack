@@ -6,16 +6,22 @@ import { KeyboardArrowLeft } from '@mui/icons-material';
 export default function Breadcrumb() {
     return (
         <Breadcrumbs 
-            separator={<KeyboardArrowLeft />} 
-            aria-label="breadcrumbs"
+            // separator={<KeyboardArrowLeft />} 
             size="lg"
+              sx={{
+                "--Breadcrumbs-gap": "10px"
+            }}
         >
-            <Typography>Amy</Typography>
-            {['Lockers', 'Containers', 'Items'].map((string) => (
-                <Link key={string} color="neutral" href="#separators">
-                    {string}
-                </Link>
-            ))}
+            <Link color="neutral" href="#separators">
+                Lockers
+            </Link>
+            <Link color="neutral" href="#separators">
+                Containers
+            </Link>
+            <Link color="neutral" href="#separators">
+                Items
+            </Link>
+            <br />
         </Breadcrumbs>
     );
 }

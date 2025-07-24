@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../App.jsx";
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
 import Button from '@mui/joy/Button';
@@ -13,9 +14,10 @@ import { InfoOutlined } from '@mui/icons-material';
 import { useInput } from '../../../hooks/useInput';
 import { isEmail, isNotEmpty, hasMinLength, isEqualToOtherValue, hasMaxLength } from '../../../util/validation.js';
 
-export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
+export default function RegisterForm({ changeAuthStatus, handleValidate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const { setUserId } = useContext(AuthContext);
 
     const {value: firstNameValue, 
         handleInputChange: handleFirstNameChange, 
@@ -99,10 +101,9 @@ export default function RegisterForm({ changeAuthStatus, onAuthenticate }) {
                 return;
             }
 
-            const userId = res.id;
-            localStorage.setItem('userId', userId);
-            localStorage.setItem('userEmail', emailValue);
-            onAuthenticate();   
+            sessionStorage.setItem('userId', res.id);
+            setUserId(res.id); 
+            handleValidate(); 
         })
     }
 
