@@ -18,11 +18,14 @@ public class Locker {
     @JsonManagedReference
     private User user;
 
-    @Column(name="location")
-    private String location;
+    @Column(name="address")
+    private String address;
 
     @Column(name="name")
     private String name;
+
+    @Column(name="details")
+    private String details = "";
 
     @OneToMany(mappedBy="locker", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -40,10 +43,18 @@ public class Locker {
         this.user = user;
     }
 
-    public Locker(String name, User user, String location) {
+    public Locker(String name, User user, String address, String details) {
         this.name = name;
         this.user = user;
-        this.location = location;
+        this.address = address;
+        this.details = details;
+    }
+
+    public Locker(String name, User user, String address) {
+        this.name = name;
+        this.user = user;
+        this.address = address;
+        this.details = "";
     }
 
 //    public Locker(int id, String name, int userId) {
@@ -67,14 +78,6 @@ public class Locker {
 
     public int getId() { return id; }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public List<Container> getContainers() { return containers; }
 
     public void addContainer(Container container) {
@@ -85,5 +88,13 @@ public class Locker {
     public void addItem(Item newItem) {
         items.add(newItem);
         newItem.setLocker(this); // Ensure the item knows its locker
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

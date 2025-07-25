@@ -2,7 +2,6 @@ import Button from '@mui/joy/Button';
 import { Router, Link as RouterLink } from 'react-router';
 import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
-
 import About from '../../About'; 
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
@@ -15,15 +14,18 @@ import Autocomplete from '@mui/joy/Autocomplete';
 import Person from '@mui/icons-material/Person';
 import Search from '@mui/icons-material/Person';
 import { SearchOutlined, SearchRounded } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AuthContext } from '../../../App';
 
-export default function GettingStartedNav({ user }) {
-    // console.log('userId:', user);
+export default function GettingStartedNav() {
     const [searchedItems, setSearchedItems] = useState(['nike shoes', 'lampshade', 'full size bedsheet set']);
+    const { userId } = useContext(AuthContext);
+    console.log(userId);
+    
 
     return (
         <header>
-        {!user && (
+        {!userId && (
             <Stack
                 direction="row"
                 spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -59,7 +61,7 @@ export default function GettingStartedNav({ user }) {
                 </List>
             </Stack>
         )}
-        {user && (
+        {userId && (
             <Box
                 sx={{
                     display: 'flex',

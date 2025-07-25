@@ -19,7 +19,12 @@ function App() {
       <CssVarsProvider>
         <AuthContext.Provider value={{ userId, setUserId }}>
           <Routes>
-            <Route index element={<GettingStarted />} />
+            {!userId && (
+              <Route path="/" element={<GettingStarted />} />
+            )}
+            {userId && (
+              <Route path="/" element={<LockerList />} />
+            )}
             <Route path="about" element={<About />} />
             <Route path="feedback" element={<Feedback />} />
             <Route path="lockerlist" element={<LockerList />} />

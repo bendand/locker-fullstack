@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/{userId}/lockers")
 public class LockerController {
 
@@ -30,9 +30,10 @@ public class LockerController {
     // Endpoint is http://localhost:8080/{userId}/lockers
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllLockersByUserId(@PathVariable(value="userId") int userId) {
-        List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
         System.out.println("get user lockers endpoint hit");
-        System.out.println(allUsersLockers);
+        System.out.println("user id: " + userId);
+        List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
+        System.out.println("all users lockers: " + allUsersLockers);
         if (allUsersLockers.isEmpty()) {
             String response = "No lockers found for user with ID of " + userId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
@@ -66,7 +67,7 @@ public class LockerController {
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
         }
 
-        Locker newLocker = new Locker(lockerData.getName(), user, lockerData.getLocation());
+        Locker newLocker = new Locker(lockerData.getName(), user, lockerData.getAddress());
         lockerRepository.save(newLocker);
 
         return new ResponseEntity<>(newLocker, HttpStatus.CREATED); // 201
@@ -100,7 +101,7 @@ public class LockerController {
             }
 
             currentLocker.setName(updatedLockerData.getName());
-            currentLocker.setLocation(updatedLockerData.getLocation());
+            currentLocker.setAddress(updatedLockerData.getAddress());
             lockerRepository.save(currentLocker);
 
             return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200

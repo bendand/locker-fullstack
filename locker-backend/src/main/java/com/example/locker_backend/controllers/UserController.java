@@ -14,7 +14,7 @@ import com.example.locker_backend.services.CustomUserDetailsService;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/")
 public class UserController {
 
@@ -34,7 +34,6 @@ public class UserController {
         if (user == null || !encoder.matches(userData.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid credentials"); // 401 Unauthorized
         } else {
-            System.out.println("User found and password matches password in database");
             // If the password matches, set the user details in the custom user details service
             // customUserDetailsService.setUserDetails(user);
             // If the user exists and the password matches, return a success response

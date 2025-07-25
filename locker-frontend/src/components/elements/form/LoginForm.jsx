@@ -36,56 +36,56 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
         return hasMinLength(value, 8) && hasMaxLength(value, 40);
     });
 
-    function handleSubmit() {
+    async function handleSubmitLogin() {
         setIsSubmitting(true);
-        const allFieldsContainValues = emailValue && passwordValue;
-        const anyValuesContainErrors = emailHasError || passwordHasError;
 
-        if (!allFieldsContainValues || anyValuesContainErrors) {
+        const anyValuesContainErrors = emailHasError || passwordHasError;
+        if (anyValuesContainErrors) {
             setIsSubmitting(false);
             return;
         }
+
+        let response;
+        let userData;
 
         const formData = {
             email: emailValue,
             password: passwordValue
         };
 
-        console.log('Submitting login form with data:', formData);
+        try {
+            response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }, 
+                body: JSON.stringify(formData)
+            })
 
-        fetch('http://localhost:8080/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            } else if (res.status === 401) {
-                return 'Credentials are invalid.';
-            } else {        
-                return 'Something went wrong. Please try again later.';
-            }
-        })
-        .then(res => {
-            setIsSubmitting(false);
-            if (typeof res === 'string') {
-                setErrorMessage(res);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    setErrorMessage("Invalid credentials")
+                } else {
+                    setErrorMessage("Bad request, try again later");
+                }
+                setIsSubmitting(false);
                 return;
             }
 
-            sessionStorage.setItem('userId', res.id);
-            setUserId(res.id);
+            userData = await response.json();
+            setUserId(userData.id);
             handleValidate();
-        })
+        } catch (error) {
+            setErrorMessage(error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
         <Sheet
             variant="outlined"
-            sx={{ maxWidth: 350, borderRadius: 'md', p: 3, boxShadow: 'lg' }}
+            sx={{ maxWidth: 350, borderRadius: 'md', p: 3, boxShadow: 'lg', justifyContent: 'center' }}
         >
         <ModalClose variant="plain" sx={{ m: 1 }} />
             <ButtonGroup 
@@ -112,13 +112,14 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
                     name="email"
                     value={emailValue}
                     error={emailHasError}
-                    required
                 >
                     <FormLabel>Email</FormLabel>
                     <Input
                         type="email"
                         onChange={handleEmailChange}
                         onBlur={handleEmailBlur}
+                        required
+
                     />
                     {emailHasError && (
                         <FormHelperText>
@@ -132,13 +133,13 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
                     type="password"
                     value={passwordValue}
                     error={passwordHasError}
-                    required
                 >
                     <FormLabel>Password</FormLabel>
                     <Input
                         type="password"
                         onChange={handlePasswordChange}
                         onBlur={handlePasswordBlur}
+                        required
                     />
                     {passwordHasError && (
                         <FormHelperText>
@@ -149,7 +150,7 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
                 </FormControl>
                 <Button 
                     type="submit"
-                    onClick={handleSubmit}
+                    onClick={handleSubmitLogin}
                     loading={isSubmitting}
                 >
                     Submit

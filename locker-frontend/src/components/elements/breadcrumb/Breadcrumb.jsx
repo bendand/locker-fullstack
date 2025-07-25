@@ -9,16 +9,18 @@ export default function Breadcrumb() {
             // separator={<KeyboardArrowLeft />} 
             size="lg"
               sx={{
-                "--Breadcrumbs-gap": "10px"
+                "--Breadcrumbs-gap": "10px",
+                alignContent: "center",
+                justifyContent: "center"
             }}
         >
-            <Link color="neutral" href="#separators">
+            <Link color="neutral">
                 Lockers
             </Link>
-            <Link color="neutral" href="#separators">
+            <Link color="neutral">
                 Containers
             </Link>
-            <Link color="neutral" href="#separators">
+            <Link color="neutral">
                 Items
             </Link>
             <br />

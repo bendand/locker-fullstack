@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import * as React from 'react';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Link from '@mui/joy/Link';
@@ -6,6 +6,16 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Chip from '@mui/joy/Chip';
 import Typography from '@mui/joy/Typography';
+import Button from '@mui/joy/Button';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import Stack from '@mui/joy/Stack';
+import Add from '@mui/icons-material/Add';
 
 export default function LockerCard({ name, location, id }) {
 

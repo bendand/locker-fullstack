@@ -60,15 +60,18 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
     });
 
 
-    function handleSubmit() {
+    async function handleSubmitRegister() {
         setIsSubmitting(true);
-        const allFieldsContainValues = firstNameValue && lastNameValue && emailValue && password1Value && password2Value;
+
         const anyValuesContainErrors = firstNameHasError || lastNameHasError || emailHasError || password1HasError || password2HasError;
 
-        if (!allFieldsContainValues || anyValuesContainErrors) {
+        if (anyValuesContainErrors) {
             setIsSubmitting(false);
             return;
         }
+
+        let response;
+        let userData;
 
         const formData = {
             firstName: firstNameValue,
@@ -77,36 +80,34 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
             password: password1Value
         };
 
-        fetch('http://localhost:8080/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            } else if (res.status === 409) {
-                return 'User already exists with the email: ' + emailValue;
-            } else {
-                return 'Something went wrong. Please try again later.';
-            }
-        })
-        .then(res => {
-            setIsSubmitting(false);
+        try {
+            response = await fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }, 
+                body: JSON.stringify(formData)
+            })
 
-            if (typeof res === 'string') {
-                setErrorMessage(res);
+            if (!response.ok) {
+                if (response.status === 409) {
+                    setErrorMessage("User already exists with the email " + formData.email);
+                } else {
+                    setErrorMessage("Bad request, try again later");
+                }
+                setIsSubmitting(false);
                 return;
             }
 
-            sessionStorage.setItem('userId', res.id);
-            setUserId(res.id); 
-            handleValidate(); 
-        })
+            userData = await response.json();
+            setUserId(userData.id);
+            handleValidate();
+        } catch (error) {
+            setErrorMessage(error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     }
-
 
 
     return (
@@ -150,12 +151,12 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                         name="first"
                         value={firstNameValue}
                         error={firstNameHasError}
-                        required 
                     >
                         <FormLabel>First name</FormLabel>
                         <Input
                             onChange={handleFirstNameChange}
                             onBlur={handleFirstNameBlur}
+                            required 
                         />
                         {firstNameHasError && (
                             <FormHelperText>
@@ -172,12 +173,12 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                         name="last"
                         value={lastNameValue}
                         error={lastNameHasError}
-                        required
                     >
                         <FormLabel>Last name</FormLabel>
                         <Input
                             onChange={handleLastNameChange}
                             onBlur={handleLastNameBlur}
+                            required 
                         />
                         {lastNameHasError && (
                             <FormHelperText>
@@ -191,13 +192,13 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                     name="email"
                     value={emailValue}
                     error={emailHasError}
-                    required
                 >
                     <FormLabel>Email</FormLabel>
                     <Input
                         type="email"
                         onChange={handleEmailChange}
                         onBlur={handleEmailBlur}
+                        required
                     />
                     {emailHasError && (
                         <FormHelperText>
@@ -210,13 +211,13 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                     name="password1"
                     value={password1Value}
                     error={password1HasError}
-                    required
                 >
                     <FormLabel>Enter password</FormLabel>
                     <Input
                         type="password"
                         onChange={handlePassword1Change}
                         onBlur={handlePassword1Blur}
+                        required
                     />
                     {password1HasError && (
                         <FormHelperText>
@@ -229,13 +230,13 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                     name="password2"
                     value={password2Value}
                     error={password2HasError}
-                    required
                 >
                     <FormLabel>Confirm password</FormLabel>
                     <Input
                         type="password"
                         onChange={handlePassword2Change}
                         onBlur={handlePassword2Blur}
+                        required
                     />
                     {password2HasError && (
                         <FormHelperText>
@@ -246,7 +247,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                 </FormControl>
                 <Button 
                     type="submit"
-                    onClick={handleSubmit}
+                    onClick={handleSubmitRegister}
                     loading={isSubmitting}
                 >
                     Submit
