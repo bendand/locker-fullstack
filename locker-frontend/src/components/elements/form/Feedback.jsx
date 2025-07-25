@@ -1,7 +1,6 @@
 import GettingStartedNav from "../nav/GettingStartedNav";
 
 export default function Feedback({ user }) {
-    const userId = sessionStorage.getItem(userId);
 
     return (
         <>

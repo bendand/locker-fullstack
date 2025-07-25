@@ -1,5 +1,6 @@
 import LockerCard from "./LockerCard";
 import Footer from "../Footer";
+import Locker from '../../classes/Locker'
 import BreadCrumb from '../elements/breadcrumb/Breadcrumb';
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
@@ -14,22 +15,22 @@ import Modal from '@mui/joy/Modal';
 import Add from '@mui/icons-material/Add';
 
 export default function LockerList() {
-    const [lockers, setLockers] = useState([]);
-    const [noLockersFound, setNoLockersFound] = useState(false);
+    const [lockers, setLockers] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
     const [open, setOpen] = useState(false);
-    const { userId } = useContext(AuthContext);
+    // const { userId } = useContext(AuthContext);
+    const userId = sessionStorage.getItem("userId");
     const navigate = useNavigate();
 
+    const userHasLockers = lockers && lockers.length > 0;
+    
     
     // effect that calls function that fetches locker from backend and checks for valid user credential
     useEffect(() => {
-        if (userId === null) {
-            navigate('/');
-        }
-
+        setIsFetching(true);
         handleFetchLockers();
-    }, [lockers, userId]);
+        setIsFetching(false);
+    }, [lockers]);
     // dependency above is used to run the effect when locker is added by add locker modal
     // which then updates the locker data
 
@@ -38,21 +39,23 @@ export default function LockerList() {
 
         let lockers = [];
         let response;
-        let data;
+        let lockerData;
 
         try {
             response = await fetch(`http://localhost:8080/${userId}/lockers`);
             
             if (response.status === 404 || response.status === 400) {
-                setNoLockersFound(true);
                 return;
             }
             
             lockerData = await response.json();
             lockerData.forEach(locker => {
                 let newLocker = new Locker(locker.id, locker.name, locker.details);
+                console.log('new locker being pushed to lockerlist, ' + newLocker);
                 lockers.push(newLocker);
             });
+
+            setLockers(lockers);
         } catch (error) {
             console.error(error.message);
         } finally {
@@ -104,12 +107,16 @@ export default function LockerList() {
                             </Button>
                             <Modal open={open} onClose={() => setOpen(false)}>
                                 <AddLockerForm 
-                                    onSubmission={setLockers}
+                                    onSubmission={{
+                                        setLockers: () => setLockers(),
+                                        setOpen: () => setOpen(false)
+                                    }}
+                                    userId={userId}
                                 />
                             </Modal>
                         </div>
                     </Stack>
-                    {noLockersFound && (
+                    {!userHasLockers && (
                         <Stack
                             sx={{ alignContent: "center" }}
                         >
@@ -118,6 +125,7 @@ export default function LockerList() {
                             </div>
                         </Stack>
                     )}
+
                 </Box>
             </main>
             <Footer />

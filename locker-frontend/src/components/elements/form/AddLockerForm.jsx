@@ -1,3 +1,4 @@
+import { useState, useContext } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
@@ -9,7 +10,9 @@ import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 
 
-export default function AddLockerForm({ onSubmission }) {
+export default function AddLockerForm({ userId, onSubmission }) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [inputValues, setInputValues] = useState({
         name: '',
         address: '',
@@ -19,6 +22,8 @@ export default function AddLockerForm({ onSubmission }) {
     // function that sets new values when inputs are changed
     function handleInputChange(event) {
         const { name, value } = event.target;
+
+        if (name === 'details' && value.length > 200) return;
         
         setInputValues(prevData => ({
             ...prevData,
@@ -26,17 +31,59 @@ export default function AddLockerForm({ onSubmission }) {
         }));
     }
 
+    async function handleSubmitLocker() {
+        setIsSubmitting(true);
+
+        let response;
+        let lockerData;
+
+        const formData = {
+            name: inputValues.name,
+            address: inputValues.address,
+            details: inputValues.details
+        };
+
+        console.log(formData);
+
+        try {
+            response = await fetch(`http://localhost:8080/${userId}/lockers/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }, 
+                body: JSON.stringify(formData)
+            })
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    setErrorMessage("User not found")
+                } else {
+                    setErrorMessage("Bad request, try again later");
+                }
+                setIsSubmitting(false);
+                return;
+            }
+
+            lockerData = await response.json();
+            onSubmission.setOpen();
+            onSubmission.setLockers();
+        } catch (error) {
+            setErrorMessage(error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+
 
     return (
         <ModalDialog>
             <DialogTitle>Add a locker</DialogTitle>
-            <form
-                onSubmit={(event) => {
-                event.preventDefault();
-                setOpen(false);
-                }}
-            >
+            <form>
                 <Stack spacing={2}>
+                    {errorMessage && (
+                        <p>{errorMessage}</p>
+                    )}
                     <FormControl>
                         <FormLabel>Name</FormLabel>
                         <Input 
@@ -56,11 +103,10 @@ export default function AddLockerForm({ onSubmission }) {
                             onChange={handleInputChange}
                         />
                     </FormControl>
-                    <FormControl>
-                        <FormLabel>Details (optional)</FormLabel>
+                    <FormControl>                
+                        <FormLabel>Details (optional, max 200 characters)</FormLabel>
                         <Textarea
                             placeholder="Details about location, access codes, special instructions, etc..."
-                            maxLength={255}
                             minRows={2}
                             maxRows={4}
                             name='details'
@@ -70,6 +116,8 @@ export default function AddLockerForm({ onSubmission }) {
                     </FormControl>
                     <Button 
                         type="submit"
+                        onClick={handleSubmitLocker}
+                        loading={isSubmitting}
                     >
                         Submit
                     </Button>

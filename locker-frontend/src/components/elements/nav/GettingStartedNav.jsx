@@ -19,8 +19,8 @@ import { AuthContext } from '../../../App';
 
 export default function GettingStartedNav() {
     const [searchedItems, setSearchedItems] = useState(['nike shoes', 'lampshade', 'full size bedsheet set']);
-    const { userId } = useContext(AuthContext);
-    console.log(userId);
+    // const { userId } = useContext(AuthContext);
+    const userId = sessionStorage.getItem("userId");
     
 
     return (

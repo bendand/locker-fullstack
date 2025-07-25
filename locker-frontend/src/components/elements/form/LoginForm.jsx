@@ -73,6 +73,7 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
             }
 
             userData = await response.json();
+            sessionStorage.setItem("userId", userData.id);
             setUserId(userData.id);
             handleValidate();
         } catch (error) {

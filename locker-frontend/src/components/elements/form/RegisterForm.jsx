@@ -100,6 +100,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
             }
 
             userData = await response.json();
+            sessionStorage.setItem("userId", userData.id);
             setUserId(userData.id);
             handleValidate();
         } catch (error) {
