@@ -30,6 +30,13 @@ export default function LockerDetails() {
     // variable used to display conditional content
     const lockerHasContainers = containers && containers.length > 0;
 
+    function handleSubmission() {
+        toast('Container added');
+        setIsFetching(true);
+        handleFetchContainers();
+        setIsFetching(false);
+    }
+
     // effect that fetches containers associated with the locker ID
     useEffect(() => {
         setIsFetching(true);
@@ -53,7 +60,6 @@ export default function LockerDetails() {
             lockerData = await response.json();
             lockerData.forEach(container => {
                 let newContainer = new Container(container.id, container.name, container.description);
-                console.log('here is a container JS object thats being pushed to containers: ', newContainer);
                 containers.push(newContainer);
             });
 
@@ -63,7 +69,7 @@ export default function LockerDetails() {
         }
     }
 
-    function handleViewContainerrDetails(containerId, containerName) {
+    function handleViewContainerDetails(containerId, containerName) {
         navigate(`/lockerlist/${lockerId}/${lockerName}/${containerId}/${containerName}`);
     }
 
@@ -83,8 +89,8 @@ export default function LockerDetails() {
                 >
                     <div>
                         <Breadcrumb 
-                            lockersViewed={true}
-                            containersViewed={false}
+                            lockersViewed={false}
+                            containersViewed={true}
                             itemsViewed={false}
                         />
                     </div>
@@ -96,11 +102,9 @@ export default function LockerDetails() {
                             alignContent: "center"
                         }}
                     >
-                        {lockerName && (
-                            <div>
-                                <h1>Containers in {lockerName}</h1>
-                            </div>
-                        )}
+                        <div>
+                            <h1>Containers in {lockerName}</h1>
+                        </div>
                         <div>
                             <Button
                                 variant="outlined"
@@ -116,7 +120,7 @@ export default function LockerDetails() {
                                     userId={userId}
                                     lockerId={lockerId}
                                     onSubmission={{
-                                        fetchUpdatedContainers: () => handleFetchContainers(),
+                                        handleSubmission: () => handleSubmission(),
                                         setOpen: () => setOpen(false)
                                     }}
                                 />
@@ -150,7 +154,7 @@ export default function LockerDetails() {
                                     <ContainerCard
                                         locker
                                         container={container}
-                                        onClick={() => handleViewLockerDetails(container.id)}
+                                        onClick={() => handleViewContainerDetails(container.id, container.name)}
                                     />
                                 </Grid>
                             ))}

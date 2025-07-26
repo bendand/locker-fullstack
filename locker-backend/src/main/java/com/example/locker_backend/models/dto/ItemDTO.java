@@ -7,7 +7,6 @@ import com.example.locker_backend.models.User;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 
 public class ItemDTO {
-    private int itemId;
     private String name;
     private String description;
     private int quantity = 1;
@@ -15,22 +14,13 @@ public class ItemDTO {
     private int containerId;
     private int userId;
 
-    public ItemDTO (int itemId, String name, String description, int quantity, int lockerId, int containerId, int userId) {
-        this.itemId = itemId;
+    public ItemDTO (String name, String description, int quantity, int lockerId, int containerId, int userId) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
         this.lockerId = lockerId;
         this.containerId = containerId;
         this.userId = userId;
-    }
-
-    public int getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
     }
 
     public String getName() {

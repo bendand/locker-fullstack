@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/{userId}/{lockerId}/{containerId}/items")
 public class ItemController {
 
@@ -72,6 +72,7 @@ public class ItemController {
     // Endpoint http://localhost:8080/{userId}/{lockerId}/{containerId}/items/add
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addItem(@RequestBody ItemDTO itemData) {
+        System.out.println("add item endpoint hit");
         // Validate that the containerId, lockerId, and userId are valid
         if (itemData.getContainerId() <= 0 || itemData.getLockerId() <= 0 || itemData.getUserId() <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
@@ -92,7 +93,8 @@ public class ItemController {
         Item newItem = new Item(itemData.getName(), itemData.getQuantity(), currentUser,
                 currentLocker, currentContainer);
 
-        itemRepository.save(newItem);
+        System.out.println("new item to be added: " + newItem);
+//        itemRepository.save(newItem);
 
         return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
     }

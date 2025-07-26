@@ -5,6 +5,7 @@ import Input from '@mui/joy/Input';
 import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
+import { toast } from 'react-toastify';
 import { Textarea } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
@@ -61,6 +62,8 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
             containerData = await response.json();
             console.log('heres the container data received after container submission: ' + containerData);
             onSubmission.setOpen();
+            // not working
+            toast('Container added');
             onSubmission.fetchUpdatedContainers();
         } catch (error) {
             setErrorMessage(error.message);
