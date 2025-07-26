@@ -61,8 +61,8 @@ export default function LockerList() {
         }
     }
 
-    function handleViewLockerDetails(lockerId) {
-        navigate(`/lockerlist/${lockerId}`);
+    function handleViewLockerDetails(lockerId, lockerName) {
+        navigate(`/lockerlist/${lockerId}/${lockerName}`);
     }
 
     return (
@@ -143,7 +143,7 @@ export default function LockerList() {
                                 <Grid xs={4} key={locker.id}>
                                     <LockerCard 
                                         locker={locker}
-                                        onClick={() => handleViewLockerDetails(locker.id)}
+                                        onClick={() => handleViewLockerDetails(locker.id, locker.name)}
                                     />
                                 </Grid>
                             ))}

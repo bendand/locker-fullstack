@@ -31,7 +31,6 @@ public class LockerController {
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllLockersByUserId(@PathVariable(value="userId") int userId) {
         List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
-        System.out.println("all users lockers: " + allUsersLockers);
         if (allUsersLockers.isEmpty()) {
             String response = "No lockers found for user with ID of " + userId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404

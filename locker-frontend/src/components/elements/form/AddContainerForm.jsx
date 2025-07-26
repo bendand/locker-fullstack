@@ -38,10 +38,10 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
 
         const formData = {
             name: inputValues.name,
-            description: inputValues.description
+            description: inputValues.description,
+            userId: userId,
+            lockerId: lockerId
         };
-
-        console.log(formData);
 
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers/add`, {
@@ -53,16 +53,13 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
             })
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    setErrorMessage("User not found")
-                } else {
-                    setErrorMessage("Bad request, try again later");
-                }
+                setErrorMessage("Bad request, try again later");
                 setIsSubmitting(false);
                 return;
             }
 
             containerData = await response.json();
+            console.log('heres the container data received after container submission: ' + containerData);
             onSubmission.setOpen();
             onSubmission.fetchUpdatedContainers();
         } catch (error) {
@@ -98,7 +95,7 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
                             placeholder="Details about container, its appearance, location in locker, etc."
                             minRows={2}
                             maxRows={4}
-                            name='details'
+                            name='description'
                             value={inputValues.description}
                             onChange={handleInputChange}
                         />

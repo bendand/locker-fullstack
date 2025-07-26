@@ -30,7 +30,7 @@ export default function LockerCard({ locker, onClick }) {
         >
             <AspectRatio ratio="1" sx={{ width: 90 }}>
                 <img
-                    src="george-pagan-iii.jpg"
+                    src="/george-pagan-iii.jpg"
                     loading="lazy"
                     alt=""
                 />

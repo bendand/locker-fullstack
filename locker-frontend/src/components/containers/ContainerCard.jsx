@@ -30,7 +30,7 @@ export default function ContainerCard({ container, onClick }) {
         >
             <AspectRatio ratio="1" sx={{ width: 90 }}>
                 <img
-                    src="george-pagan-iii.jpg"
+                    src="/attic-boxes.jpg"
                     loading="lazy"
                     alt=""
                 />

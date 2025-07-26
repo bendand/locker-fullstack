@@ -1,7 +1,9 @@
 import { useParams, useNavigate, Link } from "react-router";
+import { useLocation } from 'react-router-dom';
 import Footer from "../Footer";
 import { useEffect, useState, useContext } from "react";
 import Container from '../../classes/Container'
+import ContainerCard from "../containers/ContainerCard";
 import { toast } from 'react-toastify';
 import GettingStartedNav from "../elements/nav/GettingStartedNav";
 import Breadcrumb from "../elements/breadcrumb/Breadcrumb";
@@ -9,6 +11,7 @@ import Button from '@mui/joy/Button';
 import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 import CircularProgress from '@mui/joy/CircularProgress';
+import AddContainerForm from "../elements/form/AddContainerForm";
 import Grid from '@mui/joy/Grid';
 
 import Modal from '@mui/joy/Modal';
@@ -16,14 +19,13 @@ import Add from '@mui/icons-material/Add';
 
 export default function LockerDetails() {
     const navigate = useNavigate();
-    const [containers, setContainers] = useState(null);
-    const [lockerName, setLockerName] = useState(null);
-    const [isFetching, setIsFetching] = useState(null);
-    const { lockerId } = useParams();
-    const userId = sessionStorage.getItem('userId');
+    const { lockerId, lockerName } = useParams();
 
-    console.log('locker id: ' + lockerId);
-    console.log('user id: ' + userId);
+    const [containers, setContainers] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [isFetching, setIsFetching] = useState(null);
+
+    const userId = sessionStorage.getItem('userId');
 
     // variable used to display conditional content
     const lockerHasContainers = containers && containers.length > 0;
@@ -44,28 +46,25 @@ export default function LockerDetails() {
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers`);
             
-            if (response.status === 404 || response.status === 400) {
+            if (response.status === 400) {
                 return;
             }
             
             lockerData = await response.json();
-            lockerData.containers.forEach(container => {
+            lockerData.forEach(container => {
                 let newContainer = new Container(container.id, container.name, container.description);
                 console.log('here is a container JS object thats being pushed to containers: ', newContainer);
                 containers.push(newContainer);
             });
 
             setContainers(containers);
-            console.log('locker data: ', lockerData);
-            // setLockerName(lockerData)
         } catch (error) {
             console.error(error.message);
         }
     }
 
-    function handleViewContainerrDetails(containerId) {
-        console.log(containerId);
-        navigate(`/lockerlist/${lockerId}/${containerId}`);
+    function handleViewContainerrDetails(containerId, containerName) {
+        navigate(`/lockerlist/${lockerId}/${lockerName}/${containerId}/${containerName}`);
     }
 
 
@@ -114,11 +113,12 @@ export default function LockerDetails() {
                             </Button>
                             <Modal open={open} onClose={() => setOpen(false)}>
                                 <AddContainerForm 
+                                    userId={userId}
+                                    lockerId={lockerId}
                                     onSubmission={{
                                         fetchUpdatedContainers: () => handleFetchContainers(),
                                         setOpen: () => setOpen(false)
                                     }}
-                                    userId={userId}
                                 />
                             </Modal>
                         </div>
@@ -128,7 +128,7 @@ export default function LockerDetails() {
                             sx={{ alignContent: "center" }}
                         >
                             <div>
-                                <h3><em>There are no lockers to display</em></h3>
+                                <h3><em>There are no containers to display</em></h3>
                             </div>
                         </Stack>
                     )}
@@ -148,7 +148,8 @@ export default function LockerDetails() {
                             {containers.map((container, index) => (
                                 <Grid xs={4} key={container.id}>
                                     <ContainerCard
-                                        locker={container}
+                                        locker
+                                        container={container}
                                         onClick={() => handleViewLockerDetails(container.id)}
                                     />
                                 </Grid>

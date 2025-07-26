@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/{userId}/{lockerId}/containers")
 public class ContainerController {
 
@@ -30,6 +30,7 @@ public class ContainerController {
     // Endpoint is http://localhost:8080/{userId}/{lockerId}/containers
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllContainersByLockerId(@PathVariable(value="lockerId") int lockerId) {
+        System.out.println("get all containers by locker id endpoint hit");
         List<Container> allLockersContainers = containerRepository.findAllByLockerId(lockerId);
         System.out.println(allLockersContainers);
         if (allLockersContainers.isEmpty()) {
@@ -64,11 +65,14 @@ public class ContainerController {
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
         }
 
+        System.out.println("add container endpoint hit");
+
         Locker locker = lockerRepository.findById(containerData.getLockerId()).orElse(null);
         User user = locker != null ? locker.getUser() : null;
 
         // Create a new container and save it to the repository
         Container newContainer = new Container(containerData.getName(), containerData.getDescription(), user, locker);
+        System.out.println("new container being saved: " + newContainer);
         containerRepository.save(newContainer);
 
         // Add the new container to the locker

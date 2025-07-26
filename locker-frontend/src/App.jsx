@@ -28,7 +28,7 @@ function App() {
             <Route path="about" element={<About />} />
             <Route path="feedback" element={<Feedback />} />
             <Route path="lockerlist" element={<LockerList />} />
-            <Route path="lockerlist/:lockerId" element={<LockerDetails />} />
+            <Route path="lockerlist/:lockerId/:lockerName" element={<LockerDetails />} />
             <Route path="lockerlist/:lockerId/:containerId" element={<ContainerDetails />} />
           </Routes> 
           <ToastContainer />
