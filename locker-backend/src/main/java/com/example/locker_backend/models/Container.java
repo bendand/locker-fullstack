@@ -37,11 +37,6 @@ public class Container {
         this.user = user;
     }
 
-    public Container(String name, User user, Locker locker) {
-        this.name = name;
-        this.user = user;
-        this.locker = locker;
-    }
 
     public Container(String name, String description, User user, Locker locker) {
         this.name = name;

@@ -30,8 +30,6 @@ public class LockerController {
     // Endpoint is http://localhost:8080/{userId}/lockers
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllLockersByUserId(@PathVariable(value="userId") int userId) {
-        System.out.println("get user lockers endpoint hit");
-        System.out.println("user id: " + userId);
         List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
         System.out.println("all users lockers: " + allUsersLockers);
         if (allUsersLockers.isEmpty()) {
@@ -61,10 +59,6 @@ public class LockerController {
     // Endpoint http://localhost:8080/{userId}/lockers/add
     @PostMapping("/add")
     public ResponseEntity<?> addLocker(@PathVariable(value="userId") int userId, @RequestBody LockerDTO lockerData) {
-        System.out.println("locker name: " + lockerData.getName());
-        System.out.println("locker address: " + lockerData.getAddress());
-        System.out.println("locker details: " + lockerData.getDetails());
-
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             String response = "User with ID of " + userId + " not found.";
@@ -72,8 +66,7 @@ public class LockerController {
         }
 
         Locker newLocker = new Locker(lockerData.getName(), user, lockerData.getAddress(), lockerData.getDetails());
-        System.out.println(newLocker);
-//        lockerRepository.save(newLocker);
+        lockerRepository.save(newLocker);
 
         return new ResponseEntity<>(newLocker, HttpStatus.CREATED); // 201
     }

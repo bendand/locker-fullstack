@@ -29,8 +29,9 @@ public class ContainerController {
     // GET the full list of containers for a specific locker
     // Endpoint is http://localhost:8080/{userId}/{lockerId}/containers
     @GetMapping(value="", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllContainersByLockerId(@PathVariable(value="userId") Long userId, @PathVariable(value="lockerId") int lockerId) {
+    public ResponseEntity<?> getAllContainersByLockerId(@PathVariable(value="lockerId") int lockerId) {
         List<Container> allLockersContainers = containerRepository.findAllByLockerId(lockerId);
+        System.out.println(allLockersContainers);
         if (allLockersContainers.isEmpty()) {
             String response = "No containers found for locker with locker ID of " + lockerId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404

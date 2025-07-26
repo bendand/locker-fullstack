@@ -17,7 +17,7 @@ import DialogContent from '@mui/joy/DialogContent';
 import Stack from '@mui/joy/Stack';
 import Add from '@mui/icons-material/Add';
 
-export default function LockerCard({ locker, onClick }) {
+export default function ContainerCard({ container, onClick }) {
     return (
         <Card
             variant="outlined"
@@ -37,7 +37,7 @@ export default function LockerCard({ locker, onClick }) {
             </AspectRatio>
             <CardContent>
                 <Typography level="title-lg" id="card-description">
-                    {locker.name}
+                    {container.name}
                 </Typography>
                 <Typography
                     level="body-sm"
@@ -50,17 +50,9 @@ export default function LockerCard({ locker, onClick }) {
                         href="#interactive-card"
                         sx={{ color: 'text.tertiary' }}
                     >
-                        {locker.address}
+                        {container.description}
                     </Link>
                 </Typography>
-                {/* <Chip
-                    variant="outlined"
-                    color="primary"
-                    size="sm"
-                    sx={{ pointerEvents: 'none' }}
-                >
-                    {locker.details}
-                </Chip> */}
             </CardContent>
         </Card>
     );

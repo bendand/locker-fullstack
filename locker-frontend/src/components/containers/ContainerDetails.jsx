@@ -14,10 +14,10 @@ import { toast } from 'react-toastify';
 
 export default function ContainerDetails() {
     const { lockerId, containerName } = useParams();
-    const location = useLocation();
-    const data = location.state.data;
-    const lockerName = data.lockerName;
-    const containerItems = data.containerItems;
+    // const location = useLocation();
+    // const data = location.state.data;
+    // const lockerName = data.lockerName;
+    // const containerItems = data.containerItems;
     const addItemModal = useRef();
     const deleteContainerModal = useRef();
     const navigate = useNavigate();

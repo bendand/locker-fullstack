@@ -29,7 +29,7 @@ function App() {
             <Route path="feedback" element={<Feedback />} />
             <Route path="lockerlist" element={<LockerList />} />
             <Route path="lockerlist/:lockerId" element={<LockerDetails />} />
-            <Route path="lockerlist/:lockerId/:containerName" element={<ContainerDetails />} />
+            <Route path="lockerlist/:lockerId/:containerId" element={<ContainerDetails />} />
           </Routes> 
           <ToastContainer />
         </AuthContext.Provider>

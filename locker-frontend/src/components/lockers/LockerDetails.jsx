@@ -1,113 +1,162 @@
 import { useParams, useNavigate, Link } from "react-router";
-import Header from "../Header";
 import Footer from "../Footer";
-import Button from "../elements/button/Button";
-import ContainerLabel from "../containers/ContainerLabel";
-import DeleteLockerModal from "./DeleteLockerModal";
-import AddContainerModal from "../containers/AddContainerModal";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useContext } from "react";
+import Container from '../../classes/Container'
 import { toast } from 'react-toastify';
+import GettingStartedNav from "../elements/nav/GettingStartedNav";
+import Breadcrumb from "../elements/breadcrumb/Breadcrumb";
+import Button from '@mui/joy/Button';
+import Box from '@mui/joy/Box';
+import Stack from '@mui/joy/Stack';
+import CircularProgress from '@mui/joy/CircularProgress';
+import Grid from '@mui/joy/Grid';
 
+import Modal from '@mui/joy/Modal';
+import Add from '@mui/icons-material/Add';
 
 export default function LockerDetails() {
-    const [lockerData, setLockerData] = useState(null);
-    let { lockerId } = useParams();
-    const deleteLockerModal = useRef();
-    const addContainerModal = useRef();
     const navigate = useNavigate();
+    const [containers, setContainers] = useState(null);
+    const [lockerName, setLockerName] = useState(null);
+    const [isFetching, setIsFetching] = useState(null);
+    const { lockerId } = useParams();
+    const userId = sessionStorage.getItem('userId');
+
+    console.log('locker id: ' + lockerId);
+    console.log('user id: ' + userId);
 
     // variable used to display conditional content
-    const hasContainers = lockerData && lockerData.lockerContainers.length > 0;
+    const lockerHasContainers = containers && containers.length > 0;
 
     // effect that fetches containers associated with the locker ID
     useEffect(() => {
-        fetch(`https://locker-api-uoib.onrender.com/lockers/${lockerId}`)
-        .then(res => {
-            return res.json();
-        })
-        .then((data) => {
-            setLockerData(data);
-        }); 
-    }, [lockerData]);
+        setIsFetching(true);
+        handleFetchContainers();
+        setIsFetching(false);
+    }, []);
     // above lockerData dependency triggers effect when add container modal updates data
 
-    // functions to control delete modal opening and closing
-    function handleStartDeleteLocker() {
-        deleteLockerModal.current.open();
+    async function handleFetchContainers() {
+        let containers = [];
+        let lockerData;
+        let response;
+
+        try {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers`);
+            
+            if (response.status === 404 || response.status === 400) {
+                return;
+            }
+            
+            lockerData = await response.json();
+            lockerData.containers.forEach(container => {
+                let newContainer = new Container(container.id, container.name, container.description);
+                console.log('here is a container JS object thats being pushed to containers: ', newContainer);
+                containers.push(newContainer);
+            });
+
+            setContainers(containers);
+            console.log('locker data: ', lockerData);
+            // setLockerName(lockerData)
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 
-    function handleCancelDeleteLocker() {
-        deleteLockerModal.current.close();
-    }
-
-    // functions to control add container modal opening and closing
-    function handleStartAddContainer() {
-        addContainerModal.current.open();
-    }
-
-    function handleCancelAddContainer() {
-        addContainerModal.current.close();
-    }
-
-    // simple logic needed to delete locker 
-    function handleDeleteLocker() {
-        fetch(`https://locker-api-uoib.onrender.com/lockers/${lockerId}`, {
-            method: "DELETE",
-        })
-        .then(res => {
-            return res.json();
-        })
-        .then(updatedLockers => {
-            console.log(updatedLockers);
-            deleteLockerModal.current.close();
-            toast('Locker Deleted');
-            navigate('/lockerlist');
-        });
+    function handleViewContainerrDetails(containerId) {
+        console.log(containerId);
+        navigate(`/lockerlist/${lockerId}/${containerId}`);
     }
 
 
     return (
         <>
-            <Header />
+            <GettingStartedNav />
             <main>
-                <div className="locker-details">
-                    {lockerData && (
-                        <>
-                            <div className="locker-details-header">
-                                <Link to={'/lockerlist'} className="back-to-label">Back to Locker List</Link>
-                                <strong>Containers in {lockerData.lockerName} </strong>
-                                <Button onClick={handleStartDeleteLocker}>Delete Locker</Button>
+                <Box
+                    sx={{
+                        width: 1000,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 2
+                    }}
+                >
+                    <div>
+                        <Breadcrumb 
+                            lockersViewed={true}
+                            containersViewed={false}
+                            itemsViewed={false}
+                        />
+                    </div>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        sx={{
+                            justifyContent: "center",
+                            alignContent: "center"
+                        }}
+                    >
+                        {lockerName && (
+                            <div>
+                                <h1>Containers in {lockerName}</h1>
                             </div>
-                            <ul className="container-list">
-                                {lockerData.lockerContainers.map((container, idx) => (
-                                    <li key={idx}>
-                                        <ContainerLabel
-                                            lockerName={lockerData.lockerName}
-                                            containerItems={container.containerItems}
-                                            containerName={container.containerName}
-                                        />
-                                    </li>
-                                ))}
-                            </ul>
-                        </>
+                        )}
+                        <div>
+                            <Button
+                                variant="outlined"
+                                color="neutral"
+                                startDecorator={<Add />}
+                                size="sm"
+                                onClick={() => setOpen(true)}
+                            >
+                                Add Container
+                            </Button>
+                            <Modal open={open} onClose={() => setOpen(false)}>
+                                <AddContainerForm 
+                                    onSubmission={{
+                                        fetchUpdatedContainers: () => handleFetchContainers(),
+                                        setOpen: () => setOpen(false)
+                                    }}
+                                    userId={userId}
+                                />
+                            </Modal>
+                        </div>
+                    </Stack>
+                    {!lockerHasContainers && (
+                        <Stack
+                            sx={{ alignContent: "center" }}
+                        >
+                            <div>
+                                <h3><em>There are no lockers to display</em></h3>
+                            </div>
+                        </Stack>
                     )}
-                    {!hasContainers && (
-                        <p>There are no containers to display.</p>
+                    {isFetching && (
+                        <CircularProgress />
                     )}
-                    <Button onClick={handleStartAddContainer}>Add Container</Button>
-                </div>
+                    {lockerHasContainers && (
+                        <Grid
+                            container
+                            rowSpacing={1}
+                            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                            sx={{ 
+                                width: '100%', 
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {containers.map((container, index) => (
+                                <Grid xs={4} key={container.id}>
+                                    <ContainerCard
+                                        locker={container}
+                                        onClick={() => handleViewLockerDetails(container.id)}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    )}
+                </Box>
             </main>
-            <DeleteLockerModal
-                ref={deleteLockerModal}
-                onCancel={handleCancelDeleteLocker}
-                onDelete={handleDeleteLocker}
-            />
-            <AddContainerModal
-                lockerId={lockerId}
-                ref={addContainerModal}
-                onCancel={handleCancelAddContainer}
-                onAdd={setLockerData}
-            />
             <Footer />
         </>
     );

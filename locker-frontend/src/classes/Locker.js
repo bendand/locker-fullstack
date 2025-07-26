@@ -1,8 +1,8 @@
 export default class Locker {
-    constructor(id, name, location, description) {
-    this.id = id;
-    this.name = name;
-    this.location = location;
-    this.description = description
+    constructor(id, name, address, details) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.details = details
     }
 }

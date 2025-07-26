@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 
-export default function Breadcrumb() {
+export default function Breadcrumb({ lockersViewed, containersViewed, itemsViewed }) {
     return (
         <Breadcrumbs 
             // separator={<KeyboardArrowLeft />} 
@@ -14,13 +14,22 @@ export default function Breadcrumb() {
                 justifyContent: "center"
             }}
         >
-            <Link color="neutral">
+            <Link 
+                color="neutral"
+                disabled={lockersViewed}
+            >
                 Lockers
             </Link>
-            <Link color="neutral">
+            <Link  
+                color="neutral"
+                disabled={containersViewed}
+            >
                 Containers
             </Link>
-            <Link color="neutral">
+            <Link 
+                color="neutral"
+                disabled={itemsViewed}
+            >
                 Items
             </Link>
             <br />

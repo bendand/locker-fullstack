@@ -25,7 +25,7 @@ public class Locker {
     private String name;
 
     @Column(name="details")
-    private String details = "";
+    private String details;
 
     @OneToMany(mappedBy="locker", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -50,12 +50,12 @@ public class Locker {
         this.details = details;
     }
 
-    public Locker(String name, User user, String address) {
-        this.name = name;
-        this.user = user;
-        this.address = address;
-        this.details = "";
-    }
+//    public Locker(String name, User user, String address) {
+//        this.name = name;
+//        this.user = user;
+//        this.address = address;
+//        this.details = "";
+//    }
 
 //    public Locker(int id, String name, int userId) {
 //        this.id = id;
@@ -96,5 +96,13 @@ public class Locker {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

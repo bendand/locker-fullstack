@@ -66,7 +66,7 @@ export default function AddLockerForm({ userId, onSubmission }) {
 
             lockerData = await response.json();
             onSubmission.setOpen();
-            onSubmission.setLockers();
+            onSubmission.fetchUpdatedLockers();
         } catch (error) {
             setErrorMessage(error.message);
         } finally {
