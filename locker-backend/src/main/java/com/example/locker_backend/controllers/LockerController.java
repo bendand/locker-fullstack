@@ -89,7 +89,9 @@ public class LockerController {
     // Corresponds to http://localhost:8080/{userId}/lockers/update/{lockerId}
     @PutMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId, @RequestBody LockerDTO updatedLockerData) {
+        System.out.println("update locker endpoint hit");
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
+        System.out.println("current locker: " + currentLocker);
         if (currentLocker != null) {
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
@@ -99,7 +101,9 @@ public class LockerController {
 
             currentLocker.setName(updatedLockerData.getName());
             currentLocker.setAddress(updatedLockerData.getAddress());
-            lockerRepository.save(currentLocker);
+            currentLocker.setDetails(updatedLockerData.getDetails());
+
+//            lockerRepository.save(currentLocker);
 
             return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200
         } else {

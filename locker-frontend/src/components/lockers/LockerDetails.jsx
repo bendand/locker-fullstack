@@ -13,6 +13,7 @@ import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 import CircularProgress from '@mui/joy/CircularProgress';
 import AddContainerForm from "../elements/form/AddContainerForm";
+import EditLockerForm from "../elements/form/EditLockerForm";
 import Grid from '@mui/joy/Grid';
 
 import Modal from '@mui/joy/Modal';
@@ -23,7 +24,8 @@ export default function LockerDetails() {
     const { lockerId, lockerName } = useParams();
     const [containers, setContainers] = useState(null);
     const [lockerDetails, setLockerDetails] = useState(null);
-    const [open, setOpen] = useState(false);
+    const [openEditLockerModal, setOpenEditLockerModal] = useState(false);
+    const [openAddContainerModal, setOpenAddContainerModal] = useState(false);
     const [isFetching, setIsFetching] = useState(null);
     const userId = sessionStorage.getItem('userId');
 
@@ -140,17 +142,37 @@ export default function LockerDetails() {
                                 color="neutral"
                                 startDecorator={<Add />}
                                 size="sm"
-                                onClick={() => setOpen(true)}
+                                onClick={() => setOpenAddContainerModal(true)}
                             >
                                 Add Container
                             </Button>
-                            <Modal open={open} onClose={() => setOpen(false)}>
+                            <Modal open={openAddContainerModal} onClose={() => setOpenAddContainerModal(false)}>
                                 <AddContainerForm 
                                     userId={userId}
                                     lockerId={lockerId}
                                     onSubmission={{
                                         handleSubmission: () => handleSubmission(),
-                                        setOpen: () => setOpen(false)
+                                        setOpenAddContainerModal: () => setOpenAddContainerModal(false)
+                                    }}
+                                />
+                            </Modal>
+                        </div>
+                        <div>
+                            <Button
+                                variant="outlined"
+                                color="neutral"
+                                size="sm"
+                                onClick={() => setOpenEditLockerModal(true)}
+                            >
+                                Edit Locker
+                            </Button>
+                            <Modal open={openEditLockerModal} onClose={() => setOpenEditLockerModal(false)}>
+                                <EditLockerForm 
+                                    userId={userId}
+                                    lockerInfo={lockerDetails}
+                                    onSubmission={{
+                                        handleSubmission: () => handleSubmission(),
+                                        setOpenEditLockerModal: () => setOpenEditLockerModal(false)
                                     }}
                                 />
                             </Modal>
