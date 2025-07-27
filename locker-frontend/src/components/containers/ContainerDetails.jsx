@@ -2,7 +2,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import Footer from '../Footer';
 import { useEffect, useState, useContext } from "react";
 import Item from '../../classes/Item'
-import ContainerCard from "../containers/ContainerCard";
+import ItemCard from "../containerItems/ItemCard";
 import GettingStartedNav from "../elements/nav/GettingStartedNav";
 import Breadcrumb from "../elements/breadcrumb/Breadcrumb";
 import Button from '@mui/joy/Button';
@@ -66,8 +66,6 @@ export default function ContainerDetails() {
     }
 
     function handleViewItemDetails(itemId, itemName) {
-        console.log('item id: ' + itemId);
-        console.log('item name: ' + itemName);
         navigate(`/lockerlist/${lockerId}/${lockerName}/${containerId}/${containerName}`);
     }
     
@@ -116,6 +114,7 @@ export default function ContainerDetails() {
                                 <AddItemForm 
                                     userId={userId}
                                     lockerId={lockerId}
+                                    containerId={containerId}
                                     onSubmission={{
                                         handleSubmission: () => handleSubmission(),
                                         setOpen: () => setOpen(false)
@@ -146,7 +145,7 @@ export default function ContainerDetails() {
                                 justifyContent: 'center',
                             }}
                         >
-                            {items.map((item, index) => (
+                            {items.map((item) => (
                                 <Grid xs={4} key={item.id}>
                                     <ItemCard
                                         item={item}

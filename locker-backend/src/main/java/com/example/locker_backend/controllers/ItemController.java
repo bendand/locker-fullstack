@@ -72,7 +72,6 @@ public class ItemController {
     // Endpoint http://localhost:8080/{userId}/{lockerId}/{containerId}/items/add
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addItem(@RequestBody ItemDTO itemData) {
-        System.out.println("add item endpoint hit");
         // Validate that the containerId, lockerId, and userId are valid
         if (itemData.getContainerId() <= 0 || itemData.getLockerId() <= 0 || itemData.getUserId() <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
@@ -90,11 +89,10 @@ public class ItemController {
         }
 
         // Create a new item and save it to the repository
-        Item newItem = new Item(itemData.getName(), itemData.getQuantity(), currentUser,
+        Item newItem = new Item(itemData.getName(), itemData.getQuantity(), itemData.getDescription(), currentUser,
                 currentLocker, currentContainer);
 
-        System.out.println("new item to be added: " + newItem);
-//        itemRepository.save(newItem);
+        itemRepository.save(newItem);
 
         return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
     }

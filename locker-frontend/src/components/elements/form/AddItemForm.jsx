@@ -25,6 +25,7 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
         const { name, value } = event.target;
 
         if (name === 'description' && value.length > 200) return;
+        if (name === 'quantity' && value < 1) return;
         
         setInputValues(prevData => ({
             ...prevData,
@@ -42,9 +43,9 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
             name: inputValues.name,
             description: inputValues.description,
             quantity: inputValues.quantity,
-            userId: userId,
-            lockerId: lockerId,
-            containerId: containerId
+            userId,
+            lockerId,
+            containerId
         };
 
         try {
@@ -65,7 +66,6 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
             itemData = await response.json();
             console.log('heres the item data received after item submission: ' + itemData);
             onSubmission.setOpen();
-            // not working
             toast('Item added');
             onSubmission.fetchUpdatedItems();
         } catch (error) {

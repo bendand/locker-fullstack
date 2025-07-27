@@ -37,7 +37,7 @@ export default function ItemCard({ item, onClick }) {
             </AspectRatio>
             <CardContent>
                 <Typography level="title-lg" id="card-description">
-                    {container.name}
+                    {item.name}
                 </Typography>
                 <Typography
                     level="body-sm"
@@ -50,7 +50,7 @@ export default function ItemCard({ item, onClick }) {
                         href="#interactive-card"
                         sx={{ color: 'text.tertiary' }}
                     >
-                        {container.description}
+                        {item.description && item.description}
                     </Link>
                 </Typography>
             </CardContent>

@@ -19,6 +19,8 @@ public class Item {
     @JsonBackReference
     private Container container;
 
+    private String description;
+
     @ManyToOne
     @JsonBackReference
     private Locker locker;
@@ -32,18 +34,20 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, int quantity, User user, Locker locker, Container container) {
+    public Item(String name, int quantity, String description, User user, Locker locker, Container container) {
         this.name = name;
         this.quantity = quantity;
+        this.description = description;
         this.user = user;
         this.locker = locker;
         this.container = container;
     }
 
-    public Item(int id, String name, int quantity, User user, Locker locker, Container container) {
+    public Item(int id, String name, int quantity, String description, User user, Locker locker, Container container) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
+        this.description = description;
         this.user = user;
         this.locker = locker;
         this.container = container;
@@ -95,5 +99,18 @@ public class Item {
 
     public void setUser(User currentUser) {
         this.user = currentUser;
+    }
+
+    @Override
+    public String toString() {
+        return name + " - (Container: " + container;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
