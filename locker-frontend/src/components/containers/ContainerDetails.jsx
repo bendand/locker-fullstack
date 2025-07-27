@@ -32,14 +32,12 @@ export default function ContainerDetails() {
     useEffect(() => {
         setIsFetching(true);
         handleFetchItems();
-        setIsFetching(false);
     }, []);
 
     function handleSubmission() {
         toast('Item added');
         setIsFetching(true);
         handleFetchItems();
-        setIsFetching(false);
     }
 
     async function handleFetchItems() {
@@ -54,6 +52,7 @@ export default function ContainerDetails() {
             }
             
             containerData = await response.json();
+
             containerData.forEach(item => {
                 let newItem = new Item(item.id, item.name, item.quantity, item.description);
                 items.push(newItem);
@@ -62,6 +61,8 @@ export default function ContainerDetails() {
             setItems(items);
         } catch (error) {
             console.error(error.message);
+        } finally {
+            setIsFetching(false);
         }
     }
 
@@ -145,6 +146,9 @@ export default function ContainerDetails() {
                                 justifyContent: 'center',
                             }}
                         >
+                            {items.forEach((item) => {
+                                console.log("item name: " + item.name);
+                            })}
                             {items.map((item) => (
                                 <Grid xs={4} key={item.id}>
                                     <ItemCard

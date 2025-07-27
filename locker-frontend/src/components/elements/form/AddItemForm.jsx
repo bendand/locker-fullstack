@@ -109,7 +109,6 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
                     <FormControl>                
                         <FormLabel>Quantity</FormLabel>
                         <Input
-                            defaultValue="1"
                             type="number"
                             name='quantity'
                             value={inputValues.quantity}

@@ -18,6 +18,8 @@ import Stack from '@mui/joy/Stack';
 import Add from '@mui/icons-material/Add';
 
 export default function ItemCard({ item, onClick }) {
+
+    console.log("item id in item card: " + item.id);
     return (
         <Card
             variant="outlined"

@@ -30,7 +30,6 @@ export default function LockerList() {
     useEffect(() => {
         setIsFetching(true);
         handleFetchLockers();
-        setIsFetching(false);
     }, []);
     // dependency above is used to run the effect when locker is added by add locker modal
     // which then updates the locker data
@@ -58,6 +57,8 @@ export default function LockerList() {
             setLockers(lockers);
         } catch (error) {
             console.error(error.message);
+        } finally {
+            setIsFetching(false);
         }
     }
 

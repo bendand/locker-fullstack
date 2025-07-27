@@ -35,23 +35,24 @@ public class ItemController {
     @Autowired
     ItemRepository itemRepository;
 
-
     // GET the full list of items in a specific container
     // Endpoint is http://localhost:8080/{userId}/{lockerId}/{containerId}/items
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value = "userId") int userId, @PathVariable(value = "lockerId") int lockerId, @PathVariable(value = "containerId") int containerId) {
+        System.out.println("get all items endpoint hit");
         if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST);
         }
 
         List<Item> allContainersItems = itemRepository.findAllByContainerId(containerId);
+
         if (allContainersItems.isEmpty()) {
             String response = "No items found for container with ID of " + containerId + ".";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(allContainersItems, HttpStatus.OK); // 200
+        return new ResponseEntity<>(allContainersItems, HttpStatus.OK);
     }
 
 

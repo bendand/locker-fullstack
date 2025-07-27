@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Footer from "../Footer";
 import { useEffect, useState, useContext } from "react";
 import Container from '../../classes/Container'
+import Locker from "../../classes/Locker";
 import ContainerCard from "../containers/ContainerCard";
 import { toast } from 'react-toastify';
 import GettingStartedNav from "../elements/nav/GettingStartedNav";
@@ -20,11 +21,10 @@ import Add from '@mui/icons-material/Add';
 export default function LockerDetails() {
     const navigate = useNavigate();
     const { lockerId, lockerName } = useParams();
-
     const [containers, setContainers] = useState(null);
+    const [lockerDetails, setLockerDetails] = useState(null);
     const [open, setOpen] = useState(false);
     const [isFetching, setIsFetching] = useState(null);
-
     const userId = sessionStorage.getItem('userId');
 
     // variable used to display conditional content
@@ -32,18 +32,47 @@ export default function LockerDetails() {
 
     function handleSubmission() {
         toast('Container added');
-        setIsFetching(true);
-        handleFetchContainers();
-        setIsFetching(false);
+
+        async function fetchUpdatedContainers() {
+            setIsFetching(true);
+            await handleFetchContainers();
+            setIsFetching(false);
+        }
+
+        fetchUpdatedContainers();
     }
 
     // effect that fetches containers associated with the locker ID
     useEffect(() => {
-        setIsFetching(true);
-        handleFetchContainers();
-        setIsFetching(false);
+        async function fetchData() {
+            setIsFetching(true);
+            await handleFetchLockerData();
+            await handleFetchContainers();
+            setIsFetching(false);
+        };
+
+        fetchData();
     }, []);
-    // above lockerData dependency triggers effect when add container modal updates data
+
+
+    async function handleFetchLockerData() {
+        let lockerData;
+        let response;
+
+        try {
+            response = await fetch(`http://localhost:8080/${userId}/lockers/${lockerId}`);
+            
+            if (response.status === 404) {
+                return;
+            }
+            
+            lockerData = await response.json();
+            let lockerObj = new Locker(lockerData.id, lockerData.name, lockerData.address, lockerData.details);
+            setLockerDetails(lockerObj);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
 
     async function handleFetchContainers() {
         let containers = [];
@@ -131,6 +160,12 @@ export default function LockerDetails() {
                         <Stack
                             sx={{ alignContent: "center" }}
                         >
+                            {/* in the future I want this displayed by mousing over locker name */}
+                            <div>
+                                {lockerDetails && (
+                                    <p><em>{lockerDetails?.details}</em></p>
+                                )}
+                            </div>
                             <div>
                                 <h3><em>There are no containers to display</em></h3>
                             </div>
@@ -140,25 +175,34 @@ export default function LockerDetails() {
                         <CircularProgress />
                     )}
                     {lockerHasContainers && (
-                        <Grid
-                            container
-                            rowSpacing={1}
-                            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                            sx={{ 
-                                width: '100%', 
-                                justifyContent: 'center',
-                            }}
-                        >
-                            {containers.map((container, index) => (
-                                <Grid xs={4} key={container.id}>
-                                    <ContainerCard
-                                        locker
-                                        container={container}
-                                        onClick={() => handleViewContainerDetails(container.id, container.name)}
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
+                        <Stack>
+                            <div>
+                                {/* in the future I want this displayed by mousing over locker name */}
+                                {lockerDetails && (
+                                    <p><em>{lockerDetails?.details}</em></p>
+                                )}
+                            </div>
+                            <br></br>
+                            <Grid
+                                container
+                                rowSpacing={1}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                sx={{ 
+                                    width: '100%', 
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {containers.map((container, index) => (
+                                    <Grid xs={4} key={container.id}>
+                                        <ContainerCard
+                                            locker
+                                            container={container}
+                                            onClick={() => handleViewContainerDetails(container.id, container.name)}
+                                        />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Stack>
                     )}
                 </Box>
             </main>
