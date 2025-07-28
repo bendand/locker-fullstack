@@ -187,7 +187,7 @@ export default function LockerDetails() {
                             {/* in the future I want this displayed by mousing over locker name */}
                             <div>
                                 {lockerDetails && (
-                                    <p><em>{lockerDetails?.details}</em></p>
+                                    <p>Details: {lockerDetails?.details}</p>
                                 )}
                             </div>
                             <div>
@@ -203,7 +203,7 @@ export default function LockerDetails() {
                             <div>
                                 {/* in the future I want this displayed by mousing over locker name */}
                                 {lockerDetails && (
-                                    <p><em>{lockerDetails?.details}</em></p>
+                                    <p>Details: {lockerDetails?.details}</p>
                                 )}
                             </div>
                             <br></br>

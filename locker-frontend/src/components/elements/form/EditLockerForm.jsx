@@ -79,7 +79,8 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
     }
 
     async function handleDeleteLocker() {
-        console.log('hit handle delete locker function');
+        setOpenConfirmDeleteLocker(false);
+        
         let response;
 
         try {

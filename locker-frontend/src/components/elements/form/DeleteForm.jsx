@@ -26,7 +26,7 @@ export default function DeleteForm({ onCancel, onProceedDelete }) {
                     </Button>
                     <Button 
                         color="danger"
-                        onClick={onProceedDelete}
+                        onClick={() => onProceedDelete.handleDeleteLocker()}
                     >
                         Delete Locker
                     </Button>
