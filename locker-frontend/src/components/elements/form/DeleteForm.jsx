@@ -1,31 +1,38 @@
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import ModalDialog from '@mui/joy/ModalDialog';
-import DialogTitle from '@mui/joy/DialogTitle';
-import DialogContent from '@mui/joy/DialogContent';
-import { Textarea } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
+import { useState, useContext } from 'react';
+import ModalDialog from '@mui/joy/ModalDialog';
+import DialogTitle from '@mui/joy/DialogTitle';
 
-export default function DeleteForm({ onCancel, onProceed }) {
+
+
+export default function DeleteForm({ onCancel, onProceedDelete }) {
+    const [errorMessage, setErrorMessage] = useState(null);
+
     return (
-        <Stack>
+        <ModalDialog>
             <div>
                 <p>Are you sure you want to delete the locker?</p>
             </div>
-            <Button 
-                onClick={onCancel}
-            >
-                Cancel
-            </Button>
-            <Button 
-                color="danger"
-                onClick={onProceed}
-            >
-                Delete Locker
-            </Button>
-        </Stack>
+            <form>
+                <Stack spacing={2}>
+                    {errorMessage && (
+                        <p>{errorMessage}</p>
+                    )}
+                    <Button 
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        color="danger"
+                        onClick={onProceedDelete}
+                    >
+                        Delete Locker
+                    </Button>
+                </Stack>
+            </form>
+        </ModalDialog>
 
     );
 }

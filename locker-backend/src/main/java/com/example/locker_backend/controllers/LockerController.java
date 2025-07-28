@@ -74,10 +74,12 @@ public class LockerController {
     // DELETE an existing locker
     // Corresponds to http://localhost:8080/{userId}/lockers/{lockerId}
     @DeleteMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId) {
+    public ResponseEntity<?> deleteLocker(@PathVariable(value="lockerId") int lockerId) {
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
+        System.out.println("locker to be deleted: " + currentLocker);
         if (currentLocker != null) {
-            lockerRepository.deleteById(lockerId);
+//            lockerRepository.deleteById(lockerId);
+            System.out.println("locker would have been deleted here");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";
@@ -89,22 +91,18 @@ public class LockerController {
     // Corresponds to http://localhost:8080/{userId}/lockers/update/{lockerId}
     @PutMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId, @RequestBody LockerDTO updatedLockerData) {
-        System.out.println("update locker endpoint hit");
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
-        System.out.println("current locker: " + currentLocker);
         if (currentLocker != null) {
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
                 String response = "User with ID of " + userId + " not found.";
                 return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
             }
-
             currentLocker.setName(updatedLockerData.getName());
             currentLocker.setAddress(updatedLockerData.getAddress());
             currentLocker.setDetails(updatedLockerData.getDetails());
 
-//            lockerRepository.save(currentLocker);
-
+            lockerRepository.save(currentLocker);
             return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";

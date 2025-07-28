@@ -1,26 +1,29 @@
 import { useState, useContext } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import DeleteForm from './DeleteForm';
 import Input from '@mui/joy/Input';
 import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
-import DialogContent from '@mui/joy/DialogContent';
 import { Textarea } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
+import Modal from '@mui/joy/Modal';
+import DeleteForm from './DeleteForm';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 
 export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [openConfirmDeleteLocker, setOpenConfirmDeleteLocker] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
+    const lockerId = lockerInfo.id;
     const [inputValues, setInputValues] = useState({
         name: lockerInfo.name,
         address: lockerInfo.address,
         details: lockerInfo.details
     });
-
-    console.log(lockerInfo.id);
 
     // function that sets new values when inputs are changed
     function handleInputChange(event) {
@@ -38,7 +41,6 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         setIsSubmitting(true);
 
         let response;
-        let lockerData;
 
         const formData = {
             id: lockerInfo.id,
@@ -46,8 +48,6 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
             address: inputValues.address,
             details: inputValues.details
         };
-
-        console.log(formData);
 
         try {
             response = await fetch(`http://localhost:8080/${userId}/lockers/${lockerId}`, {
@@ -68,8 +68,8 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                 return;
             }
 
-            lockerData = await response.json();
-            onSubmission.setOpen();
+            onSubmission.closeModal();
+            toast("Locker updated");
             onSubmission.fetchUpdatedLockerDetails();
         } catch (error) {
             setErrorMessage(error.message);
@@ -78,6 +78,26 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         }
     }
 
+    async function handleDeleteLocker() {
+        console.log('hit handle delete locker function');
+        let response;
+
+        try {
+            response = await fetch(`http://localhost:8080/${userId}/lockers/${lockerId}`, {
+                method: 'DELETE'
+            })
+            if (!response.ok) {
+                setErrorMessage("Bad request, try again later");
+                return;
+            }
+
+            onSubmission.closeModal();
+            toast("Locker deleted")
+            navigate("/lockerlist");
+        } catch (error) {
+            setErrorMessage(error.message);
+        }
+    }
 
 
     return (
@@ -127,9 +147,19 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                     </Button>
                     <Button 
                         color="danger"
+                        onClick={() => setOpenConfirmDeleteLocker(true)}
                     >
                         Delete Locker
                     </Button>
+                    <Modal open={openConfirmDeleteLocker} onClose={() => setOpenConfirmDeleteLocker(false)}>
+                        <DeleteForm 
+                            onCancel={() => setOpenConfirmDeleteLocker(false)}
+                            onProceedDelete={{
+                                handleDeleteLocker: () => handleDeleteLocker(),
+                                closeModal: () => setOpenConfirmDeleteLocker(false)
+                            }}
+                        />
+                    </Modal>
                 </Stack>
             </form>
         </ModalDialog>

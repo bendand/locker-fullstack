@@ -33,7 +33,7 @@ public class ContainerController {
         List<Container> allLockersContainers = containerRepository.findAllByLockerId(lockerId);
         if (allLockersContainers.isEmpty()) {
             String response = "No containers found for locker with locker ID of " + lockerId + ".";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(allLockersContainers, HttpStatus.OK); // 200

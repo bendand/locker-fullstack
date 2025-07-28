@@ -84,7 +84,7 @@ export default function LockerDetails() {
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers`);
             
-            if (response.status === 400) {
+            if (response.status === 204) {
                 return;
             }
             
@@ -133,9 +133,11 @@ export default function LockerDetails() {
                             alignContent: "center"
                         }}
                     >
-                        <div>
-                            <h1>Containers in {lockerName}</h1>
-                        </div>
+                        {lockerDetails && (
+                            <div>
+                                <h1>Containers in {lockerDetails.name}</h1>
+                            </div>
+                        )}
                         <div>
                             <Button
                                 variant="outlined"
@@ -171,8 +173,8 @@ export default function LockerDetails() {
                                     userId={userId}
                                     lockerInfo={lockerDetails}
                                     onSubmission={{
-                                        handleSubmission: () => handleSubmission(),
-                                        setOpenEditLockerModal: () => setOpenEditLockerModal(false)
+                                        fetchUpdatedLockerDetails: () => handleFetchLockerData(),
+                                        closeModal: () => setOpenEditLockerModal(false)
                                     }}
                                 />
                             </Modal>
