@@ -80,8 +80,10 @@ public class ContainerController {
     @DeleteMapping(value="/{containerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteContainer(@PathVariable(value="containerId") int containerId, @PathVariable(value="userId") int userId) {
         Container currentContainer = containerRepository.findById(containerId).orElse(null);
+        System.out.println("container to be deleted: " + currentContainer);
         if (currentContainer != null) {
-            containerRepository.deleteById(containerId);
+            System.out.println("container would be deleted here");
+//            containerRepository.deleteById(containerId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
         } else {
             String response = "Container with ID of " + containerId + " not found.";

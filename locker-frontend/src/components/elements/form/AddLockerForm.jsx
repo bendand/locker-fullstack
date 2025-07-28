@@ -8,6 +8,7 @@ import DialogContent from '@mui/joy/DialogContent';
 import { Textarea } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
+import { toast } from 'react-toastify';
 
 
 export default function AddLockerForm({ userId, onSubmission }) {
@@ -43,8 +44,6 @@ export default function AddLockerForm({ userId, onSubmission }) {
             details: inputValues.details
         };
 
-        console.log(formData);
-
         try {
             response = await fetch(`http://localhost:8080/${userId}/lockers/add`, {
                 method: 'POST',
@@ -65,7 +64,8 @@ export default function AddLockerForm({ userId, onSubmission }) {
             }
 
             lockerData = await response.json();
-            onSubmission.setOpen();
+            onSubmission.closeModal();
+            toast("Locker added");
             onSubmission.fetchUpdatedLockers();
         } catch (error) {
             setErrorMessage(error.message);

@@ -32,9 +32,7 @@ export default function LockerDetails() {
     // variable used to display conditional content
     const lockerHasContainers = containers && containers.length > 0;
 
-    function handleSubmission() {
-        toast('Container added');
-
+    function handleContainerSubmission() {
         async function fetchUpdatedContainers() {
             setIsFetching(true);
             await handleFetchContainers();
@@ -83,7 +81,6 @@ export default function LockerDetails() {
 
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers`);
-            
             if (response.status === 204) {
                 return;
             }
@@ -153,8 +150,8 @@ export default function LockerDetails() {
                                     userId={userId}
                                     lockerId={lockerId}
                                     onSubmission={{
-                                        handleSubmission: () => handleSubmission(),
-                                        setOpenAddContainerModal: () => setOpenAddContainerModal(false)
+                                        handleSubmission: () => handleContainerSubmission(),
+                                        closeAddContainerModal: () => setOpenAddContainerModal(false)
                                     }}
                                 />
                             </Modal>
@@ -180,16 +177,15 @@ export default function LockerDetails() {
                             </Modal>
                         </div>
                     </Stack>
+                    {lockerDetails && (
+                        <div>
+                            <p>Details: {lockerDetails?.details}</p>
+                        </div>
+                    )}
                     {!lockerHasContainers && (
                         <Stack
                             sx={{ alignContent: "center" }}
                         >
-                            {/* in the future I want this displayed by mousing over locker name */}
-                            <div>
-                                {lockerDetails && (
-                                    <p>Details: {lockerDetails?.details}</p>
-                                )}
-                            </div>
                             <div>
                                 <h3><em>There are no containers to display</em></h3>
                             </div>
@@ -199,34 +195,27 @@ export default function LockerDetails() {
                         <CircularProgress />
                     )}
                     {lockerHasContainers && (
-                        <Stack>
-                            <div>
-                                {/* in the future I want this displayed by mousing over locker name */}
-                                {lockerDetails && (
-                                    <p>Details: {lockerDetails?.details}</p>
-                                )}
-                            </div>
-                            <br></br>
-                            <Grid
-                                container
-                                rowSpacing={1}
-                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                sx={{ 
-                                    width: '100%', 
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                {containers.map((container, index) => (
-                                    <Grid xs={4} key={container.id}>
-                                        <ContainerCard
-                                            locker
-                                            container={container}
-                                            onClick={() => handleViewContainerDetails(container.id, container.name)}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Stack>
+                        <Grid
+                            container
+                            rowSpacing={1}
+                            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                            sx={{ 
+                                width: '100%', 
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {containers.map((container, index) => (
+                                <Grid 
+                                    xs={4} 
+                                    key={container.id}
+                                >
+                                    <ContainerCard
+                                        container={container}
+                                        onClick={() => handleViewContainerDetails(container.id, container.name)}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
                     )}
                 </Box>
             </main>

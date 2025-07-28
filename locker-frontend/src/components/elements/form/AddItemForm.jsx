@@ -64,10 +64,9 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
             }
 
             itemData = await response.json();
-            console.log('heres the item data received after item submission: ' + itemData);
-            onSubmission.setOpen();
+            onSubmission.closeAddItemModal();
             toast('Item added');
-            onSubmission.fetchUpdatedItems();
+            onSubmission.handleSubmission();
         } catch (error) {
             setErrorMessage(error.message);
         } finally {

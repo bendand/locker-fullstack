@@ -33,7 +33,7 @@ public class LockerController {
         List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
         if (allUsersLockers.isEmpty()) {
             String response = "No lockers found for user with ID of " + userId + ".";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT); 
         }
 
         return new ResponseEntity<>(allUsersLockers, HttpStatus.OK); // 200
@@ -78,7 +78,7 @@ public class LockerController {
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
         if (currentLocker != null) {
             lockerRepository.deleteById(lockerId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404

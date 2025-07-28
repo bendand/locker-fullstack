@@ -6,19 +6,15 @@ import DialogTitle from '@mui/joy/DialogTitle';
 
 
 
-export default function DeleteForm({ onCancel, onProceedDelete }) {
-    const [errorMessage, setErrorMessage] = useState(null);
+export default function DeleteForm({ unit, onCancel, onProceedDelete }) {
 
     return (
         <ModalDialog>
             <div>
-                <p>Are you sure you want to delete the locker?</p>
+                <p>Are you sure you want to delete the {unit}?</p>
             </div>
             <form>
                 <Stack spacing={2}>
-                    {errorMessage && (
-                        <p>{errorMessage}</p>
-                    )}
                     <Button 
                         onClick={onCancel}
                     >
@@ -26,9 +22,9 @@ export default function DeleteForm({ onCancel, onProceedDelete }) {
                     </Button>
                     <Button 
                         color="danger"
-                        onClick={() => onProceedDelete.handleDeleteLocker()}
+                        onClick={() => onProceedDelete.handleDelete()}
                     >
-                        Delete Locker
+                        Delete {unit}
                     </Button>
                 </Stack>
             </form>

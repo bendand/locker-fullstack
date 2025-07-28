@@ -39,7 +39,6 @@ public class ItemController {
     // Endpoint is http://localhost:8080/{userId}/{lockerId}/{containerId}/items
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllItemsByContainerId(@PathVariable(value = "userId") int userId, @PathVariable(value = "lockerId") int lockerId, @PathVariable(value = "containerId") int containerId) {
-        System.out.println("get all items endpoint hit");
         if (containerId <= 0 || lockerId <= 0 || userId <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST);

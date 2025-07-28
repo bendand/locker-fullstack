@@ -12,8 +12,6 @@ import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Grid from '@mui/joy/Grid';
-
-
 import Modal from '@mui/joy/Modal';
 import Add from '@mui/icons-material/Add';
 
@@ -21,19 +19,16 @@ export default function LockerList() {
     const [lockers, setLockers] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
     const [open, setOpen] = useState(false);
-
     const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId");
     const userHasLockers = lockers && lockers.length > 0;
     
-    // effect that calls function that fetches locker from backend and checks for valid user credential
+    console.log('user id in lockerlist: ' + userId);
+
     useEffect(() => {
         setIsFetching(true);
         handleFetchLockers();
     }, []);
-    // dependency above is used to run the effect when locker is added by add locker modal
-    // which then updates the locker data
-
 
     async function handleFetchLockers() {
         let lockers = [];
@@ -43,7 +38,7 @@ export default function LockerList() {
         try {
             response = await fetch(`http://localhost:8080/${userId}/lockers`);
             
-            if (response.status === 404 || response.status === 400) {
+            if (response.status === 204) {
                 return;
             }
             
@@ -111,7 +106,7 @@ export default function LockerList() {
                                 <AddLockerForm 
                                     onSubmission={{
                                         fetchUpdatedLockers: () => handleFetchLockers(),
-                                        setOpen: () => setOpen(false)
+                                        closeModal: () => setOpen(false)
                                     }}
                                     userId={userId}
                                 />
@@ -150,7 +145,6 @@ export default function LockerList() {
                             ))}
                         </Grid>
                     )}
-
                 </Box>
             </main>
             <Footer />

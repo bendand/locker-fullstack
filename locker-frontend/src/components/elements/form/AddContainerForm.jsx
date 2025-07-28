@@ -60,11 +60,9 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
             }
 
             containerData = await response.json();
-            console.log('heres the container data received after container submission: ' + containerData);
-            onSubmission.setOpen();
-            // not working
+            onSubmission.closeAddContainerModal();
             toast('Container added');
-            onSubmission.fetchUpdatedContainers();
+            onSubmission.handleSubmission();
         } catch (error) {
             setErrorMessage(error.message);
         } finally {

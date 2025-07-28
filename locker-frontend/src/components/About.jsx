@@ -6,7 +6,7 @@ export default function About() {
 
     return (
         <>
-            <GettingStartedNav user={userId} />
+            <GettingStartedNav/>
             <main>
                 <div className="about-container">
                     <div className="about-page">

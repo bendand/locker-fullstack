@@ -13,23 +13,22 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 
 
-export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
+export default function EditContainerForm({ lockerId, containerInfo, userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [openConfirmDeleteLocker, setOpenConfirmDeleteLocker] = useState(false);
+    const [openConfirmDeleteContainer, setOpenConfirmDeleteContainer] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-    const lockerId = lockerInfo.id;
+    const containerId = containerInfo.id;
     const [inputValues, setInputValues] = useState({
-        name: lockerInfo.name,
-        address: lockerInfo.address,
-        details: lockerInfo.details
+        name: containerInfo.name,
+        description: containerInfo.description
     });
 
     // function that sets new values when inputs are changed
     function handleInputChange(event) {
         const { name, value } = event.target;
 
-        if (name === 'details' && value.length > 200) return;
+        if (name === 'description' && value.length > 200) return;
         
         setInputValues(prevData => ({
             ...prevData,
@@ -37,20 +36,18 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         }));
     }
 
-    async function handleSubmitLocker() {
+    async function handleSubmitContainer() {
         setIsSubmitting(true);
 
         let response;
 
         const formData = {
-            id: lockerInfo.id,
             name: inputValues.name,
-            address: inputValues.address,
-            details: inputValues.details
+            description: inputValues.description
         };
 
         try {
-            response = await fetch(`http://localhost:8080/${userId}/lockers/${lockerId}`, {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers/${containerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,8 +66,8 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
             }
 
             onSubmission.closeModal();
-            toast("Locker updated");
-            onSubmission.fetchUpdatedLockerDetails();
+            toast("Container updated");
+            onSubmission.fetchUpdatedContainerDetails();
         } catch (error) {
             setErrorMessage(error.message);
         } finally {
@@ -78,8 +75,8 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         }
     }
 
-    async function handleDeleteLocker() {
-        setOpenConfirmDeleteLocker(false);
+    async function handleDeleteContainer() {
+        setOpenConfirmDeleteContainer(false);
         
         let response;
 
@@ -93,8 +90,8 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
             }
 
             onSubmission.closeModal();
-            toast("Locker deleted")
-            navigate("/lockerlist");
+            toast("Container deleted")
+            navigate(`/lockerlist`);
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -103,7 +100,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
 
     return (
         <ModalDialog>
-            <DialogTitle>Edit locker</DialogTitle>
+            <DialogTitle>Edit container</DialogTitle>
             <form>
                 <Stack spacing={2}>
                     {errorMessage && (
@@ -119,46 +116,37 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                             onChange={handleInputChange}
                         />
                     </FormControl>
-                    <FormControl>
-                        <FormLabel>Address</FormLabel>
-                        <Input 
-                            required
-                            name='address'
-                            value={inputValues.address}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
                     <FormControl>                
-                        <FormLabel>Details (optional, max 200 characters)</FormLabel>
+                        <FormLabel>Description (optional, max 200 characters)</FormLabel>
                         <Textarea
-                            placeholder="Details about location, access codes, special instructions, etc..."
+                            placeholder="Details about container, its appearance, location in locker, etc."
                             minRows={2}
                             maxRows={4}
-                            name='details'
-                            value={inputValues.details}
+                            name='description'
+                            value={inputValues.description}
                             onChange={handleInputChange}
                         />
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitLocker}
+                        onClick={handleSubmitContainer}
                         loading={isSubmitting}
                     >
                         Submit
                     </Button>
                     <Button 
                         color="danger"
-                        onClick={() => setOpenConfirmDeleteLocker(true)}
+                        onClick={() => setOpenConfirmDeleteContainer(true)}
                     >
-                        Delete Locker
+                        Delete Container
                     </Button>
-                    <Modal open={openConfirmDeleteLocker} onClose={() => setOpenConfirmDeleteLocker(false)}>
+                    <Modal open={openConfirmDeleteContainer} onClose={() => setOpenConfirmDeleteContainer(false)}>
                         <DeleteForm 
-                            unit="locker"
-                            onCancel={() => setOpenConfirmDeleteLocker(false)}
+                            unit="container"
+                            onCancel={() => setOpenConfirmDeleteContainer(false)}
                             onProceedDelete={{
-                                handleDeleteLocker: () => handleDeleteLocker(),
-                                closeModal: () => setOpenConfirmDeleteLocker(false)
+                                handleDelete: () => handleDeleteContainer(),
+                                closeModal: () => setOpenConfirmDeleteContainer(false)
                             }}
                         />
                     </Modal>
