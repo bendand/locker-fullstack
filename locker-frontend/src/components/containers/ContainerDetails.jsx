@@ -11,6 +11,7 @@ import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 import CircularProgress from '@mui/joy/CircularProgress';
 import AddItemForm from "../elements/form/AddItemForm";
+import EditItemForm from "../elements/form/EditItemForm";
 import EditContainerForm from "../elements/form/EditContainerForm"
 import Grid from '@mui/joy/Grid';
 
@@ -25,6 +26,7 @@ export default function ContainerDetails() {
     const [openAddItemModal, setOpenAddItemModal] = useState(false);
     const [openEditItem, setOpenEditItem] = useState(false);
     const [itemEditing, setItemEditing] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
     const [openEditContainerModal, setOpenEditContainerModal] = useState(false);
     const [containerDetails, setContainerDetails] = useState(null);
     const [isFetching, setIsFetching] = useState(null);
@@ -35,17 +37,16 @@ export default function ContainerDetails() {
     // variable used to display conditional content
     const containerHasItems = items && items.length > 0;
 
-    function handleSubmission() {
-        toast('Container added');
+    // function handleSubmission() {
 
-        async function fetchUpdatedItems() {
-            setIsFetching(true);
-            await handleFetchItems();
-            setIsFetching(false);
-        }
+    //     async function fetchUpdatedItems() {
+    //         setIsFetching(true);
+    //         await handleFetchItems();
+    //         setIsFetching(false);
+    //     }
 
-        fetchUpdatedItems();
-    }
+    //     fetchUpdatedItems();
+    // }
 
     // effect that fetches containers associated with the locker ID
     useEffect(() => {
@@ -104,21 +105,24 @@ export default function ContainerDetails() {
     }
 
     async function handleViewItemDetails(itemId) {
-        console.log("item id, item name: " + itemId, itemName);
+        let response;
+        let itemData;
         
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${itemId}`);
             
             if (!response.ok) {
+                setErrorMessage("Action failed");
                 return;
             };
             
             itemData = await response.json();
-            let itemObj = new Item(itemData.id, itemData.name, itemData.quantity, itemData.description);
-            
+            let itemObj = new Item(itemId, itemData.name, itemData.quantity, itemData.description);
+
             setItemEditing(itemObj);
+            setOpenEditItem(true);
         } catch (error) {
-            console.error(error.message);
+            setErrorMessage(error.message);
         }
     }
     
@@ -200,6 +204,11 @@ export default function ContainerDetails() {
                             </Modal>
                         </div>
                     </Stack>
+                    {errorMessage && (
+                        <div>
+                            <p>{errorMessage}</p>
+                        </div>
+                    )}
                     {containerDetails && (
                         <div>
                             <p>Description: {containerDetails?.description}</p>
@@ -245,14 +254,20 @@ export default function ContainerDetails() {
                                     </Grid>
                                 ))}
                             </Grid>
-                            <Modal open={openEditItem}>
+                            <Modal open={openEditItem} onClose={() => setOpenEditItem(false)}>
                                 <EditItemForm 
-                                    // item={item}
+                                    item={itemEditing}
                                     userId={userId}
                                     lockerId={lockerId}
                                     containerId={containerId}
-                                    onUpdateItems={onUpdateItems}
-                                    onCancel={() => setOpenEditItem(false)}
+                                    onSubmit={{
+                                        fetchUpdatedItems: () => handleFetchItems(),
+                                        closeModal: () => setOpenEditItem(false)
+                                    }}
+                                    onDelete={{
+                                        fetchUpdatedItems: () => handleFetchItems(),
+                                        closeModal: () => setOpenEditItem(false)
+                                    }}
                                 />
                             </Modal>
                         </>

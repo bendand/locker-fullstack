@@ -13,7 +13,7 @@ import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 
 
-export default function EditItemForm({ item, userId, lockerId, containerId, onUpdateItems, onCancel }) {
+export default function EditItemForm({ item, userId, lockerId, containerId, onSubmit, onDelete }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [openDeleteItem, setOpenDeleteItem] = useState(false);
@@ -52,7 +52,7 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onUp
         };
 
         try {
-            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${item.itemId}`, {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${item.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,8 +67,9 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onUp
             }
 
             itemData = await response.json();
-            onUpdateItems();
+            onSubmit.closeModal();
             toast('Item updated');
+            onSubmit.fetchUpdatedItems();
         } catch (error) {
             setErrorMessage(error.message);
         } finally {
@@ -81,7 +82,7 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onUp
         let response;
 
         try {
-            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${item.itemId}`, {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${item.id}`, {
                 method: 'DELETE'
             })
             if (!response.ok) {
@@ -89,9 +90,9 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onUp
                 return;
             }
 
-            onSubmission.closeModal();
-            toast("Container deleted");
-            navigate(`/lockerlist/${lockerId}/${lockerName}`);
+            onDelete.closeModal();
+            toast("Item deleted");
+            onDelete.fetchUpdatedItems();
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -145,9 +146,10 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onUp
                         Submit
                     </Button>
                     <Button 
-                        onClick={onCancel}
+                        onClick={() => setOpenDeleteItem(true)}
+                        color='danger'
                     >
-                        Cancel
+                        Delete Item
                     </Button>
                 </Stack>
             </form>
@@ -155,10 +157,7 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onUp
                 <DeleteForm 
                     unit="item"
                     onCancel={() => setOpenDeleteItem(false)}
-                    onProceedDelete={{
-                        handleDelete: () => handleDeleteItem(),
-                        closeModal: () => setOpenConfirmDeleteLocker(false)
-                    }}
+                    onProceedDelete={() => handleDeleteItem()}
                 />
             </Modal>
         </ModalDialog>

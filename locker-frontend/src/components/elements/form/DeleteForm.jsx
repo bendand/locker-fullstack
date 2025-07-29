@@ -22,7 +22,7 @@ export default function DeleteForm({ unit, onCancel, onProceedDelete }) {
                     </Button>
                     <Button 
                         color="danger"
-                        onClick={() => onProceedDelete.handleDelete()}
+                        onClick={onProceedDelete}
                     >
                         Delete {unit}
                     </Button>

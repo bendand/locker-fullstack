@@ -117,16 +117,13 @@ public class ItemController {
     @PutMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateItem(@PathVariable(value = "itemId") int itemId, @RequestBody ItemDTO updatedItemData) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
-        System.out.println("current item: " + currentItem);
         if (currentItem != null) {
             // Update the item's details
             currentItem.setName(updatedItemData.getName());
             currentItem.setQuantity(updatedItemData.getQuantity());
-
-            System.out.println("updated item: " + currentItem);
-            System.out.println("item would then be saved here");
+            currentItem.setDescription(updatedItemData.getDescription());
             // Save the updated item
-//            itemRepository.save(currentItem);
+            itemRepository.save(currentItem);
             return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
         } else {
             String response = "Item with ID of " + itemId + " not found.";
