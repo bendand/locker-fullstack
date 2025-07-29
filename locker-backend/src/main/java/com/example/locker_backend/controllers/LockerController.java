@@ -33,7 +33,7 @@ public class LockerController {
         List<Locker> allUsersLockers = lockerRepository.findAllByUserId(userId);
         if (allUsersLockers.isEmpty()) {
             String response = "No lockers found for user with ID of " + userId + ".";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT); 
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(allUsersLockers, HttpStatus.OK); // 200

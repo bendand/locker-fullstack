@@ -22,8 +22,6 @@ export default function LockerList() {
     const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId");
     const userHasLockers = lockers && lockers.length > 0;
-    
-    console.log('user id in lockerlist: ' + userId);
 
     useEffect(() => {
         setIsFetching(true);

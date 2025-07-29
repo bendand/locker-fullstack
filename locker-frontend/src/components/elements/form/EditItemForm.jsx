@@ -4,24 +4,23 @@ import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import { toast } from 'react-toastify';
+import DeleteForm from './DeleteForm';
 import { Textarea } from '@mui/joy';
+import Modal from '@mui/joy/Modal';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
-import Modal from '@mui/joy/Modal';
-import DeleteForm from './DeleteForm';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
 
 
-export default function EditContainerForm({ lockerId, lockerName, containerInfo, userId, onSubmission }) {
+export default function EditItemForm({ item, userId, lockerId, containerId, onUpdateItems, onCancel }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [openConfirmDeleteContainer, setOpenConfirmDeleteContainer] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate();
-    const containerId = containerInfo.id;
+    const [openDeleteItem, setOpenDeleteItem] = useState(false);
     const [inputValues, setInputValues] = useState({
-        name: containerInfo.name,
-        description: containerInfo.description
+        name: item.name,
+        quantity: item.quantity,
+        description: item.description
     });
 
     // function that sets new values when inputs are changed
@@ -29,6 +28,7 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
         const { name, value } = event.target;
 
         if (name === 'description' && value.length > 200) return;
+        if (name === 'quantity' && value < 1) return;
         
         setInputValues(prevData => ({
             ...prevData,
@@ -36,18 +36,23 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
         }));
     }
 
-    async function handleSubmitContainer() {
+    async function handleSubmitItem() {
         setIsSubmitting(true);
 
         let response;
+        let itemData;
 
         const formData = {
             name: inputValues.name,
-            description: inputValues.description
+            description: inputValues.description,
+            quantity: inputValues.quantity,
+            userId,
+            lockerId,
+            containerId
         };
 
         try {
-            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers/${containerId}`, {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${item.itemId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,18 +61,14 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
             })
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    setErrorMessage("User not found")
-                } else {
-                    setErrorMessage("Bad request, try again later");
-                }
                 setIsSubmitting(false);
+                setErrorMessage("Bad request, try again later");
                 return;
             }
 
-            onSubmission.closeModal();
-            toast("Container updated");
-            onSubmission.fetchUpdatedContainerDetails();
+            itemData = await response.json();
+            onUpdateItems();
+            toast('Item updated');
         } catch (error) {
             setErrorMessage(error.message);
         } finally {
@@ -75,12 +76,12 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
         }
     }
 
-    async function handleDeleteContainer() {
-        setOpenConfirmDeleteContainer(false);
+    async function handleDeleteItem() {
+        setOpenDeleteItem(false);
         let response;
 
         try {
-            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/containers/${containerId}`, {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${item.itemId}`, {
                 method: 'DELETE'
             })
             if (!response.ok) {
@@ -97,9 +98,10 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
     }
 
 
+
     return (
         <ModalDialog>
-            <DialogTitle>Edit container</DialogTitle>
+            <DialogTitle>Edit item</DialogTitle>
             <form>
                 <Stack spacing={2}>
                     {errorMessage && (
@@ -118,7 +120,7 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
                     <FormControl>                
                         <FormLabel>Description (optional, max 200 characters)</FormLabel>
                         <Textarea
-                            placeholder="Details about container, its appearance, location in locker, etc."
+                            placeholder="Details about item, its appearance, condition, etc."
                             minRows={2}
                             maxRows={4}
                             name='description'
@@ -126,30 +128,39 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
                             onChange={handleInputChange}
                         />
                     </FormControl>
+                    <FormControl>                
+                        <FormLabel>Quantity</FormLabel>
+                        <Input
+                            type="number"
+                            name='quantity'
+                            value={inputValues.quantity}
+                            onChange={handleInputChange}
+                        />
+                    </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitContainer}
+                        onClick={handleSubmitItem}
                         loading={isSubmitting}
                     >
                         Submit
                     </Button>
                     <Button 
-                        color="danger"
-                        onClick={() => setOpenConfirmDeleteContainer(true)}
+                        onClick={onCancel}
                     >
-                        Delete Container
+                        Cancel
                     </Button>
-                    <Modal open={openConfirmDeleteContainer} onClose={() => setOpenConfirmDeleteContainer(false)}>
-                        <DeleteForm 
-                            unit="container"
-                            onCancel={() => setOpenConfirmDeleteContainer(false)}
-                            onProceedDelete={{
-                                handleDelete: () => handleDeleteContainer(),
-                            }}
-                        />
-                    </Modal>
                 </Stack>
             </form>
+            <Modal open={openDeleteItem} onClose={() => setOpenDeleteItem(false)}>
+                <DeleteForm 
+                    unit="item"
+                    onCancel={() => setOpenDeleteItem(false)}
+                    onProceedDelete={{
+                        handleDelete: () => handleDeleteItem(),
+                        closeModal: () => setOpenConfirmDeleteLocker(false)
+                    }}
+                />
+            </Modal>
         </ModalDialog>
     );
 }

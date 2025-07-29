@@ -23,6 +23,8 @@ import { toast } from 'react-toastify';
 export default function ContainerDetails() {
     const [items, setItems] = useState(null);
     const [openAddItemModal, setOpenAddItemModal] = useState(false);
+    const [openEditItem, setOpenEditItem] = useState(false);
+    const [itemEditing, setItemEditing] = useState(null);
     const [openEditContainerModal, setOpenEditContainerModal] = useState(false);
     const [containerDetails, setContainerDetails] = useState(null);
     const [isFetching, setIsFetching] = useState(null);
@@ -64,7 +66,7 @@ export default function ContainerDetails() {
 
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items`);
-            if (response.status === 404) {
+            if (response.status === 204) {
                 return;
             }
             
@@ -101,8 +103,23 @@ export default function ContainerDetails() {
         }
     }
 
-    function handleViewItemDetails(itemId, itemName) {
-        navigate(`/lockerlist/${lockerId}/${lockerName}/${containerId}/${containerName}`);
+    async function handleViewItemDetails(itemId) {
+        console.log("item id, item name: " + itemId, itemName);
+        
+        try {
+            response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items/${itemId}`);
+            
+            if (!response.ok) {
+                return;
+            };
+            
+            itemData = await response.json();
+            let itemObj = new Item(itemData.id, itemData.name, itemData.quantity, itemData.description);
+            
+            setItemEditing(itemObj);
+        } catch (error) {
+            console.error(error.message);
+        }
     }
     
     return (
@@ -172,6 +189,7 @@ export default function ContainerDetails() {
                             <Modal open={openEditContainerModal} onClose={() => setOpenEditContainerModal(false)}>
                                 <EditContainerForm
                                     lockerId={lockerId}
+                                    lockerName={lockerName}
                                     userId={userId}
                                     containerInfo={containerDetails}
                                     onSubmission={{
@@ -187,6 +205,11 @@ export default function ContainerDetails() {
                             <p>Description: {containerDetails?.description}</p>
                         </div>
                     )}
+                    {/* {errorMessage && (
+                        <div>
+                            <p>{errorMessage}</p>
+                        </div>
+                    )} */}
                     {!containerHasItems && (
                         <Stack
                             sx={{ alignContent: "center" }}
@@ -200,24 +223,39 @@ export default function ContainerDetails() {
                         <CircularProgress />
                     )}
                     {containerHasItems && (
-                        <Grid
-                            container
-                            rowSpacing={1}
-                            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                            sx={{ 
-                                width: '100%', 
-                                justifyContent: 'center',
-                            }}
-                        >
-                            {items.map((item) => (
-                                <Grid xs={4} key={item.id}>
-                                    <ItemCard
-                                        item={item}
-                                        onClick={() => handleViewItemDetails(item.id, item.name)}
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
+                        <>
+                            <Grid
+                                container
+                                rowSpacing={1}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                sx={{ 
+                                    width: '100%', 
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {items.map((item) => (
+                                    <Grid xs={4} key={item.id}>
+                                        <ItemCard
+                                            item={item}
+                                            userId={userId}
+                                            lockerId={lockerId}
+                                            containerId={containerId}
+                                            onClick={() => handleViewItemDetails(item.id)}
+                                        />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                            <Modal open={openEditItem}>
+                                <EditItemForm 
+                                    // item={item}
+                                    userId={userId}
+                                    lockerId={lockerId}
+                                    containerId={containerId}
+                                    onUpdateItems={onUpdateItems}
+                                    onCancel={() => setOpenEditItem(false)}
+                                />
+                            </Modal>
+                        </>
                     )}
                 </Box>
             </main>
