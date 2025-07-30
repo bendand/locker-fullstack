@@ -1,6 +1,4 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../App.jsx";
+import { useState } from "react";
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
 import Button from '@mui/joy/Button';
@@ -17,7 +15,6 @@ import { isEmail, isNotEmpty, hasMinLength, isEqualToOtherValue, hasMaxLength } 
 export default function RegisterForm({ changeAuthStatus, handleValidate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { setUserId } = useContext(AuthContext);
 
     const {value: firstNameValue, 
         handleInputChange: handleFirstNameChange, 

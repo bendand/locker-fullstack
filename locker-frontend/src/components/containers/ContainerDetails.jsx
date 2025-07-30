@@ -1,10 +1,10 @@
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Footer from '../Footer';
 import Container from '../../classes/Container';
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import Item from '../../classes/Item';
-import ItemCard from "../containerItems/ItemCard";
-import GettingStartedNav from "../elements/nav/GettingStartedNav";
+import ItemCard from "../items/ItemCard";
+import MainNav from "../elements/nav/MainNav";
 import Breadcrumb from "../elements/breadcrumb/Breadcrumb";
 import Button from '@mui/joy/Button';
 import Box from '@mui/joy/Box';
@@ -14,10 +14,8 @@ import AddItemForm from "../elements/form/AddItemForm";
 import EditItemForm from "../elements/form/EditItemForm";
 import EditContainerForm from "../elements/form/EditContainerForm"
 import Grid from '@mui/joy/Grid';
-
 import Modal from '@mui/joy/Modal';
 import Add from '@mui/icons-material/Add';
-import { toast } from 'react-toastify'; 
 
 
 
@@ -35,9 +33,6 @@ export default function ContainerDetails() {
 
     // variable used to display conditional content
     const containerHasItems = items && items.length > 0;
-
-    console.log("items being held in state variable: ");
-    console.log(items);
 
     // effect that fetches containers associated with the locker ID
     useEffect(() => {
@@ -118,11 +113,11 @@ export default function ContainerDetails() {
     
     return (
         <>
-            <GettingStartedNav />
+            <MainNav />
             <main>
                 <Box
                     sx={{
-                        width: 1000,
+                        width: '80%',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -222,13 +217,15 @@ export default function ContainerDetails() {
                                 container
                                 rowSpacing={1}
                                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                direction={{ xs: "column", sm: "column", md: "row", lg: "row" }}
                                 sx={{ 
-                                    width: '100%', 
-                                    justifyContent: 'center',
+                                    width: "100%", 
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             >
                                 {items.map((item) => (
-                                    <Grid xs={4} key={item.id}>
+                                    <Grid xs={4} key={item.id} display="flex">
                                         <ItemCard
                                             item={item}
                                             userId={userId}

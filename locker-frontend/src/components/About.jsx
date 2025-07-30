@@ -1,12 +1,11 @@
-import Navigation from "./Header";
 import Footer from "./Footer";
-import GettingStartedNav from "./elements/nav/GettingStartedNav";
+import MainNav from "./elements/nav/MainNav";
 
 export default function About() {
 
     return (
         <>
-            <GettingStartedNav/>
+            <MainNav/>
             <main>
                 <div className="about-container">
                     <div className="about-page">

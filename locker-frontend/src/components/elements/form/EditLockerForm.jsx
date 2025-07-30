@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
@@ -11,7 +11,6 @@ import Modal from '@mui/joy/Modal';
 import DeleteForm from './DeleteForm';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
-
 
 export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,7 +112,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
-                            required 
+                            required="true"
                             name='name'
                             value={inputValues.name}
                             onChange={handleInputChange}
@@ -122,7 +121,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                     <FormControl>
                         <FormLabel>Address</FormLabel>
                         <Input 
-                            required
+                            required="true"
                             name='address'
                             value={inputValues.address}
                             onChange={handleInputChange}

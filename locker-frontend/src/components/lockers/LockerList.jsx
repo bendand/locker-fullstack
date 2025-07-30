@@ -2,10 +2,9 @@ import LockerCard from "./LockerCard";
 import Footer from "../Footer";
 import Locker from '../../classes/Locker'
 import Breadcrumb from '../elements/breadcrumb/Breadcrumb';
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { AuthContext } from '../../App';
-import GettingStartedNav from "../elements/nav/GettingStartedNav";
+import MainNav from "../elements/nav/MainNav";
 import AddLockerForm from "../elements/form/AddLockerForm";
 import Button from '@mui/joy/Button';
 import Box from '@mui/joy/Box';
@@ -43,7 +42,6 @@ export default function LockerList() {
             lockerData = await response.json();
             lockerData.forEach(locker => {
                 let newLocker = new Locker(locker.id, locker.name, locker.address, locker.details);
-                // console.log('here is a locker JS object thats being pushed to lockers: ', newLocker);
                 lockers.push(newLocker);
             });
 
@@ -61,24 +59,22 @@ export default function LockerList() {
 
     return (
         <>
-            <GettingStartedNav/>
+            <MainNav/>
             <main>
                 <Box
                     sx={{
-                        width: 1000,
+                        width: '80%',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: 2
                     }}
                 >
-                    <div>
-                        <Breadcrumb 
-                            lockersViewed={true}
-                            containersViewed={false}
-                            itemsViewed={false}
-                        />
-                    </div>
+                    <Breadcrumb 
+                        lockersViewed={true}
+                        containersViewed={false}
+                        itemsViewed={false}
+                    />
                     <Stack
                         direction="row"
                         spacing={2}
@@ -128,13 +124,19 @@ export default function LockerList() {
                             container
                             rowSpacing={1}
                             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                            direction={{ xs: "column", sm: "column", md: "row", lg: "row" }}
                             sx={{ 
-                                width: '100%', 
-                                justifyContent: 'center',
+                                width: "100%", 
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}
                         >
                             {lockers.map((locker, index) => (
-                                <Grid xs={4} key={locker.id}>
+                                <Grid 
+                                    xs={4} 
+                                    key={locker.id}
+                                    display="flex"
+                                >
                                     <LockerCard 
                                         locker={locker}
                                         onClick={() => handleViewLockerDetails(locker.id, locker.name)}

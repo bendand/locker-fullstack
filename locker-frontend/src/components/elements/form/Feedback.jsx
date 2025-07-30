@@ -1,10 +1,10 @@
-import GettingStartedNav from "../nav/GettingStartedNav";
+import MainNav from "../nav/MainNav";
 
-export default function Feedback({ user }) {
+export default function Feedback() {
 
     return (
         <>
-            <GettingStartedNav  />
+            <MainNav  />
             <div>
                 <h2>Submit feedback or recommendations for application improvements.</h2>
             </div>

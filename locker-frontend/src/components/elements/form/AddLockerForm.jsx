@@ -1,15 +1,13 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
-import DialogContent from '@mui/joy/DialogContent';
 import { Textarea } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 import { toast } from 'react-toastify';
-
 
 export default function AddLockerForm({ userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,7 +86,7 @@ export default function AddLockerForm({ userId, onSubmission }) {
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
-                            required 
+                            required="true"
                             name='name'
                             value={inputValues.name}
                             onChange={handleInputChange}
@@ -97,7 +95,7 @@ export default function AddLockerForm({ userId, onSubmission }) {
                     <FormControl>
                         <FormLabel>Address</FormLabel>
                         <Input 
-                            required
+                            required="true"
                             name='address'
                             value={inputValues.address}
                             onChange={handleInputChange}

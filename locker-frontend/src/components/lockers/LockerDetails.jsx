@@ -1,12 +1,10 @@
-import { useParams, useNavigate, Link } from "react-router";
-import { useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from "react-router";
 import Footer from "../Footer";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import Container from '../../classes/Container'
 import Locker from "../../classes/Locker";
 import ContainerCard from "../containers/ContainerCard";
-import { toast } from 'react-toastify';
-import GettingStartedNav from "../elements/nav/GettingStartedNav";
+import MainNav from "../elements/nav/MainNav";
 import Breadcrumb from "../elements/breadcrumb/Breadcrumb";
 import Button from '@mui/joy/Button';
 import Box from '@mui/joy/Box';
@@ -15,7 +13,6 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import AddContainerForm from "../elements/form/AddContainerForm";
 import EditLockerForm from "../elements/form/EditLockerForm";
 import Grid from '@mui/joy/Grid';
-
 import Modal from '@mui/joy/Modal';
 import Add from '@mui/icons-material/Add';
 
@@ -104,11 +101,11 @@ export default function LockerDetails() {
 
     return (
         <>
-            <GettingStartedNav />
+            <MainNav />
             <main>
                 <Box
                     sx={{
-                        width: 1000,
+                        width: '80%',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -199,15 +196,18 @@ export default function LockerDetails() {
                             container
                             rowSpacing={1}
                             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                            direction={{ xs: "column", sm: "column", md: "row", lg: "row" }}
                             sx={{ 
-                                width: '100%', 
-                                justifyContent: 'center',
+                                width: "100%", 
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}
                         >
                             {containers.map((container, index) => (
                                 <Grid 
                                     xs={4} 
                                     key={container.id}
+                                    display="flex"
                                 >
                                     <ContainerCard
                                         container={container}

@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import RegisterForm from './elements/form/RegisterForm';
-import GettingStartedNav from './elements/nav/GettingStartedNav';
+import MainNav from './elements/nav/MainNav';
 import Footer from '../components/Footer';
-import Toast from './elements/toast/Toast';
 import Modal from '@mui/joy/Modal';
 import Button from '@mui/joy/Button';
 import LoginForm from './elements/form/LoginForm'
@@ -28,7 +27,7 @@ export default function GettingStarted() {
 
     return (
         <>
-            <GettingStartedNav/>
+            <MainNav/>
             <main>
                 <section className="homepage-content">
                     <div className="left-homepage">

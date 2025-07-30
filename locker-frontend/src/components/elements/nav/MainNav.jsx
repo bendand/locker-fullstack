@@ -14,14 +14,10 @@ import Autocomplete from '@mui/joy/Autocomplete';
 import Person from '@mui/icons-material/Person';
 import Search from '@mui/icons-material/Person';
 import { SearchOutlined, SearchRounded } from '@mui/icons-material';
-import { useState, useContext } from 'react';
-import { AuthContext } from '../../../App';
 
-export default function GettingStartedNav() {
-    const [searchedItems, setSearchedItems] = useState(['nike shoes', 'lampshade', 'full size bedsheet set']);
-    // const { userId } = useContext(AuthContext);
+
+export default function MainNav() {
     const userId = sessionStorage.getItem("userId");
-    
 
     return (
         <header>
@@ -84,48 +80,59 @@ export default function GettingStartedNav() {
                         <h4>Locker</h4>
                     </Link>
                 </div>
-                <div>
+                <Stack
+                    direction="row"
+                    spacing={{ xs: 1, sm: 2, md: 4 }}
+                >
                     <List
                         role="menubar"
                         orientation="horizontal"
+
+                        spacing={1}
                     >
                         <ListItem 
                             role="none"
                             component={RouterLink}
                             to={'/lockerlist'}
+                            padding={1}
+
                         >
                             <ListItemButton role="menuitem">
                                 My Lockers
                             </ListItemButton>
                         </ListItem>
-                        <ListDivider />
                         <ListItem 
                             role="none"
                             component={RouterLink}
                             to={'/feedback'}
+                            padding={1}
+
                         >
                             <ListItemButton role="menuitem">
                                 Leave Feedback
                             </ListItemButton>
                         </ListItem>
-                        <ListDivider />
                         <ListItem 
                             role="none"
                             component={RouterLink}
+                            padding={1}
                         >
                             <ListItemButton role="menuitem">
-                                Find an Item
+                                Find Item
                                 <SearchOutlined />
                             </ListItemButton>
                         </ListItem>
 
                     </List>
-                </div>
+                </Stack>
                 <Stack
                     direction="row"
                     spacing={2}
                 >
-                    <Person fontSize='xl3' />
+                    <Person 
+                        fontSize='xl3' 
+                        // onClick={}
+                    />
                 </Stack>
             </Box>
         )}

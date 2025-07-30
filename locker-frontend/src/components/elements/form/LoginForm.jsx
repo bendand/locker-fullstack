@@ -1,5 +1,4 @@
-import { useState, useContext } from "react";
-import { AuthContext } from "../../../App.jsx";
+import { useState } from "react";
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
 import Button from '@mui/joy/Button';
@@ -13,11 +12,9 @@ import { InfoOutlined } from '@mui/icons-material';
 import { useInput } from '../../../hooks/useInput';
 import { isEmail, hasMinLength, hasMaxLength } from '../../../util/validation.js';
 
-
 export default function LoginForm({ changeAuthStatus, handleValidate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { setUserId } = useContext(AuthContext);
 
 
     const {value: emailValue, 
@@ -74,7 +71,6 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
 
             userData = await response.json();
             sessionStorage.setItem("userId", userData.id);
-            setUserId(userData.id);
             handleValidate();
         } catch (error) {
             setErrorMessage(error.message);
