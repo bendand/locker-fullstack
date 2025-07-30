@@ -103,16 +103,16 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
     return (
         <ModalDialog>
             <DialogTitle>Edit locker</DialogTitle>
-            <form>
+            <form onSubmit={handleSubmitLocker}>
                 <Stack spacing={2}>
                     {errorMessage && (
                         <p>{errorMessage}</p>
                     )}
-                    <FormControl>
+                    <FormControl required>
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
-                            required="true"
+                            required
                             name='name'
                             value={inputValues.name}
                             onChange={handleInputChange}
@@ -120,8 +120,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                     </FormControl>
                     <FormControl>
                         <FormLabel>Address</FormLabel>
-                        <Input 
-                            required="true"
+                        <Input
                             name='address'
                             value={inputValues.address}
                             onChange={handleInputChange}
@@ -140,7 +139,6 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitLocker}
                         loading={isSubmitting}
                     >
                         Submit

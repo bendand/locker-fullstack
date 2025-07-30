@@ -74,12 +74,12 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
     return (
         <ModalDialog>
             <DialogTitle>Add a container</DialogTitle>
-            <form>
+            <form onSubmit={handleSubmitContainer}>
                 <Stack spacing={2}>
                     {errorMessage && (
                         <p>{errorMessage}</p>
                     )}
-                    <FormControl>
+                    <FormControl required>
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
@@ -102,7 +102,6 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitContainer}
                         loading={isSubmitting}
                     >
                         Submit

@@ -100,12 +100,12 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
     return (
         <ModalDialog>
             <DialogTitle>Edit container</DialogTitle>
-            <form>
+            <form onSubmit={handleSubmitContainer}>
                 <Stack spacing={2}>
                     {errorMessage && (
                         <p>{errorMessage}</p>
                     )}
-                    <FormControl>
+                    <FormControl required>
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
@@ -128,7 +128,6 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitContainer}
                         loading={isSubmitting}
                     >
                         Submit

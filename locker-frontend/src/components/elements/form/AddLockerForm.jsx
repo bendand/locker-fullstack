@@ -77,12 +77,12 @@ export default function AddLockerForm({ userId, onSubmission }) {
     return (
         <ModalDialog>
             <DialogTitle>Add a locker</DialogTitle>
-            <form>
+            <form onSubmit={handleSubmitLocker}>
                 <Stack spacing={2}>
                     {errorMessage && (
                         <p>{errorMessage}</p>
                     )}
-                    <FormControl>
+                    <FormControl required>
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
@@ -114,7 +114,6 @@ export default function AddLockerForm({ userId, onSubmission }) {
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitLocker}
                         loading={isSubmitting}
                     >
                         Submit

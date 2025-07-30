@@ -78,16 +78,16 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
     return (
         <ModalDialog>
             <DialogTitle>Add an item</DialogTitle>
-            <form>
+            <form onSubmit={handleSubmitItem}>
                 <Stack spacing={2}>
                     {errorMessage && (
                         <p>{errorMessage}</p>
                     )}
-                    <FormControl>
-                        <FormLabel>Name</FormLabel>
+                    <FormControl required>
+                        <FormLabel required>Name</FormLabel>
                         <Input 
-                            autoFocus 
-                            required 
+                            required
+                            autoFocus  
                             name='name'
                             value={inputValues.name}
                             onChange={handleInputChange}
@@ -115,7 +115,6 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitItem}
                         loading={isSubmitting}
                     >
                         Submit

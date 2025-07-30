@@ -105,16 +105,16 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
     return (
         <ModalDialog>
             <DialogTitle>Edit item</DialogTitle>
-            <form>
+            <form onSubmit={handleSubmitItem}>
                 <Stack spacing={2}>
                     {errorMessage && (
                         <p>{errorMessage}</p>
                     )}
-                    <FormControl>
+                    <FormControl required>
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
-                            required 
+                            required
                             name='name'
                             value={inputValues.name}
                             onChange={handleInputChange}
@@ -142,7 +142,6 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
                     </FormControl>
                     <Button 
                         type="submit"
-                        onClick={handleSubmitItem}
                         loading={isSubmitting}
                     >
                         Submit

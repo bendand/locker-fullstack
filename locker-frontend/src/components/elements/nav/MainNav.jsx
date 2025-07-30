@@ -14,6 +14,7 @@ import Autocomplete from '@mui/joy/Autocomplete';
 import Person from '@mui/icons-material/Person';
 import Search from '@mui/icons-material/Person';
 import { SearchOutlined, SearchRounded } from '@mui/icons-material';
+import UserDrawer from "../nav/UserDrawer";
 
 
 export default function MainNav() {
@@ -129,10 +130,7 @@ export default function MainNav() {
                     direction="row"
                     spacing={2}
                 >
-                    <Person 
-                        fontSize='xl3' 
-                        // onClick={}
-                    />
+                    <UserDrawer />
                 </Stack>
             </Box>
         )}
