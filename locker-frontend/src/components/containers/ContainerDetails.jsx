@@ -30,23 +30,14 @@ export default function ContainerDetails() {
     const [openEditContainerModal, setOpenEditContainerModal] = useState(false);
     const [containerDetails, setContainerDetails] = useState(null);
     const [isFetching, setIsFetching] = useState(null);
-    const { lockerId, lockerName, containerId, containerName } = useParams();
+    const { lockerId, lockerName, containerId } = useParams();
     const userId = sessionStorage.getItem('userId');
-    const navigate = useNavigate();
 
     // variable used to display conditional content
     const containerHasItems = items && items.length > 0;
 
-    // function handleSubmission() {
-
-    //     async function fetchUpdatedItems() {
-    //         setIsFetching(true);
-    //         await handleFetchItems();
-    //         setIsFetching(false);
-    //     }
-
-    //     fetchUpdatedItems();
-    // }
+    console.log("items being held in state variable: ");
+    console.log(items);
 
     // effect that fetches containers associated with the locker ID
     useEffect(() => {
@@ -68,19 +59,18 @@ export default function ContainerDetails() {
         try {
             response = await fetch(`http://localhost:8080/${userId}/${lockerId}/${containerId}/items`);
             if (response.status === 204) {
+                setItems([]);
                 return;
             }
-            
 
             containerData = await response.json();
             containerData.forEach(item => {
                 let newItem = new Item(item.itemId, item.name, item.quantity, item.description);
                 items.push(newItem);
             });
-
             setItems(items);
         } catch (error) {
-            console.error(error.message);
+            setErrorMessage(error.message);
         }
     }
 
@@ -214,11 +204,6 @@ export default function ContainerDetails() {
                             <p>Description: {containerDetails?.description}</p>
                         </div>
                     )}
-                    {/* {errorMessage && (
-                        <div>
-                            <p>{errorMessage}</p>
-                        </div>
-                    )} */}
                     {!containerHasItems && (
                         <Stack
                             sx={{ alignContent: "center" }}

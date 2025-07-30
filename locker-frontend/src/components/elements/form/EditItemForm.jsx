@@ -86,13 +86,16 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
                 method: 'DELETE'
             })
             if (!response.ok) {
+                console.log("delete request was not ok");
                 setErrorMessage("Bad request, try again later");
                 return;
             }
 
+            console.log("about to fetch updated items");
+            onDelete.fetchUpdatedItems();
+            console.log("about to close edit modal");
             onDelete.closeModal();
             toast("Item deleted");
-            onDelete.fetchUpdatedItems();
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -153,7 +156,7 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
                     </Button>
                 </Stack>
             </form>
-            <Modal open={openDeleteItem} onClose={() => setOpenDeleteItem(false)}>
+            <Modal open={openDeleteItem} onClose={() => setOpenDeleteItem(false)} >
                 <DeleteForm 
                     unit="item"
                     onCancel={() => setOpenDeleteItem(false)}

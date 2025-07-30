@@ -143,9 +143,7 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
                         <DeleteForm 
                             unit="container"
                             onCancel={() => setOpenConfirmDeleteContainer(false)}
-                            onProceedDelete={{
-                                handleDelete: () => handleDeleteContainer(),
-                            }}
+                            onProceedDelete={() => handleDeleteContainer()}
                         />
                     </Modal>
                 </Stack>

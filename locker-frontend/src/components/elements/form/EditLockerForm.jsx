@@ -156,10 +156,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                         <DeleteForm 
                             unit="locker"
                             onCancel={() => setOpenConfirmDeleteLocker(false)}
-                            onProceedDelete={{
-                                handleDeleteLocker: () => handleDeleteLocker(),
-                                closeModal: () => setOpenConfirmDeleteLocker(false)
-                            }}
+                            onProceedDelete={ () => handleDeleteLocker()}
                         />
                     </Modal>
                 </Stack>
