@@ -50,19 +50,6 @@ public class Locker {
         this.details = details;
     }
 
-//    public Locker(String name, User user, String address) {
-//        this.name = name;
-//        this.user = user;
-//        this.address = address;
-//        this.details = "";
-//    }
-
-//    public Locker(int id, String name, int userId) {
-//        this.id = id;
-//        this.name = name;
-//        this.userId = userId;
-//    }
-
 
     public User getUser() { return user; }
 
@@ -96,6 +83,15 @@ public class Locker {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getTotalItems() {
+        int totalItems = 0;
+        for (Item item : items) {
+            totalItems += item.getQuantity();
+        }
+
+        return totalItems;
     }
 
     public String getDetails() {

@@ -1,5 +1,6 @@
 package com.example.locker_backend.controllers;
 
+import com.example.locker_backend.models.Locker;
 import com.example.locker_backend.models.User;
 import com.example.locker_backend.models.dto.UserDTO;
 import com.example.locker_backend.repositories.UserRepository;
@@ -9,7 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.example.locker_backend.services.CustomUserDetailsService;
 
 
@@ -99,14 +104,24 @@ public class UserController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK); // 200 OK
     }
 
-    // Endpoint to get a user by ID
+    // Endpoint to get a user by ID and return necessary info for profile card
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable(value = "userId") int userId) {
-        System.out.println("get user by id endpoint hit");
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        System.out.println("user fetched: " + user);
-        return ResponseEntity.ok(user); // 200 OK
+
+        int numUserLockers = user.getLockers().size();
+        int totalItems = 0;
+        for (Locker locker : user.getLockers()) {
+            totalItems += locker.getTotalItems();
+        }
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("userData", user);
+        result.put("numUserLockers", numUserLockers);
+        result.put("totalItems", totalItems);
+
+        return ResponseEntity.ok(result); // 200 OK
     }
 }

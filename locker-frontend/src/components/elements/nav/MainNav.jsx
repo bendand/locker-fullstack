@@ -13,12 +13,17 @@ import FormControl from '@mui/joy/FormControl';
 import Autocomplete from '@mui/joy/Autocomplete';
 import Person from '@mui/icons-material/Person';
 import Search from '@mui/icons-material/Person';
+import Modal from '@mui/joy/Modal';
 import { SearchOutlined, SearchRounded } from '@mui/icons-material';
 import UserDrawer from "../nav/UserDrawer";
+import { useState } from 'react';
+import SearchItemForm from '../form/SearchItemForm';
 
 
 export default function MainNav() {
     const userId = sessionStorage.getItem("userId");
+    const [openSearch, setOpenSearch] = useState(false);
+    const [isSearchingItems, setIsSearchingItems] = useState(false);
 
     return (
         <header>
@@ -118,12 +123,11 @@ export default function MainNav() {
                             component={RouterLink}
                             padding={1}
                         >
-                            <ListItemButton role="menuitem">
+                            <ListItemButton role="menuitem" onClick={() => setOpenSearch(true)}>
                                 Find Item
                                 <SearchOutlined />
                             </ListItemButton>
                         </ListItem>
-
                     </List>
                 </Stack>
                 <Stack
@@ -134,6 +138,9 @@ export default function MainNav() {
                 </Stack>
             </Box>
         )}
+        <Modal open={openSearch} onClose={() => setOpenSearch(false)}>
+            <SearchItemForm />
+        </Modal>
         </header>
 
     );
