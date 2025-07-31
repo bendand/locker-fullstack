@@ -32,7 +32,8 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
         }));
     }
 
-    async function handleSubmitItem() {
+    async function handleSubmitItem(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         let response;

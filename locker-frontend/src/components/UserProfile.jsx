@@ -58,12 +58,6 @@ export default function UserProfile() {
         <>
             <MainNav />
             <main>
-                {errorMessage && (
-                    <p>{errorMessage}</p>
-                )}
-                {isFetching && (
-                    <CircularProgress />
-                )}
                 <Box 
                     sx={{ 
                         justifyContent: 'center',
@@ -71,6 +65,12 @@ export default function UserProfile() {
                         width: '60%',
                     }}
                 >
+                {errorMessage && (
+                    <p>{errorMessage}</p>
+                )}
+                {isFetching && (
+                    <CircularProgress />
+                )}
                 {user && (
                     <>
                         <h1><em>Admin users</em></h1>

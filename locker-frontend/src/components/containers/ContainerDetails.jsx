@@ -110,6 +110,10 @@ export default function ContainerDetails() {
             setErrorMessage(error.message);
         }
     }
+
+    function handleViewLockers() {
+        navigate('/lockerlist');
+    }
     
     return (
         <>
@@ -129,6 +133,7 @@ export default function ContainerDetails() {
                             lockersViewed={false}
                             containersViewed={false}
                             itemsViewed={true}
+                            onClickLockers={() => handleViewLockers()}                            
                         />
                     </div>
                     <Stack

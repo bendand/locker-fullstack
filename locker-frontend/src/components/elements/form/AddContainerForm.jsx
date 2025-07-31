@@ -30,7 +30,8 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
         }));
     }
 
-    async function handleSubmitContainer() {
+    async function handleSubmitContainer(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         let response;

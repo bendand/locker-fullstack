@@ -36,7 +36,8 @@ export default function EditContainerForm({ lockerId, lockerName, containerInfo,
         }));
     }
 
-    async function handleSubmitContainer() {
+    async function handleSubmitContainer(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         let response;

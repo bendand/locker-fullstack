@@ -98,6 +98,10 @@ export default function LockerDetails() {
         navigate(`/lockerlist/${lockerId}/${lockerName}/${containerId}/${containerName}`);
     }
 
+    function handleViewLockers() {
+        navigate('/lockerlist');
+    }
+
 
     return (
         <>
@@ -117,6 +121,7 @@ export default function LockerDetails() {
                             lockersViewed={false}
                             containersViewed={true}
                             itemsViewed={false}
+                            onClickLockers={() => handleViewLockers()}
                         />
                     </div>
                     <Stack

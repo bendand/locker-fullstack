@@ -36,7 +36,8 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         }));
     }
 
-    async function handleSubmitLocker() {
+    async function handleSubmitLocker(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         let response;

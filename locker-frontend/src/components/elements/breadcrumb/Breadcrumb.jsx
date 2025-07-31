@@ -1,12 +1,12 @@
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import { KeyboardArrowLeft } from '@mui/icons-material';
+import { KeyboardArrowRight } from '@mui/icons-material';
 
-export default function Breadcrumb({ lockersViewed, containersViewed, itemsViewed }) {
+export default function Breadcrumb({ lockersViewed, containersViewed, itemsViewed, onClickLockers }) {
     return (
         <Breadcrumbs 
-            // separator={<KeyboardArrowLeft />} 
+            separator='' 
             size="lg"
               sx={{
                 "--Breadcrumbs-gap": "10px",
@@ -15,20 +15,23 @@ export default function Breadcrumb({ lockersViewed, containersViewed, itemsViewe
             }}
         >
             <Link 
-                color="neutral"
-                disabled={lockersViewed}
+                color={lockersViewed ? 'gray' : 'neutral'}
+                underline='none'
+                onClick={onClickLockers}
             >
                 Lockers
             </Link>
+            <KeyboardArrowRight/>
             <Link  
-                color="neutral"
-                disabled={containersViewed}
+                color={containersViewed ? 'gray' : 'neutral'}
+                underline='none'
             >
                 Containers
             </Link>
+            <KeyboardArrowRight />
             <Link 
-                color="neutral"
-                disabled={itemsViewed}
+                color={itemsViewed ? 'gray' : 'neutral'}
+                underline='none'
             >
                 Items
             </Link>

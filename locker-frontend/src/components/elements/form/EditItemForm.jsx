@@ -35,7 +35,8 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
         }));
     }
 
-    async function handleSubmitItem() {
+    async function handleSubmitItem(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         let response;

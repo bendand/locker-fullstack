@@ -30,7 +30,8 @@ export default function AddLockerForm({ userId, onSubmission }) {
         }));
     }
 
-    async function handleSubmitLocker() {
+    async function handleSubmitLocker(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         let response;
@@ -86,7 +87,7 @@ export default function AddLockerForm({ userId, onSubmission }) {
                         <FormLabel>Name</FormLabel>
                         <Input 
                             autoFocus 
-                            required="true"
+                            required
                             name='name'
                             value={inputValues.name}
                             onChange={handleInputChange}
@@ -95,7 +96,7 @@ export default function AddLockerForm({ userId, onSubmission }) {
                     <FormControl>
                         <FormLabel>Address</FormLabel>
                         <Input 
-                            required="true"
+                            required
                             name='address'
                             value={inputValues.address}
                             onChange={handleInputChange}
