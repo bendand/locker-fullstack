@@ -1,16 +1,28 @@
 package com.example.locker_backend.controllers;
 
+import com.example.locker_backend.io.AuthRequest;
+import com.example.locker_backend.io.UserRequest;
+import com.example.locker_backend.io.UserResponse;
 import com.example.locker_backend.models.Item;
 import com.example.locker_backend.models.Locker;
 import com.example.locker_backend.models.User;
 import com.example.locker_backend.models.dto.UserDTO;
 import com.example.locker_backend.repositories.UserRepository;
 import com.example.locker_backend.repositories.ItemRepository;
+import com.example.locker_backend.services.TokenBlacklistService;
+import com.example.locker_backend.services.UserService;
+import com.example.locker_backend.utils.JwtTokenUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +34,18 @@ import java.util.Map;
 import com.example.locker_backend.services.CustomUserDetailsService;
 
 
+//@CrossOrigin(maxAge = 3600)
+@RequiredArgsConstructor
 @RestController
-@CrossOrigin(maxAge = 3600)
 @RequestMapping("/")
 public class UserController {
+
+    private final ModelMapper modelMapper;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailsService userDetailsService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Autowired
     private UserRepository userRepository;
@@ -33,8 +53,6 @@ public class UserController {
     @Autowired
     private ItemRepository itemRepository;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/login")
     public ResponseEntity<?> logIn(@RequestBody UserDTO userData) {
@@ -54,6 +72,7 @@ public class UserController {
     }
 
     //  Endpoint to register a new user
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value="/register", consumes=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userData) {
         if (userRepository.existsByEmail(userData.getEmail())) {
@@ -71,10 +90,44 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser); // 201 Created
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/logout")
+    public void logOut(HttpServletRequest request) {
+        String jwtToken = extractJwtTokenFromRequest(request);
+        if (jwtToken != null) {
+            tokenBlacklistService.addTokenToBlacklist(jwtToken);
+        }
+    }
+
+    private String extractJwtTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    private void authenticate(AuthRequest authRequest) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+        } catch (DisabledException ex) {
+            throw new Exception("Profile disabled");
+        }
+    }
+
+    // Mapper method to map values from request to DTO
+    private UserDTO mapToUserDTO(UserRequest userRequest) {
+        return modelMapper.map(userRequest, UserDTO.class);
+    }
+
+    // Mapper method to map values from DTO to response
+    private UserResponse mapToUserProfileResponse(UserDTO userDTO) {
+        return modelMapper.map(userDTO, UserResponse.class);
+    }
+
 
     // Endpoint to update an existing user
     @PutMapping("/users/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable(value = "userId") int userId, @RequestBody UserDTO newUserData) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));

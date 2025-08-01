@@ -1,12 +1,20 @@
 package com.example.locker_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Entity
+@AllArgsConstructor
+@Data
+@Builder
 public class User {
 
     @Id
@@ -27,6 +35,10 @@ public class User {
 
     @Column(length = 256, name="password")
     private String password;
+
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Timestamp createdAt;
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     @JsonBackReference
@@ -128,11 +140,5 @@ public class User {
     public String toString() {
         return firstName + " " + lastName + " - " + email;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
 
 }
