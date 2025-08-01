@@ -31,8 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.locker_backend.services.CustomUserDetailsService;
-
 
 //@CrossOrigin(maxAge = 3600)
 @RequiredArgsConstructor
@@ -53,7 +51,10 @@ public class UserController {
     @Autowired
     private ItemRepository itemRepository;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e6845ed (meaningful progress on search item functionality)
     @PostMapping("/login")
     public ResponseEntity<?> logIn(@RequestBody UserDTO userData) {
         // Check if user exists in the database

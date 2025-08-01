@@ -12,7 +12,8 @@ import { toast } from 'react-toastify';
 export default function GettingStarted() {
     const [authStatus, setAuthStatus] = useState('default');
     const navigate = useNavigate();
-
+    const userId = sessionStorage.getItem('userId');
+    
     function handleOnRegister() {
         setAuthStatus('default');
         toast('Registration successful!');
@@ -43,14 +44,16 @@ export default function GettingStarted() {
                             Locker is your bookkeeper for everything storage-related 
                         </p>
                         <div>
-                            <Button 
-                                variant="outlined" 
-                                color="neutral" 
-                                onClick={() => setAuthStatus('registering')} 
-                                size="md"
-                                >
-                                Get Started
-                            </Button>
+                            {userId === null && (
+                                <Button 
+                                    variant="outlined" 
+                                    color="neutral" 
+                                    onClick={() => setAuthStatus('registering')} 
+                                    size="md"
+                                    >
+                                    Get Started
+                                </Button>
+                            )}
                             <Modal
                                 aria-labelledby="modal-title"
                                 aria-describedby="modal-desc"
