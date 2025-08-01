@@ -17,7 +17,7 @@ export default function SearchItemForm() {
 
     console.log('search input\'s options: ');
     if (searchableItems !== null) {
-      console.log(searchableItems);
+      console.log(searchInput.options);
     }
 
 
