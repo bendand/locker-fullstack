@@ -1,25 +1,67 @@
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
+import Item from '../../../classes/Item';
 import Autocomplete from '@mui/joy/Autocomplete';
 import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
+import { useState, useEffect } from 'react';
 
 export default function SearchItemForm() {
-  return (
-    <ModalDialog>
-        <DialogTitle>Find an item</DialogTitle>
-        <Stack spacing={2} sx={{ width: 300 }}>
-            <FormControl>
-                <Autocomplete
-                    freeSolo
-                    placeholder="Type anything"
-                    options={top100Films.map((option) => option.title)}
-                />
-            </FormControl>
-        </Stack>
-    </ModalDialog> 
-  );
+    const [searchableItems, setSearchableItems] = useState();
+    const [errorMessage, setErrorMessage] = useState('');
+    const userId = sessionStorage.getItem('userId');
+
+    useEffect(() => {
+        handleFetchItems();
+    }, []);
+
+    async function handleFetchItems() {
+        let items = [];
+        let response;
+        let itemsData;
+
+        try {
+            response = await fetch(`http://localhost:8080/${userId}/items`);
+            
+            if (response.status === 204 || response.status === 400) {
+                console.log('response message')
+                console.log(response.message);
+                setErrorMessage(response.message);
+                return;
+            }
+            
+            itemsData = await response.json();
+            itemsData.forEach(item => {
+                let newItem = new Item(item.id, item.name, item.quantity, item.description);
+                items.push(newItem);
+            });
+
+            setSearchableItems(items);
+        } catch (error) {
+            setErrorMessage(error.message);
+        }
+    }
+
+    return (
+        <ModalDialog>
+            <DialogTitle>Find an item</DialogTitle>
+            {errorMessage && (
+                <div>
+                    <p>{errorMessage}</p>
+                </div>
+            )}
+            <Stack spacing={2} sx={{ width: 300 }}>
+                <FormControl>
+                    <Autocomplete
+                        freeSolo
+                        placeholder="Type anything"
+                        options={top100Films.map((option) => option.title)}
+                    />
+                </FormControl>
+            </Stack>
+        </ModalDialog> 
+    );
 }
 
 // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top

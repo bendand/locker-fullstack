@@ -1,16 +1,20 @@
 package com.example.locker_backend.controllers;
 
+import com.example.locker_backend.models.Item;
 import com.example.locker_backend.models.Locker;
 import com.example.locker_backend.models.User;
 import com.example.locker_backend.models.dto.UserDTO;
 import com.example.locker_backend.repositories.UserRepository;
+import com.example.locker_backend.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +29,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -67,6 +74,7 @@ public class UserController {
 
     // Endpoint to update an existing user
     @PutMapping("/users/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable(value = "userId") int userId, @RequestBody UserDTO newUserData) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
@@ -123,5 +131,27 @@ public class UserController {
         result.put("totalItems", totalItems);
 
         return ResponseEntity.ok(result); // 200 OK
+    }
+
+    // GET the full list of items for a user
+    // Endpoint is http://localhost:8080/{userId}/items
+    @GetMapping(value = "/{userId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllItemsByUserId(@PathVariable(value = "userId") int userId) {
+        System.out.println("get all items endpoint hit");
+        if (userId <= 0) {
+            String response = "Invalid userId.";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST);
+        }
+
+        List<Item> allUsersItems = itemRepository.findAllByUserId(userId);
+        System.out.println("these are the users items that were found");
+        System.out.println(allUsersItems);
+
+        if (allUsersItems.isEmpty()) {
+            String response = "No items found for user with ID of " + userId + ".";
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(allUsersItems, HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
-import { useParams } from 'react-router-dom';
 import Footer from '../Footer';
 import Container from '../../classes/Container';
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router';
 import Item from '../../classes/Item';
 import ItemCard from "../items/ItemCard";
 import MainNav from "../elements/nav/MainNav";
@@ -30,6 +30,7 @@ export default function ContainerDetails() {
     const [isFetching, setIsFetching] = useState(null);
     const { lockerId, lockerName, containerId } = useParams();
     const userId = sessionStorage.getItem('userId');
+    const navigate = useNavigate();
 
     // variable used to display conditional content
     const containerHasItems = items && items.length > 0;

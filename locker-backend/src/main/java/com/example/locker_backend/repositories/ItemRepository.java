@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer>{
     List<Item> findAllByContainerId(int containerId);
+
+    List<Item> findAllByUserId(int userId);
 }
