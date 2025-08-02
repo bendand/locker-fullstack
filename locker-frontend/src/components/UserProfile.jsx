@@ -19,7 +19,6 @@ export default function UserProfile() {
     const [numItems, setNumItems] = useState(null);
     const userId = sessionStorage.getItem('userId');
 
-
     useEffect(() => {
         async function fetchUserData() {
             setIsFetching(true);
@@ -44,7 +43,7 @@ export default function UserProfile() {
             data = await response.json();
 
             setNumItems(data.totalItems);
-            setNumLockers(data.numUserLockers)
+            setNumLockers(data.numUserLockers);
 
             let userData = data.userData;
             let user = new User(userData.id, userData.firstName, userData.lastName, userData.email, userData.initials);

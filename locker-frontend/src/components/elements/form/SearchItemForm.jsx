@@ -11,14 +11,16 @@ import { useState, useEffect } from 'react';
 export default function SearchItemForm() {
     const [searchableItems, setSearchableItems] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
-    const [itemValue, setItemValue] = useState();
+    const [itemValue, setItemValue] = useState({
+      id: null,
+      name: ''
+    });
     const [inputValue, setInputValue] = useState('');
     const userId = sessionStorage.getItem('userId');
 
-    console.log('search input\'s options: ');
-    if (searchableItems !== null) {
-      console.log(searchInput.options);
-    }
+
+    console.log('item value:');
+    console.log(itemValue.name, itemValue.id);
 
 
     useEffect(() => {
@@ -53,6 +55,12 @@ export default function SearchItemForm() {
     }
 
 
+    function handleFindItem() {
+      console.log('handle find item function hit');
+      console.log('')
+    }
+
+
     return (
         <ModalDialog>
             <DialogTitle>Find an item</DialogTitle>
@@ -63,14 +71,18 @@ export default function SearchItemForm() {
             )}
             {searchableItems !== null && (
               <Stack spacing={2} sx={{ width: 300 }}>
-                  <FormControl>
+                  <FormControl
+                      id='searchInput'
+                  >
                       <Autocomplete
-                          name='searchInput'
                           placeholder="Search here"
-                          value={itemValue}
+                          value={itemValue.name}
                           onChange={(event, newItemValue) => {
-                            setItemValue(newItemValue);
-                          }}
+                            setItemValue(({
+                              [id]: newItemValue.id,
+                              [name]: newItemValue.name
+                            }));
+                          }}                        
                           inputValue={inputValue}
                           onInputChange={(event, newInputValue) => {
                             setInputValue(newInputValue);
@@ -81,8 +93,9 @@ export default function SearchItemForm() {
                   <Button 
                       variant="outlined" 
                       color="neutral" 
-                      disabled={!itemValue}
+                      disabled={!itemValue.name}
                       size="md"
+                      onClick={() => handleFindItem()}
                   >
                       Find Item
                   </Button>

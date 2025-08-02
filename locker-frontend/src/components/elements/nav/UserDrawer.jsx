@@ -22,6 +22,10 @@ export default function UserDrawer() {
         navigate("/profile");
     }
 
+    function handleViewLockerMap() {
+        navigate("/lockermap");
+    }
+
     function handleLogout() {
         sessionStorage.removeItem("userId");
         navigate("/");
@@ -54,6 +58,9 @@ export default function UserDrawer() {
                     <ListItem onClick={() => handleViewProfile()}>
                         <ListItemButton>My Profile</ListItemButton>
                     </ListItem>
+                    <ListItem onClick={() => handleViewLockerMap(true)}>
+                        <ListItemButton>My LockerMap</ListItemButton>
+                    </ListItem>                    
                     <ListItem onClick={() => setOpenLogout(true)}>
                         <ListItemButton>Log out</ListItemButton>
                     </ListItem>

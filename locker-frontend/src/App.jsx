@@ -8,6 +8,7 @@ import LockerList from './components/lockers/LockerList';
 import GettingStarted from "./components/GettingStarted";
 import Feedback from "./components/elements/form/Feedback"
 import UserProfile from "./components/UserProfile";
+import LockerMap from "./components/LockerMap";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="feedback" element={<Feedback />} />
           <Route path="profile" element={<UserProfile />} />
+          <Route path="lockermap" element={<LockerMap />} />
           <Route path="lockerlist" element={<LockerList />} />
           <Route path="lockerlist/:lockerId/:lockerName" element={<LockerDetails />} />
           <Route path="lockerlist/:lockerId/:lockerName/:containerId/:containerName" element={<ContainerDetails />} />

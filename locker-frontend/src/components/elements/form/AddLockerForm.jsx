@@ -7,7 +7,9 @@ import DialogTitle from '@mui/joy/DialogTitle';
 import { Textarea } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
+import Autocomplete from "react-google-autocomplete";
 import { toast } from 'react-toastify';
+import { Loader } from "@googlemaps/js-api-loader"
 
 export default function AddLockerForm({ userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,6 +19,10 @@ export default function AddLockerForm({ userId, onSubmission }) {
         address: '',
         details: ''
     });
+
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+    console.log('address: ' + inputValues.address);
 
     // function that sets new values when inputs are changed
     function handleInputChange(event) {
@@ -30,6 +36,20 @@ export default function AddLockerForm({ userId, onSubmission }) {
         }));
     }
 
+    async function validateAddress() {
+        // Import the Address Validation library.
+        const {AddressValidation} =
+            await google.maps.importLibrary('addressValidation');
+        // Call the fetchAddressValidation method.
+        const result = await AddressValidation.fetchAddressValidation({
+            address: inputValues.address,
+            languageCode: 'en',
+        });
+        // Log the results to the console.
+        document.querySelector('pre').textContent =
+            JSON.stringify(result, null, '  ');
+    }
+
     async function handleSubmitLocker(event) {
         event.preventDefault();
         setIsSubmitting(true);
@@ -37,40 +57,46 @@ export default function AddLockerForm({ userId, onSubmission }) {
         let response;
         let lockerData;
 
+        const addressValidationContent = await validateAddress();
+
+        console.log(addressValidationContent);
+        setIsSubmitting(false);
+        return;
+
         const formData = {
             name: inputValues.name,
             address: inputValues.address,
             details: inputValues.details
         };
 
-        try {
-            response = await fetch(`http://localhost:8080/${userId}/lockers/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }, 
-                body: JSON.stringify(formData)
-            })
+        // try {
+        //     response = await fetch(`http://localhost:8080/${userId}/lockers/add`, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         }, 
+        //         body: JSON.stringify(formData)
+        //     })
 
-            if (!response.ok) {
-                if (response.status === 404) {
-                    setErrorMessage("User not found")
-                } else {
-                    setErrorMessage("Bad request, try again later");
-                }
-                setIsSubmitting(false);
-                return;
-            }
+        //     if (!response.ok) {
+        //         if (response.status === 404) {
+        //             setErrorMessage("User not found")
+        //         } else {
+        //             setErrorMessage("Bad request, try again later");
+        //         }
+        //         setIsSubmitting(false);
+        //         return;
+        //     }
 
-            lockerData = await response.json();
-            onSubmission.closeModal();
-            toast("Locker added");
-            onSubmission.fetchUpdatedLockers();
-        } catch (error) {
-            setErrorMessage(error.message);
-        } finally {
-            setIsSubmitting(false);
-        }
+        //     lockerData = await response.json();
+        //     onSubmission.closeModal();
+        //     toast("Locker added");
+        //     onSubmission.fetchUpdatedLockers();
+        // } catch (error) {
+        //     setErrorMessage(error.message);
+        // } finally {
+        //     setIsSubmitting(false);
+        // }
     }
 
 
@@ -95,13 +121,23 @@ export default function AddLockerForm({ userId, onSubmission }) {
                     </FormControl>
                     <FormControl>
                         <FormLabel>Address</FormLabel>
-                        <Input 
+                        {/* <Input 
                             required
                             name='address'
                             value={inputValues.address}
                             onChange={handleInputChange}
-                        />
+                        /> */}
+                        <Input>
+                            <Autocomplete
+                                name="address"
+                                value={inputValues.address}
+                                onChange={handleInputChange}
+                                apiKey={apiKey}
+                                onPlaceSelected={(place) => console.log(place)}
+                            />
+                        </Input>
                     </FormControl>
+
                     <FormControl>                
                         <FormLabel>Details (optional, max 200 characters)</FormLabel>
                         <Textarea
