@@ -1,6 +1,5 @@
 package com.example.locker_backend.models;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 

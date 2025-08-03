@@ -5,13 +5,11 @@ public class LockerDTO {
     private String address;
     private String details;
 
-
     public LockerDTO(String name, String address, String details) {
         this.name = name;
         this.address = address;
         this.details = details;
     }
-
 
     public String getName() { return name;}
 

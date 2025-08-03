@@ -1,9 +1,7 @@
 package com.example.locker_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +33,7 @@ public class Locker {
     @JsonManagedReference
     private final List<Item> items = new ArrayList<>();
 
-
-    public Locker() {
-    }
+    public Locker() { }
 
     public Locker(User user) {
         this.user = user;
@@ -50,7 +46,6 @@ public class Locker {
         this.details = details;
     }
 
-
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user;}
@@ -60,8 +55,6 @@ public class Locker {
     }
 
     public void setName(String name) { this.name = name; }
-
-//    public void setId(int lockerId) { this.id = lockerId; }
 
     public int getId() { return id; }
 

@@ -2,19 +2,11 @@ package com.example.locker_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.sql.Timestamp;
 import java.util.*;
 
 @Entity
-@AllArgsConstructor
-@Data
-@Builder
 public class User {
 
     @Id
@@ -59,7 +51,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.username = email.substring(0, email.indexOf('@'));
-
     }
 
     public User(int id, String firstName, String lastName, String email, String password) {
@@ -141,4 +132,7 @@ public class User {
         return firstName + " " + lastName + " - " + email;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
 }

@@ -6,7 +6,6 @@ public class UserDTO {
     private String email;
     private String password;
 
-
     public String getFirstName() { return firstName; }
 
     public String getLastName() { return lastName; }
@@ -14,7 +13,6 @@ public class UserDTO {
     public String getPassword() { return password;}
 
     public String getEmail() { return email; }
-
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -31,5 +29,4 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }

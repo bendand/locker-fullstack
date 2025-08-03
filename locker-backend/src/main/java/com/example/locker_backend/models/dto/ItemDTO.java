@@ -1,11 +1,5 @@
 package com.example.locker_backend.models.dto;
 
-
-import com.example.locker_backend.models.Container;
-import com.example.locker_backend.models.Locker;
-import com.example.locker_backend.models.User;
-import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-
 public class ItemDTO {
     private String name;
     private String description;
@@ -38,7 +32,6 @@ public class ItemDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
 
     public String getDescription() {
         return description;

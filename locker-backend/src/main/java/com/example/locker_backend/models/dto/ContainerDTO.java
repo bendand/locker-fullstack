@@ -1,8 +1,5 @@
 package com.example.locker_backend.models.dto;
 
-import com.example.locker_backend.models.Locker;
-import com.example.locker_backend.models.User;
-
 public class ContainerDTO {
     private int lockerId;
     private int userId;
