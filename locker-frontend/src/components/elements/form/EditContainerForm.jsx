@@ -12,9 +12,9 @@ import DeleteForm from './DeleteForm';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 
-
 export default function EditContainerForm({ lockerId, lockerName, containerInfo, userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    // handles delete modal open and close
     const [openConfirmDeleteContainer, setOpenConfirmDeleteContainer] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();

@@ -1,29 +1,21 @@
-import Button from '@mui/joy/Button';
-import { Router, Link as RouterLink } from 'react-router';
+import { Link as RouterLink } from 'react-router';
 import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
-import About from '../../About'; 
-import Tabs from '@mui/joy/Tabs';
-import TabList from '@mui/joy/TabList';
-import Tab from '@mui/joy/Tab';
 import Box from '@mui/joy/Box';
 import List from '@mui/joy/List';
-import { ListDivider, ListItem, ListItemButton } from '@mui/joy';
-import FormControl from '@mui/joy/FormControl';
-import Autocomplete from '@mui/joy/Autocomplete';
-import Person from '@mui/icons-material/Person';
-import Search from '@mui/icons-material/Person';
+import { ListItem, ListItemButton } from '@mui/joy';
 import Modal from '@mui/joy/Modal';
-import { SearchOutlined, SearchRounded } from '@mui/icons-material';
+import { SearchOutlined } from '@mui/icons-material';
 import UserDrawer from "../nav/UserDrawer";
 import { useState } from 'react';
 import SearchItemForm from '../form/SearchItemForm';
 
 
 export default function MainNav() {
+    // userId var controls what navbar options are displayed to the user
     const userId = sessionStorage.getItem("userId");
+    // handles open/close modal with search item form where user can search for their items
     const [openSearch, setOpenSearch] = useState(false);
-    const [isSearchingItems, setIsSearchingItems] = useState(false);
 
     return (
         <header>

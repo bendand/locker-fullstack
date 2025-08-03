@@ -30,6 +30,7 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
         }));
     }
 
+    // stuffs default form submission behavior and handles submission of container
     async function handleSubmitContainer(event) {
         event.preventDefault();
         setIsSubmitting(true);
@@ -60,6 +61,7 @@ export default function AddContainerForm({ userId, lockerId, onSubmission }) {
             }
 
             containerData = await response.json();
+            // performs cleanup tasks after submission
             onSubmission.closeAddContainerModal();
             toast('Container added');
             onSubmission.handleSubmission();

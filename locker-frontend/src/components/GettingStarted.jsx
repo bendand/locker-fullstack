@@ -10,10 +10,13 @@ import { toast } from 'react-toastify';
 
 
 export default function GettingStarted() {
+    // state that communicates with login and register modals to toggle authentication state
     const [authStatus, setAuthStatus] = useState('default');
     const navigate = useNavigate();
     const userId = sessionStorage.getItem('userId');
-    
+
+
+    // functions that finish register and login procedures respectively
     function handleOnRegister() {
         setAuthStatus('default');
         toast('Registration successful!');
@@ -44,6 +47,7 @@ export default function GettingStarted() {
                             Locker is your bookkeeper for everything storage-related 
                         </p>
                         <div>
+                            {/* if user has active session the won't be prompted to login again */}
                             {userId === null && (
                                 <Button 
                                     variant="outlined" 

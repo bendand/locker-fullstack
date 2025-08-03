@@ -32,6 +32,7 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
         }));
     }
 
+    // stuffs default form submission behavior, then handles submission of item
     async function handleSubmitItem(event) {
         event.preventDefault();
         setIsSubmitting(true);
@@ -64,6 +65,7 @@ export default function AddItemForm({ userId, lockerId, containerId, onSubmissio
             }
 
             itemData = await response.json();
+            // cleanup tasks after item submission
             onSubmission.closeAddItemModal();
             toast('Item added');
             onSubmission.handleSubmission();

@@ -1,3 +1,4 @@
+// basic Locker class used for data normalization
 export default class Locker {
     constructor(id, name, address, details) {
         this.id = id;

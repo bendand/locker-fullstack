@@ -4,7 +4,6 @@ import Drawer from '@mui/joy/Drawer';
 import Button from '@mui/joy/Button';
 import List from '@mui/joy/List';
 import Modal from '@mui/joy/Modal';
-import Divider from '@mui/joy/Divider';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import Person from '@mui/icons-material/Person';
@@ -12,9 +11,9 @@ import LogoutForm from '../form/LogoutForm';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
-
 export default function UserDrawer() {
     const [open, setOpen] = useState(false);
+    // hanldes open/close of logout modal
     const [openLogout, setOpenLogout] = useState(false);
     const navigate = useNavigate();
 
@@ -26,6 +25,7 @@ export default function UserDrawer() {
         navigate("/lockermap");
     }
 
+    // logout function removes userId in session storage, navigates to home, and toasts on successful logout
     function handleLogout() {
         sessionStorage.removeItem("userId");
         navigate("/");
@@ -33,6 +33,7 @@ export default function UserDrawer() {
     }
 
 
+    // this component uses a Drawer component from material UI
     return (
         <Box sx={{ display: 'flex' }}>
             <Button

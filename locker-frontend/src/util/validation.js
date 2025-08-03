@@ -1,3 +1,5 @@
+// validation functions for use in login and register components
+
 export function isEmail(value) {
     return value.includes('@');
 }

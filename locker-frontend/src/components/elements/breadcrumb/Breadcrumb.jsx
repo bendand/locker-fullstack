@@ -1,9 +1,11 @@
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { KeyboardArrowRight } from '@mui/icons-material';
 
+// lockersViewed, containersViewed, and itemsViewed with bool values to change color dynamically
 export default function Breadcrumb({ lockersViewed, containersViewed, itemsViewed, onClickLockers }) {
+    // this component uses the breadcrumb component from Material UI
+    // I wanted to give the user a visual signal of their current depth in the application
     return (
         <Breadcrumbs 
             separator='' 

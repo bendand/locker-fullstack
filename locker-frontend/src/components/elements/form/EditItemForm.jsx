@@ -11,10 +11,10 @@ import Modal from '@mui/joy/Modal';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 
-
 export default function EditItemForm({ item, userId, lockerId, containerId, onSubmit, onDelete }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    // handles opening of delete modal
     const [openDeleteItem, setOpenDeleteItem] = useState(false);
     const [inputValues, setInputValues] = useState({
         name: item.name,
@@ -35,6 +35,7 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
         }));
     }
 
+    // submission that updates item
     async function handleSubmitItem(event) {
         event.preventDefault();
         setIsSubmitting(true);
@@ -66,6 +67,7 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
                 return;
             }
 
+            // finalizes post update procedures
             itemData = await response.json();
             onSubmit.closeModal();
             toast('Item updated');
@@ -91,9 +93,8 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
                 return;
             }
 
-            console.log("about to fetch updated items");
+            // finalizes post deletion procedures
             onDelete.fetchUpdatedItems();
-            console.log("about to close edit modal");
             onDelete.closeModal();
             toast("Item deleted");
         } catch (error) {

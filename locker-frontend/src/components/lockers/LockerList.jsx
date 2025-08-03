@@ -17,11 +17,16 @@ import Add from '@mui/icons-material/Add';
 export default function LockerList() {
     const [lockers, setLockers] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    // handles add locker form open/close state
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId");
+
+    // variable used to display conditional content
     const userHasLockers = lockers && lockers.length > 0;
 
+    // effect to fetch lockers associated with a user
     useEffect(() => {
         setIsFetching(true);
         handleFetchLockers();
@@ -35,11 +40,13 @@ export default function LockerList() {
         try {
             response = await fetch(`http://localhost:8080/${userId}/lockers`);
             
+            // if there are no lockers, return immediately and no content message will be shown
             if (response.status === 204) {
                 return;
             }
             
             lockerData = await response.json();
+            // data normalization
             lockerData.forEach(locker => {
                 let newLocker = new Locker(locker.id, locker.name, locker.address, locker.details);
                 lockers.push(newLocker);
@@ -47,12 +54,13 @@ export default function LockerList() {
 
             setLockers(lockers);
         } catch (error) {
-            console.error(error.message);
+            setErrorMessage(error.message);
         } finally {
             setIsFetching(false);
         }
     }
 
+    // redirects user to target locker on card click
     function handleViewLockerDetails(lockerId, lockerName) {
         navigate(`/lockerlist/${lockerId}/${lockerName}`);
     }
@@ -75,6 +83,11 @@ export default function LockerList() {
                         containersViewed={false}
                         itemsViewed={false}
                     />
+                    {errorMessage && (
+                        <div>
+                            <p>{errorMessage}</p>
+                        </div>
+                    )}
                     <Stack
                         direction="row"
                         spacing={2}

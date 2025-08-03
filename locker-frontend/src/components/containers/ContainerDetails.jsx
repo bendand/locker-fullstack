@@ -17,8 +17,6 @@ import Grid from '@mui/joy/Grid';
 import Modal from '@mui/joy/Modal';
 import Add from '@mui/icons-material/Add';
 
-
-
 export default function ContainerDetails() {
     const [items, setItems] = useState(null);
     const [openAddItemModal, setOpenAddItemModal] = useState(false);
@@ -35,7 +33,7 @@ export default function ContainerDetails() {
     // variable used to display conditional content
     const containerHasItems = items && items.length > 0;
 
-    // effect that fetches containers associated with the locker ID
+    // effect that triggers functions that get container data and items associated with the container ID
     useEffect(() => {
         async function fetchData() {
             setIsFetching(true);
@@ -47,6 +45,7 @@ export default function ContainerDetails() {
         fetchData();
     }, []);
 
+    // fetches container's items
     async function handleFetchItems() {
         let items = [];
         let containerData;
@@ -70,6 +69,7 @@ export default function ContainerDetails() {
         }
     }
 
+    // fetches container data for dynamic display in component
     async function handleFetchContainerData() {
         let containerData;
         let response;
@@ -86,10 +86,11 @@ export default function ContainerDetails() {
 
             setContainerDetails(containerObj);
         } catch (error) {
-            console.error(error.message);
+            setErrorMessage(error.message);
         }
     }
 
+    // function that's triggered on click of an item 
     async function handleViewItemDetails(itemId) {
         let response;
         let itemData;
@@ -112,6 +113,7 @@ export default function ContainerDetails() {
         }
     }
 
+    // function that handles click on breadcrumb link that redirects to lockerlist
     function handleViewLockers() {
         navigate('/lockerlist');
     }

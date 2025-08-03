@@ -5,7 +5,9 @@ import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 
 export default function ItemCard({ onClick, item }) {
-
+    
+    // uses a card component from Material UI formatted, added to and subtracted from to fit my needs
+    // future enhancements of my app include making this component more modular
     return (
         <Card
             variant="outlined"

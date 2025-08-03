@@ -1,14 +1,15 @@
-import React from 'react';
-import {createRoot} from 'react-dom/client';
 import {APIProvider, Map, Marker} from '@vis.gl/react-google-maps';
 import MainNav from "./elements/nav/MainNav";
 import Box from '@mui/joy/Box';
 
-
 export default function LockerMap() {
+    // accesses Google maps api key stored in env file
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    console.log(apiKey);
 
+    // this is an undeveloped feature containing static data for now. I'm going to find a way to implement 
+    // a dynamic version of this that will have markers at each locker's location, with cards off to the side
+    // for each locker that are highlighted when a user mouses over the marker, and 
+    // corresponding markers that are moved to when a user mouses over a card
     return (
         <>
             <MainNav />

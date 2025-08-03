@@ -3,7 +3,9 @@ import Button from '@mui/joy/Button';
 import ModalDialog from '@mui/joy/ModalDialog';
 
 export default function DeleteForm({ unit, onCancel, onProceedDelete }) {
-
+    
+    // this form handles the deletion of lockers, containers, and items -
+    // good opportunity for me to exercise component reusability
     return (
         <ModalDialog>
             <div>

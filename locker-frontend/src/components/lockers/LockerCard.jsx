@@ -6,6 +6,8 @@ import Typography from '@mui/joy/Typography';
 
 
 export default function LockerCard({ locker, onClick }) {
+    // uses a card component from Material UI formatted, added to and subtracted from to fit my needs
+    // future enhancements of my app include making this component more modular
     return (
         <Card
             variant="outlined"

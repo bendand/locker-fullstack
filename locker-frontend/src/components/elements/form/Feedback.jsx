@@ -1,17 +1,13 @@
 import MainNav from "../nav/MainNav";
-import { Sheet } from "@mui/joy";
-import DialogTitle from '@mui/joy/DialogTitle';
 import { useState } from "react";
 import { Textarea } from '@mui/joy';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
-import Card from "@mui/joy/Card";
 import Stack from "@mui/joy/Stack";
 import Button from "@mui/joy/Button";
 
 export default function Feedback() {
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [inputValues, setInputValues] = useState({
         name: '',
         contact: '',
@@ -29,8 +25,10 @@ export default function Feedback() {
         }));
     }
 
+    // I'm not sure I want to send user feedback anywhere at this point in development,
+    // so I'm just returning this here and the form submission mimics a real submission
     function handleSubmitFeedback() {
-        return
+        return;
     }
 
     return (
@@ -88,8 +86,7 @@ export default function Feedback() {
                                 required
                             />
                         </FormControl>
-                        <Button 
-                            loading={isSubmitting}
+                        <Button
                             onClick={() => handleSubmitFeedback()}
                             sx={{
                                 width: '30%',

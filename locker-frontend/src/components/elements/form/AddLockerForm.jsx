@@ -30,7 +30,7 @@ export default function AddLockerForm({ userId, onSubmission }) {
         }));
     }
 
-
+    // first stuffs default submission behavior, then submits new locker
     async function handleSubmitLocker(event) {
         event.preventDefault();
         setIsSubmitting(true);
@@ -64,8 +64,10 @@ export default function AddLockerForm({ userId, onSubmission }) {
             }
 
             lockerData = await response.json();
+            // cleanup tasks after locker submission
             onSubmission.closeModal();
             toast("Locker added");
+            // fetches updated lockers after submission
             onSubmission.fetchUpdatedLockers();
         } catch (error) {
             setErrorMessage(error.message);

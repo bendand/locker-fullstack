@@ -16,6 +16,8 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
+    // all similar looking constants here contain destructured values from my custom hook defined in hooks directory
+    // functions passed to this custom hook come from validation.js, and validate input according to needs of the input
     const {value: firstNameValue, 
         handleInputChange: handleFirstNameChange, 
         handleInputBlur: handleFirstNameBlur,
@@ -57,9 +59,11 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
     });
 
 
+    // handle register function
     async function handleSubmitRegister() {
         setIsSubmitting(true);
 
+        // checks for errors in any values
         const anyValuesContainErrors = firstNameHasError || lastNameHasError || emailHasError || password1HasError || password2HasError;
 
         if (anyValuesContainErrors) {
@@ -86,6 +90,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                 body: JSON.stringify(formData)
             })
 
+            // error handling for error type defined in endpoint
             if (!response.ok) {
                 if (response.status === 409) {
                     setErrorMessage("User already exists with the email " + formData.email);
@@ -97,10 +102,12 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
             }
 
             userData = await response.json();
+            // stores userId in session to mimic some level of session token auth and then calls submission handler
+            // defined in GettingStarted.jsx
             sessionStorage.setItem("userId", userData.id);
-            setUserId(userData.id);
             handleValidate();
         } catch (error) {
+            // will catch other types of errors not defined in endpoint
             setErrorMessage(error.message);
         } finally {
             setIsSubmitting(false);
@@ -125,6 +132,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                     justifyContent: 'center'
                 }}
             >
+                {/* button responsible for toggling auth status */}
                 <Button onClick={changeAuthStatus}>Log In</Button>
                 <Button disabled>Register</Button>
             </ButtonGroup>
@@ -142,6 +150,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                         overflow: "auto",
                     }}
                 >
+                    {/* basic form control pattern here, label, input, form helper text in case of errors */}
                     <FormControl
                         sx={{
                             width: 145

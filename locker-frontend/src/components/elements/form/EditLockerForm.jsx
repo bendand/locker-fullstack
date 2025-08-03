@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router';
 
 export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    // handles modal opening and closing
     const [openConfirmDeleteLocker, setOpenConfirmDeleteLocker] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         details: lockerInfo.details
     });
 
-    // function that sets new values when inputs are changed
+    // function that assigns new values when inputs are changed
     function handleInputChange(event) {
         const { name, value } = event.target;
 
@@ -36,6 +37,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
         }));
     }
 
+    // submits locker, prevents default submission behavior to avoid page refresh
     async function handleSubmitLocker(event) {
         event.preventDefault();
         setIsSubmitting(true);
@@ -68,6 +70,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                 return;
             }
 
+            // submission completion procedures executed here
             onSubmission.closeModal();
             toast("Locker updated");
             onSubmission.fetchUpdatedLockerDetails();
@@ -77,6 +80,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
             setIsSubmitting(false);
         }
     }
+
 
     async function handleDeleteLocker() {
         setOpenConfirmDeleteLocker(false);
@@ -92,6 +96,7 @@ export default function EditLockerForm({ lockerInfo, userId, onSubmission }) {
                 return;
             }
 
+            // finalizes locker deletion
             onSubmission.closeModal();
             toast("Locker deleted")
             navigate("/lockerlist");

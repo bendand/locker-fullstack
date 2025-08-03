@@ -1,6 +1,5 @@
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
-import ButtonGroup from '@mui/joy/ButtonGroup';
 import ModalDialog from '@mui/joy/ModalDialog';
 
 export default function LogoutForm({ onCancel, onLogout }) {

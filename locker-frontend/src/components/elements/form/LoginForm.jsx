@@ -17,6 +17,8 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
     const [errorMessage, setErrorMessage] = useState('');
 
 
+    // all similar looking constants here contain destructured values from my custom hook defined in hooks directory
+    // functions passed to this custom hook come from validation.js, and validate input according to needs of the input
     const {value: emailValue, 
         handleInputChange: handleEmailChange, 
         handleInputBlur: handleEmailBlur,
@@ -33,9 +35,12 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
         return hasMinLength(value, 8) && hasMaxLength(value, 40);
     });
 
+    // submits login credentials
     async function handleSubmitLogin() {
         setIsSubmitting(true);
 
+        // checks if any values have errors, theres probably a way to do this more elegantly in my custom hook
+        // but I ran out of time hooking up validation
         const anyValuesContainErrors = emailHasError || passwordHasError;
         if (anyValuesContainErrors) {
             setIsSubmitting(false);
@@ -70,6 +75,7 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
             }
 
             userData = await response.json();
+            // puts userId in session storage, handles validation
             sessionStorage.setItem("userId", userData.id);
             handleValidate();
         } catch (error) {
@@ -97,6 +103,7 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
                 }}
             >
                 <Button disabled>Log In</Button>
+                {/* button responsible for toggling auth status */}
                 <Button onClick={changeAuthStatus}>Register</Button>
             </ButtonGroup>
             {errorMessage && (

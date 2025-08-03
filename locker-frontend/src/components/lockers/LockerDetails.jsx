@@ -21,6 +21,8 @@ export default function LockerDetails() {
     const { lockerId, lockerName } = useParams();
     const [containers, setContainers] = useState(null);
     const [lockerDetails, setLockerDetails] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('')
+    // hanldes opening/closing of both modals
     const [openEditLockerModal, setOpenEditLockerModal] = useState(false);
     const [openAddContainerModal, setOpenAddContainerModal] = useState(false);
     const [isFetching, setIsFetching] = useState(null);
@@ -29,6 +31,7 @@ export default function LockerDetails() {
     // variable used to display conditional content
     const lockerHasContainers = containers && containers.length > 0;
 
+    // function that fetches updated container list after a container is added
     function handleContainerSubmission() {
         async function fetchUpdatedContainers() {
             setIsFetching(true);
@@ -39,7 +42,7 @@ export default function LockerDetails() {
         fetchUpdatedContainers();
     }
 
-    // effect that fetches containers associated with the locker ID
+    // effect that triggers functions that get locker data and containers
     useEffect(() => {
         async function fetchData() {
             setIsFetching(true);
@@ -52,6 +55,7 @@ export default function LockerDetails() {
     }, []);
 
 
+    // function whose results are used to populate locker details with information related to locker
     async function handleFetchLockerData() {
         let lockerData;
         let response;
@@ -64,13 +68,15 @@ export default function LockerDetails() {
             }
             
             lockerData = await response.json();
+            // normalization
             let lockerObj = new Locker(lockerData.id, lockerData.name, lockerData.address, lockerData.details);
             setLockerDetails(lockerObj);
         } catch (error) {
-            console.error(error.message);
+            setErrorMessage(error.message);
         }
     }
 
+    // fetches containers associated with the locker ID
     async function handleFetchContainers() {
         let containers = [];
         let lockerData;
@@ -84,20 +90,23 @@ export default function LockerDetails() {
             
             lockerData = await response.json();
             lockerData.forEach(container => {
+                // normalization
                 let newContainer = new Container(container.id, container.name, container.description);
                 containers.push(newContainer);
             });
 
             setContainers(containers);
         } catch (error) {
-            console.error(error.message);
+            setErrorMessage(error.message);
         }
     }
 
+    // redirects to container clicker
     function handleViewContainerDetails(containerId, containerName) {
         navigate(`/lockerlist/${lockerId}/${lockerName}/${containerId}/${containerName}`);
     }
 
+    // function that handles click on breadcrumb link that redirects to lockerlist
     function handleViewLockers() {
         navigate('/lockerlist');
     }
@@ -124,6 +133,11 @@ export default function LockerDetails() {
                             onClickLockers={() => handleViewLockers()}
                         />
                     </div>
+                    {errorMessage && (
+                        <div>
+                            <p>{errorMessage}</p>
+                        </div>
+                    )}
                     <Stack
                         direction="row"
                         spacing={2}

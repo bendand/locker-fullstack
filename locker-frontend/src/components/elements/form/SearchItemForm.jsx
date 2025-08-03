@@ -94,6 +94,7 @@ export default function SearchItemForm({ onSubmission }) {
               <Stack spacing={2} sx={{ width: 300 }}>
                   <FormControl
                   >
+                      {/* Material UI component that holds all users items and manages state of inputs selected */}
                       <Autocomplete
                           placeholder="Search here"
                           value={itemValue}
