@@ -20,10 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @CrossOrigin(maxAge = 3600)
@@ -146,21 +143,35 @@ public class UserController {
     // Endpoint is http://localhost:8080/{userId}/items
     @GetMapping(value = "/{userId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllItemsByUserId(@PathVariable(value = "userId") int userId) {
-        System.out.println("get all items endpoint hit");
         if (userId <= 0) {
             String response = "Invalid userId.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST);
         }
 
         List<Item> allUsersItems = itemRepository.findAllByUserId(userId);
-        System.out.println("these are the users items that were found");
-        System.out.println(allUsersItems);
-
         if (allUsersItems.isEmpty()) {
             String response = "No items found for user with ID of " + userId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(allUsersItems, HttpStatus.OK);
+    }
+
+    // GET all information about an item using itemId
+    // Endpoint is http://localhost:8080/items/{itemId}
+    @GetMapping(value = "/items/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getItemInfoById(@PathVariable(value = "itemId") int itemId) {
+        System.out.println("get item info by id endpoint hit");
+        Item currentItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemId));
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        result.put("lockerId", currentItem.getLocker().getId());
+        result.put("lockerName", currentItem.getLocker().getName());
+        result.put("containerId", currentItem.getContainer().getId());
+        result.put("containerName", currentItem.getContainer().getName());
+
+        return ResponseEntity.ok(result); // 200 OK
     }
 }

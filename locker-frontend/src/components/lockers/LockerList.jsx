@@ -107,7 +107,7 @@ export default function LockerList() {
                             </Modal>
                         </div>
                     </Stack>
-                    {!userHasLockers && (
+                    {!isFetching && !userHasLockers && (
                         <Stack
                             sx={{ alignContent: "center" }}
                         >

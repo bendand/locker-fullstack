@@ -125,7 +125,7 @@ export default function UserProfile() {
                             </CardContent>
                         </Card>
                         <br />
-                        <h1><em>Read-only users soon...</em></h1>
+                        <h1><em>Read-only users soon</em></h1>
                     </>
                 )}
                 </Box>

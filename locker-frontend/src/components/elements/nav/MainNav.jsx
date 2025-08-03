@@ -138,8 +138,15 @@ export default function MainNav() {
                 </Stack>
             </Box>
         )}
-        <Modal open={openSearch} onClose={() => setOpenSearch(false)}>
-            <SearchItemForm />
+        <Modal 
+            open={openSearch} 
+            onClose={() => setOpenSearch(false)}
+        >
+            <SearchItemForm
+                onSubmission={{
+                    closeModal: () => setOpenSearch(false)
+                }}
+            />
         </Modal>
         </header>
 

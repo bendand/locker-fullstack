@@ -60,6 +60,7 @@ public class ItemController {
     @GetMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getItemById(@PathVariable(value = "itemId") int itemId) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
+        System.out.println(currentItem);
         if (currentItem != null) {
             return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
         } else {

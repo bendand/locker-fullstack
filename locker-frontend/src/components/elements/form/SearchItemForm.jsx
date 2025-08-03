@@ -1,5 +1,4 @@
 import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
 import Item from '../../../classes/Item';
 import Autocomplete from '@mui/joy/Autocomplete';
@@ -7,22 +6,26 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import DialogTitle from '@mui/joy/DialogTitle';
 import Button from '@mui/joy/Button';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
-export default function SearchItemForm() {
+export default function SearchItemForm({ onSubmission }) {
+    // state variables for searchable items (total user's items), error messages, selected items and inputs, etc.
     const [searchableItems, setSearchableItems] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
-    const [itemValue, setItemValue] = useState({
-      id: null,
-      name: ''
-    });
+    const [itemValue, setItemValue] = useState(null);
     const [inputValue, setInputValue] = useState('');
+    const navigate = useNavigate();
     const userId = sessionStorage.getItem('userId');
 
+    console.log('item value: ');
+    console.log(itemValue);
 
-    console.log('item value:');
-    console.log(itemValue.name, itemValue.id);
+    // variable that holds either a list containing item objects or a string with a 'no items' value
+    const options = (searchableItems == null || searchableItems.length === 0)
+     ? 'No items' : searchableItems.map((item) => (item));
 
-
+    
+    // effect fetches items immediately
     useEffect(() => {
         handleFetchItems();
     }, []);
@@ -35,19 +38,20 @@ export default function SearchItemForm() {
       try {
           response = await fetch(`http://localhost:8080/${userId}/items`);
             
+          // catches one of two erroneous responses sent from server
           if (response.status === 204 || response.status === 400) {
-              console.log('response message');
-              console.log(response.message);
               setErrorMessage(response.message);
               return;
           }
         
+          // gets json out of response, formats data, and pushes to item list
           itemsData = await response.json();
           itemsData.forEach(item => {
               let newItem = new Item(item.itemId, item.name, item.quantity, item.description);
               items.push(newItem);
           });
 
+          // no we have searchable items
           setSearchableItems(items);
       } catch (error) {
           setErrorMessage(error.message);
@@ -55,11 +59,28 @@ export default function SearchItemForm() {
     }
 
 
-    function handleFindItem() {
-      console.log('handle find item function hit');
-      console.log('')
-    }
+    async function handleFindItem() {
+      let itemId = JSON.stringify(itemValue.id);
+      let response;
+      let itemData;
 
+      try {
+          response = await fetch(`http://localhost:8080/items/${itemId}`);
+            
+          if (response.status === 404) {
+              setErrorMessage(response.message);
+              return;
+          }
+        
+          itemData = await response.json();
+          console.log('item data: ')
+          console.log(itemData);
+          onSubmission.closeModal();
+          navigate(`/lockerlist/${itemData.lockerId}/${itemData.lockerName}/${itemData.containerId}/${itemData.containerName}`);
+      } catch (error) {
+          setErrorMessage(error.message);
+      }
+    }
 
     return (
         <ModalDialog>
@@ -72,28 +93,25 @@ export default function SearchItemForm() {
             {searchableItems !== null && (
               <Stack spacing={2} sx={{ width: 300 }}>
                   <FormControl
-                      id='searchInput'
                   >
                       <Autocomplete
                           placeholder="Search here"
-                          value={itemValue.name}
-                          onChange={(event, newItemValue) => {
-                            setItemValue(({
-                              [id]: newItemValue.id,
-                              [name]: newItemValue.name
-                            }));
-                          }}                        
+                          value={itemValue}
+                          onChange={(event, newValue) => {
+                            setItemValue(newValue);
+                          }}                   
                           inputValue={inputValue}
                           onInputChange={(event, newInputValue) => {
                             setInputValue(newInputValue);
                           }}
-                          options={searchableItems == null && searchableItems.length === 0 ? 'No items' : searchableItems.map((item) => item.name)}
+                          options={options}
+                          getOptionLabel={(option) => option.name}
                       />
                   </FormControl>
                   <Button 
                       variant="outlined" 
                       color="neutral" 
-                      disabled={!itemValue.name}
+                      disabled={!itemValue}
                       size="md"
                       onClick={() => handleFindItem()}
                   >
