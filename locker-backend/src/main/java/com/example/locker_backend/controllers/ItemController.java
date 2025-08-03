@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -45,7 +44,6 @@ public class ItemController {
         }
 
         List<Item> allContainersItems = itemRepository.findAllByContainerId(containerId);
-
         if (allContainersItems.isEmpty()) {
             String response = "No items found for container with ID of " + containerId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
@@ -60,7 +58,6 @@ public class ItemController {
     @GetMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getItemById(@PathVariable(value = "itemId") int itemId) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
-        System.out.println(currentItem);
         if (currentItem != null) {
             return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
         } else {
@@ -79,7 +76,7 @@ public class ItemController {
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
         }
 
-        // Check if the container exists
+        // Check if the associated user, locker, and container exist
         User currentUser = userRepository.findById(itemData.getUserId()).orElse(null);
         Locker currentLocker = lockerRepository.findById(itemData.getLockerId()).orElse(null);
         Container currentContainer = containerRepository.findById(itemData.getContainerId()).orElse(null);
@@ -119,11 +116,10 @@ public class ItemController {
     public ResponseEntity<?> updateItem(@PathVariable(value = "itemId") int itemId, @RequestBody ItemDTO updatedItemData) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
         if (currentItem != null) {
-            // Update the item's details
+            // set item with updated attributes from item DTO and saves the updated item
             currentItem.setName(updatedItemData.getName());
             currentItem.setQuantity(updatedItemData.getQuantity());
             currentItem.setDescription(updatedItemData.getDescription());
-            // Save the updated item
             itemRepository.save(currentItem);
             return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
         } else {

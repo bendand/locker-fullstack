@@ -149,7 +149,7 @@ export default function ContainerDetails() {
                     >
                         {containerDetails && (
                             <div>
-                                <h1>Items in {containerDetails.name}</h1>
+                                <h1>Items in {containerDetails.name} in locker: {lockerName}</h1>
                             </div>
                         )}
                         <div>

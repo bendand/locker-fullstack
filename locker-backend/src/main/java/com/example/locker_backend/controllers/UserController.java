@@ -143,7 +143,7 @@ public class UserController {
                 .orElseThrow(() -> new RuntimeException("Item not found with ID: " + itemId));
 
         // hashmap to store comprehensive data about item, this is used to route the user to the item they're looking for
-        // some more sensible mapping needs to be implemented for a couple of the last endpoints here for better cohesion
+        // more sensible controller/route planning and mapping needs to be implemented for a couple of the last endpoints for better cohesion
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("lockerId", currentItem.getLocker().getId());
         result.put("lockerName", currentItem.getLocker().getName());

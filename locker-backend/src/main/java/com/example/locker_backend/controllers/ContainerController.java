@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class ContainerController {
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(allLockersContainers, HttpStatus.OK); // 200
+        return new ResponseEntity<>(allLockersContainers, HttpStatus.OK);
     }
 
 
@@ -46,10 +45,10 @@ public class ContainerController {
     public ResponseEntity<?> getContainerById(@PathVariable(value="containerId") int containerId) {
         Container currentContainer = containerRepository.findById(containerId).orElse(null);
         if (currentContainer != null) {
-            return new ResponseEntity<>(currentContainer, HttpStatus.OK); // 200
+            return new ResponseEntity<>(currentContainer, HttpStatus.OK);
         } else {
             String response = "Container with ID of " + containerId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -63,6 +62,7 @@ public class ContainerController {
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
         }
 
+        // gets associated locker and user
         Locker locker = lockerRepository.findById(containerData.getLockerId()).orElse(null);
         User user = locker != null ? locker.getUser() : null;
 
@@ -71,7 +71,7 @@ public class ContainerController {
         containerRepository.save(newContainer);
 
         // Add the new container to the locker
-        return new ResponseEntity<>(newContainer, HttpStatus.CREATED); // 201
+        return new ResponseEntity<>(newContainer, HttpStatus.CREATED);
     }
 
 
@@ -96,6 +96,7 @@ public class ContainerController {
     public ResponseEntity<?> updateContainer(@PathVariable(value="containerId") int containerId, @RequestBody ContainerDTO updatedContainer) {
         Container currentContainer = containerRepository.findById(containerId).orElse(null);
         if (currentContainer != null) {
+            // set current container with new attributes from the DTO
             currentContainer.setName(updatedContainer.getName());
             currentContainer.setDescription(updatedContainer.getDescription());
 
@@ -106,6 +107,5 @@ public class ContainerController {
             String response = "Container with ID of " + containerId + " not found.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
         }
-
     }
 }

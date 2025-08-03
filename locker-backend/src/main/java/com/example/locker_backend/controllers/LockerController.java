@@ -1,6 +1,5 @@
 package com.example.locker_backend.controllers;
 
-
 import com.example.locker_backend.models.Locker;
 import com.example.locker_backend.models.User;
 import com.example.locker_backend.models.dto.LockerDTO;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class LockerController {
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(allUsersLockers, HttpStatus.OK); // 200
+        return new ResponseEntity<>(allUsersLockers, HttpStatus.OK);
     }
 
 
@@ -46,10 +44,10 @@ public class LockerController {
     public ResponseEntity<?> getLockerById(@PathVariable(value="lockerId") int lockerId) {
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
         if (currentLocker != null) {
-            return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200
+            return new ResponseEntity<>(currentLocker, HttpStatus.OK);
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -58,16 +56,18 @@ public class LockerController {
     // Endpoint http://localhost:8080/{userId}/lockers/add
     @PostMapping("/add")
     public ResponseEntity<?> addLocker(@PathVariable(value="userId") int userId, @RequestBody LockerDTO lockerData) {
+        // finds user to associate locker with
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             String response = "User with ID of " + userId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
 
+        // creates and saves new locker
         Locker newLocker = new Locker(lockerData.getName(), user, lockerData.getAddress(), lockerData.getDetails());
         lockerRepository.save(newLocker);
 
-        return new ResponseEntity<>(newLocker, HttpStatus.CREATED); // 201
+        return new ResponseEntity<>(newLocker, HttpStatus.CREATED);
     }
 
 
@@ -75,13 +75,14 @@ public class LockerController {
     // Corresponds to http://localhost:8080/{userId}/lockers/{lockerId}
     @DeleteMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteLocker(@PathVariable(value="lockerId") int lockerId) {
+        // gets current locker or returns null
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
         if (currentLocker != null) {
             lockerRepository.deleteById(lockerId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -89,22 +90,25 @@ public class LockerController {
     // Corresponds to http://localhost:8080/{userId}/lockers/update/{lockerId}
     @PutMapping(value="/{lockerId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateLocker(@PathVariable(value="lockerId") int lockerId, @PathVariable(value="userId") int userId, @RequestBody LockerDTO updatedLockerData) {
+        // gets current locker or returns null
         Locker currentLocker = lockerRepository.findById(lockerId).orElse(null);
         if (currentLocker != null) {
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
                 String response = "User with ID of " + userId + " not found.";
-                return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+                return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
             }
+            // sets locker with new data from the DTO
             currentLocker.setName(updatedLockerData.getName());
             currentLocker.setAddress(updatedLockerData.getAddress());
             currentLocker.setDetails(updatedLockerData.getDetails());
 
+            // saves locker with new updates
             lockerRepository.save(currentLocker);
             return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 }
