@@ -35,10 +35,6 @@ public class Locker {
 
     public Locker() { }
 
-    public Locker(User user) {
-        this.user = user;
-    }
-
     public Locker(String name, User user, String address, String details) {
         this.name = name;
         this.user = user;
@@ -58,22 +54,6 @@ public class Locker {
 
     public int getId() { return id; }
 
-    public List<Container> getContainers() { return containers; }
-
-    public void addContainer(Container container) {
-        containers.add(container);
-        container.setLocker(this); // Ensure the container knows its locker
-    }
-
-    public void addItem(Item newItem) {
-        items.add(newItem);
-        newItem.setLocker(this); // Ensure the item knows its locker
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -85,10 +65,6 @@ public class Locker {
         }
 
         return totalItems;
-    }
-
-    public String getDetails() {
-        return details;
     }
 
     public void setDetails(String details) {

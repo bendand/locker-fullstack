@@ -42,20 +42,6 @@ public class Item {
         this.container = container;
     }
 
-    public Item(int id, String name, int quantity, String description, User user, Locker locker, Container container) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.description = description;
-        this.user = user;
-        this.locker = locker;
-        this.container = container;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -66,14 +52,6 @@ public class Item {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public int getItemId() {
-        return id;
-    }
-
-    public void setItemId(int itemId) {
-        this.id = itemId;
     }
 
     public void setContainer(Container container) {
@@ -100,16 +78,12 @@ public class Item {
         this.user = currentUser;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return name + " - (Container: " + container;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

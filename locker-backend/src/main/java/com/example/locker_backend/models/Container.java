@@ -31,21 +31,9 @@ public class Container {
     public Container() {
     }
 
-    public Container(User user) {
-        this.user = user;
-    }
-
-
     public Container(String name, String description, User user, Locker locker) {
         this.name = name;
         this.description = description;
-        this.user = user;
-        this.locker = locker;
-    }
-
-    public Container(int id, String name, User user, Locker locker) {
-        this.id = id;
-        this.name = name;
         this.user = user;
         this.locker = locker;
     }
@@ -58,19 +46,8 @@ public class Container {
         this.name = name;
     }
 
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-
-    public void addItem(Item item) {
-        items.add(item);
-        item.setContainer(this); // Set the container for the item
     }
 
     public void setLocker(Locker locker) {
@@ -87,10 +64,6 @@ public class Container {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public void setDescription(String description) {
