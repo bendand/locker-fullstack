@@ -75,4 +75,20 @@ public class Locker {
     public String toString() {
         return name + " (User: " + user + ")";
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public List<Container> getContainers() {
+        return containers;
+    }
 }

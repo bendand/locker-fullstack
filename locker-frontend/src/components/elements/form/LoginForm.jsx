@@ -16,7 +16,6 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-
     // all similar looking constants here contain destructured values from my custom hook defined in hooks directory
     // functions passed to this custom hook come from validation.js, and validate input according to needs of the input
     const {value: emailValue, 
@@ -74,9 +73,11 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
                 return;
             }
 
+
             userData = await response.json();
             // puts userId in session storage, handles validation
             sessionStorage.setItem("userId", userData.id);
+            console.log('user id in session: ' + sessionStorage.getItem('userId'));
             handleValidate();
         } catch (error) {
             setErrorMessage(error.message);

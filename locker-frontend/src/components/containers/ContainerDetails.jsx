@@ -59,8 +59,12 @@ export default function ContainerDetails() {
             }
 
             containerData = await response.json();
+            console.log('containers items jsonified: ');
+            console.log(containerData);
             containerData.forEach(item => {
+                console.log('pushing items: ');
                 let newItem = new Item(item.itemId, item.name, item.quantity, item.description);
+                console.log(newItem);
                 items.push(newItem);
             });
             setItems(items);

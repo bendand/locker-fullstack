@@ -22,7 +22,7 @@ export default function LockerCard({ locker, onClick }) {
                 <img
                     src="/george-pagan-iii.jpg"
                     loading="lazy"
-                    alt=""
+                    alt="geometric industrial pattern"
                 />
             </AspectRatio>
             <CardContent>

@@ -1,6 +1,7 @@
 package com.example.locker_backend.models.dto;
 
 public class ItemDTO {
+    private int id;
     private String name;
     private String description;
     private int quantity = 1;
@@ -9,6 +10,16 @@ public class ItemDTO {
     private int userId;
 
     public ItemDTO (String name, String description, int quantity, int lockerId, int containerId, int userId) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.lockerId = lockerId;
+        this.containerId = containerId;
+        this.userId = userId;
+    }
+
+    public ItemDTO (int id, String name, String description, int quantity, int lockerId, int containerId, int userId) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
@@ -63,5 +74,13 @@ public class ItemDTO {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

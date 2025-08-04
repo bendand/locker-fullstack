@@ -22,7 +22,7 @@ export default function ContainerCard({ container, onClick }) {
                 <img
                     src="/attic-boxes.jpg"
                     loading="lazy"
-                    alt=""
+                    alt="boxes in an attic"
                 />
             </AspectRatio>
             <CardContent>

@@ -17,14 +17,10 @@ export default function SearchItemForm({ onSubmission }) {
     const navigate = useNavigate();
     const userId = sessionStorage.getItem('userId');
 
-    console.log('item value: ');
-    console.log(itemValue);
-
     // variable that holds either a list containing item objects or a string with a 'no items' value
     const options = (searchableItems == null || searchableItems.length === 0)
      ? 'No items' : searchableItems.map((item) => (item));
 
-    
     // effect fetches items immediately
     useEffect(() => {
         handleFetchItems();
@@ -73,8 +69,6 @@ export default function SearchItemForm({ onSubmission }) {
           }
         
           itemData = await response.json();
-          console.log('item data: ')
-          console.log(itemData);
           onSubmission.closeModal();
           navigate(`/lockerlist/${itemData.lockerId}/${itemData.lockerName}/${itemData.containerId}/${itemData.containerName}`);
       } catch (error) {

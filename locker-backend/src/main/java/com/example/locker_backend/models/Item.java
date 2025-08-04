@@ -42,6 +42,16 @@ public class Item {
         this.container = container;
     }
 
+    public Item(int id, String name, int quantity, String description, User user, Locker locker, Container container) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.description = description;
+        this.user = user;
+        this.locker = locker;
+        this.container = container;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -85,5 +95,21 @@ public class Item {
     @Override
     public String toString() {
         return name + " - (Container: " + container;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name;
     }
 }

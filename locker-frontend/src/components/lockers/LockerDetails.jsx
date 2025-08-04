@@ -22,7 +22,7 @@ export default function LockerDetails() {
     const [containers, setContainers] = useState(null);
     const [lockerDetails, setLockerDetails] = useState(null);
     const [errorMessage, setErrorMessage] = useState('')
-    // hanldes opening/closing of both modals
+    // handles opening/closing of both modals
     const [openEditLockerModal, setOpenEditLockerModal] = useState(false);
     const [openAddContainerModal, setOpenAddContainerModal] = useState(false);
     const [isFetching, setIsFetching] = useState(null);
@@ -89,6 +89,7 @@ export default function LockerDetails() {
             }
             
             lockerData = await response.json();
+
             lockerData.forEach(container => {
                 // normalization
                 let newContainer = new Container(container.id, container.name, container.description);

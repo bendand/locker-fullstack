@@ -44,6 +44,10 @@ public class ItemController {
         }
 
         List<Item> allContainersItems = itemRepository.findAllByContainerId(containerId);
+        System.out.println("all containers items' ids:");
+        for (Item item : allContainersItems) {
+            System.out.println(item.getId());
+        }
         if (allContainersItems.isEmpty()) {
             String response = "No items found for container with ID of " + containerId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);

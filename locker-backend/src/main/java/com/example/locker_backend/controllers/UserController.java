@@ -30,6 +30,7 @@ public class UserController {
     public ResponseEntity<?> logIn(@RequestBody UserDTO userData) {
         // Check if user already exists in the database
         User user = userRepository.findByEmail(userData.getEmail());
+
         // Hashing password using Pbkdf2PasswordEncoder
         Pbkdf2PasswordEncoder encoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 

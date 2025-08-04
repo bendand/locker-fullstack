@@ -22,7 +22,7 @@ export default function ItemCard({ onClick, item }) {
                 <img
                     src="/attic-boxes.jpg"
                     loading="lazy"
-                    alt=""
+                    alt="boxes in an attic"
                 />
             </AspectRatio>
             <CardContent>

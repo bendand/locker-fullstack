@@ -77,4 +77,32 @@ public class User {
     public String toString() {
         return firstName + " " + lastName + " - " + email;
     }
+
+    public List<Container> getContainers() {
+        return containers;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
