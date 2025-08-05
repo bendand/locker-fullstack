@@ -86,4 +86,9 @@ public class Container {
     public List<Item> getItems() {
         return items;
     }
+
+    public void addItem(Item item) {
+        items.add(item);
+        item.setContainer(this); // Set the container for the item
+    }
 }

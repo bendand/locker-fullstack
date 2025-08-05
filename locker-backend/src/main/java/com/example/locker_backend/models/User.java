@@ -64,6 +64,10 @@ public class User {
 
     public void setPassword(String password) { this.password = password; }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
         this.username = email.substring(0, email.indexOf('@'));
@@ -104,5 +108,25 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void addLocker(Locker locker) {
+        lockers.add(locker);
+    }
+
+    public void addContainer(Container container) {
+        containers.add(container);
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
     }
 }

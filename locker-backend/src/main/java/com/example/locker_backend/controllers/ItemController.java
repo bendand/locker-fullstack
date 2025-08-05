@@ -44,10 +44,6 @@ public class ItemController {
         }
 
         List<Item> allContainersItems = itemRepository.findAllByContainerId(containerId);
-        System.out.println("all containers items' ids:");
-        for (Item item : allContainersItems) {
-            System.out.println(item.getId());
-        }
         if (allContainersItems.isEmpty()) {
             String response = "No items found for container with ID of " + containerId + ".";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NO_CONTENT);
@@ -63,10 +59,10 @@ public class ItemController {
     public ResponseEntity<?> getItemById(@PathVariable(value = "itemId") int itemId) {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
         if (currentItem != null) {
-            return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
+            return new ResponseEntity<>(currentItem, HttpStatus.OK);
         } else {
             String response = "Item with ID of " + itemId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -77,7 +73,7 @@ public class ItemController {
         // Validate that the containerId, lockerId, and userId are valid
         if (itemData.getContainerId() <= 0 || itemData.getLockerId() <= 0 || itemData.getUserId() <= 0) {
             String response = "Invalid containerId, lockerId, or userId.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST);
         }
 
         // Check if the associated user, locker, and container exist
@@ -87,7 +83,7 @@ public class ItemController {
 
         if (currentUser == null || currentLocker == null || currentContainer == null) {
             String response = "Invalid userId, lockerId, or containerId.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
 
         // Create a new item and save it to the repository
@@ -96,7 +92,7 @@ public class ItemController {
 
         itemRepository.save(newItem);
 
-        return new ResponseEntity<>(newItem, HttpStatus.CREATED); // 201
+        return new ResponseEntity<>(newItem, HttpStatus.CREATED);
     }
 
     // DELETE an existing item
@@ -106,10 +102,10 @@ public class ItemController {
         Item currentItem = itemRepository.findById(itemId).orElse(null);
         if (currentItem != null) {
             itemRepository.deleteById(itemId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             String response = "Item with ID of " + itemId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -125,10 +121,10 @@ public class ItemController {
             currentItem.setQuantity(updatedItemData.getQuantity());
             currentItem.setDescription(updatedItemData.getDescription());
             itemRepository.save(currentItem);
-            return new ResponseEntity<>(currentItem, HttpStatus.OK); // 200
+            return new ResponseEntity<>(currentItem, HttpStatus.OK);
         } else {
             String response = "Item with ID of " + itemId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 }

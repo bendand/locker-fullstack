@@ -77,7 +77,6 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
             userData = await response.json();
             // puts userId in session storage, handles validation
             sessionStorage.setItem("userId", userData.id);
-            console.log('user id in session: ' + sessionStorage.getItem('userId'));
             handleValidate();
         } catch (error) {
             setErrorMessage(error.message);

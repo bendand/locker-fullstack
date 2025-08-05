@@ -43,7 +43,7 @@ export default function SearchItemForm({ onSubmission }) {
           // gets json out of response, formats data, and pushes to item list
           itemsData = await response.json();
           itemsData.forEach(item => {
-              let newItem = new Item(item.itemId, item.name, item.quantity, item.description);
+              let newItem = new Item(item.id, item.name, item.quantity, item.description);
               items.push(newItem);
           });
 

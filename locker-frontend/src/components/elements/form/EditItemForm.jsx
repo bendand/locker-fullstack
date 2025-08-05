@@ -88,7 +88,6 @@ export default function EditItemForm({ item, userId, lockerId, containerId, onSu
                 method: 'DELETE'
             })
             if (!response.ok) {
-                console.log("delete request was not ok");
                 setErrorMessage("Bad request, try again later");
                 return;
             }

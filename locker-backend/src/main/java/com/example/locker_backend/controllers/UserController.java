@@ -89,10 +89,10 @@ public class UserController {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + userId + " not found"); // 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + userId + " not found");
         }
 
-        return ResponseEntity.ok().body("User with ID " + userId + " deleted successfully"); // 200 OK
+        return ResponseEntity.ok().body("User with ID " + userId + " deleted successfully");
     }
 
     // Endpoint to get a user by ID and return necessary info for profile card

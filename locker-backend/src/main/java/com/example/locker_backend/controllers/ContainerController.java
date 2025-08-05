@@ -59,7 +59,7 @@ public class ContainerController {
     public ResponseEntity<?> addContainer(@RequestBody ContainerDTO containerData) {
         if (containerData.getLockerId() <= 0 || containerData.getUserId() <= 0) {
             String response = "Invalid lockerId or userId.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST); // 400
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.BAD_REQUEST);
         }
 
         // gets associated locker and user
@@ -82,10 +82,10 @@ public class ContainerController {
         Container currentContainer = containerRepository.findById(containerId).orElse(null);
         if (currentContainer != null) {
             containerRepository.deleteById(containerId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             String response = "Container with ID of " + containerId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -102,10 +102,10 @@ public class ContainerController {
 
             // Save the updated container
             containerRepository.save(currentContainer);
-            return new ResponseEntity<>(currentContainer, HttpStatus.OK); // 200
+            return new ResponseEntity<>(currentContainer, HttpStatus.OK);
         } else {
             String response = "Container with ID of " + containerId + " not found.";
-            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
         }
     }
 }

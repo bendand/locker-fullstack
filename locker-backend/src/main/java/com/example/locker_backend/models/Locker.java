@@ -71,6 +71,16 @@ public class Locker {
         this.details = details;
     }
 
+    public void addContainer(Container container) {
+        containers.add(container);
+        container.setLocker(this); // Ensure the container knows its locker
+    }
+
+    public void addItem(Item newItem) {
+        items.add(newItem);
+        newItem.setLocker(this); // Ensure the item knows its locker
+    }
+
     @Override
     public String toString() {
         return name + " (User: " + user + ")";

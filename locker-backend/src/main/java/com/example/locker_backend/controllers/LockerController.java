@@ -105,7 +105,7 @@ public class LockerController {
 
             // saves locker with new updates
             lockerRepository.save(currentLocker);
-            return new ResponseEntity<>(currentLocker, HttpStatus.OK); // 200
+            return new ResponseEntity<>(currentLocker, HttpStatus.OK);
         } else {
             String response = "Locker with ID of " + lockerId + " not found.";
             return new ResponseEntity<>(Collections.singletonMap("response", response), HttpStatus.NOT_FOUND);
