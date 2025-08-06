@@ -35,7 +35,8 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
     });
 
     // submits login credentials
-    async function handleSubmitLogin() {
+    async function handleSubmitLogin(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         // checks if any values have errors, theres probably a way to do this more elegantly in my custom hook
@@ -111,55 +112,56 @@ export default function LoginForm({ changeAuthStatus, handleValidate }) {
                     {errorMessage}
                 </FormHelperText>
             )}  
-            <Stack spacing={1}>
-                <FormControl
-                    name="email"
-                    value={emailValue}
-                    error={emailHasError}
-                >
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                        type="email"
-                        onChange={handleEmailChange}
-                        onBlur={handleEmailBlur}
-                        required
+            <form onSubmit={handleSubmitLogin}>
+                <Stack spacing={1}>
+                    <FormControl
+                        name="email"
+                        value={emailValue}
+                        error={emailHasError}
+                    >
+                        <FormLabel>Email</FormLabel>
+                        <Input
+                            type="email"
+                            onChange={handleEmailChange}
+                            onBlur={handleEmailBlur}
+                            required
 
-                    />
-                    {emailHasError && (
-                        <FormHelperText>
-                            <InfoOutlined />
-                            Please enter a valid email address.
-                        </FormHelperText>
-                    )}
-                </FormControl>
-                <FormControl
-                    name="password"
-                    type="password"
-                    value={passwordValue}
-                    error={passwordHasError}
-                >
-                    <FormLabel>Password</FormLabel>
-                    <Input
+                        />
+                        {emailHasError && (
+                            <FormHelperText>
+                                <InfoOutlined />
+                                Please enter a valid email address.
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+                    <FormControl
+                        name="password"
                         type="password"
-                        onChange={handlePasswordChange}
-                        onBlur={handlePasswordBlur}
-                        required
-                    />
-                    {passwordHasError && (
-                        <FormHelperText>
-                            <InfoOutlined />
-                            Password must be 8-40 characters.
-                        </FormHelperText>
-                    )}
-                </FormControl>
-                <Button 
-                    type="submit"
-                    onClick={handleSubmitLogin}
-                    loading={isSubmitting}
-                >
-                    Submit
-                </Button> 
-            </Stack>
+                        value={passwordValue}
+                        error={passwordHasError}
+                    >
+                        <FormLabel>Password</FormLabel>
+                        <Input
+                            type="password"
+                            onChange={handlePasswordChange}
+                            onBlur={handlePasswordBlur}
+                            required
+                        />
+                        {passwordHasError && (
+                            <FormHelperText>
+                                <InfoOutlined />
+                                Password must be 8-40 characters.
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+                    <Button 
+                        type="submit"
+                        loading={isSubmitting}
+                    >
+                        Submit
+                    </Button> 
+                </Stack>
+            </form>
         </Sheet>  
     );
 }

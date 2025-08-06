@@ -39,7 +39,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
         handleInputBlur: handleEmailBlur,
         hasError: emailHasError
     } = useInput('', (value) => {
-        return isEmail(value);
+        return isEmail(value) && isNotEmpty(value);
     });
 
     const {value: password1Value,
@@ -47,7 +47,7 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
         handleInputBlur: handlePassword1Blur,
         hasError: password1HasError
     } = useInput('', (value) => {
-        return hasMinLength(value, 8) && hasMaxLength(value, 40);
+        return hasMinLength(value, 8) && hasMaxLength(value, 40) && isNotEmpty(value);
     });
 
     const {value: password2Value,
@@ -55,12 +55,13 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
         handleInputBlur: handlePassword2Blur,
         hasError: password2HasError
     } = useInput('', (value) => {
-        return isEqualToOtherValue(value, password1Value);
+        return isEqualToOtherValue(value, password1Value) && isNotEmpty(value);
     });
 
 
     // handle register function
-    async function handleSubmitRegister() {
+    async function handleSubmitRegister(event) {
+        event.preventDefault();
         setIsSubmitting(true);
 
         // checks for errors in any values
@@ -141,125 +142,128 @@ export default function RegisterForm({ changeAuthStatus, handleValidate }) {
                     {errorMessage}
                 </FormHelperText>
             )}
-            <Stack spacing={1}>
-                <Stack 
-                    direction="row" 
-                    spacing={1}
-                    sx={{
-                        justifyContent: "center",
-                        overflow: "auto",
-                    }}
-                >
-                    {/* basic form control pattern here, label, input, form helper text in case of errors */}
-                    <FormControl
+            <form onSubmit={handleSubmitRegister}>
+                <Stack spacing={1}>
+                    <Stack 
+                        direction="row" 
+                        spacing={1}
                         sx={{
-                            width: 145
+                            justifyContent: "center",
+                            overflow: "auto",
                         }}
-                        name="first"
-                        value={firstNameValue}
-                        error={firstNameHasError}
                     >
-                        <FormLabel>First name</FormLabel>
-                        <Input
-                            onChange={handleFirstNameChange}
-                            onBlur={handleFirstNameBlur}
-                            required 
-                        />
-                        {firstNameHasError && (
-                            <FormHelperText>
-                                <InfoOutlined />
-                                Please enter your first name.
-                            </FormHelperText>
-                        )}
+                
+                        {/* basic form control pattern here, label, input, form helper text in case of errors */}
+                        
+                        <FormControl
+                            sx={{
+                                width: 145
+                            }}
+                            name="first"
+                            value={firstNameValue}
+                            error={firstNameHasError}
+                        >
+                            <FormLabel>First name</FormLabel>
+                            <Input
+                                onChange={handleFirstNameChange}
+                                onBlur={handleFirstNameBlur}
+                                required 
+                            />
+                            {firstNameHasError && (
+                                <FormHelperText>
+                                    <InfoOutlined />
+                                    Please enter your first name.
+                                </FormHelperText>
+                            )}
 
-                    </FormControl>
+                        </FormControl>
+                        <FormControl
+                            sx={{
+                                width: 145
+                            }}
+                            name="last"
+                            value={lastNameValue}
+                            error={lastNameHasError}
+                        >
+                            <FormLabel>Last name</FormLabel>
+                            <Input
+                                onChange={handleLastNameChange}
+                                onBlur={handleLastNameBlur}
+                                required 
+                            />
+                            {lastNameHasError && (
+                                <FormHelperText>
+                                    <InfoOutlined />
+                                    Please enter your last name.
+                                </FormHelperText>
+                            )}
+                        </FormControl>
+                    </Stack>
                     <FormControl
-                        sx={{
-                            width: 145
-                        }}
-                        name="last"
-                        value={lastNameValue}
-                        error={lastNameHasError}
+                        name="email"
+                        value={emailValue}
+                        error={emailHasError}
                     >
-                        <FormLabel>Last name</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <Input
-                            onChange={handleLastNameChange}
-                            onBlur={handleLastNameBlur}
-                            required 
+                            type="email"
+                            onChange={handleEmailChange}
+                            onBlur={handleEmailBlur}
+                            required
                         />
-                        {lastNameHasError && (
+                        {emailHasError && (
                             <FormHelperText>
                                 <InfoOutlined />
-                                Please enter your last name.
+                                Please enter a valid email address.
                             </FormHelperText>
                         )}
                     </FormControl>
+                    <FormControl
+                        name="password1"
+                        value={password1Value}
+                        error={password1HasError}
+                    >
+                        <FormLabel>Enter password</FormLabel>
+                        <Input
+                            type="password"
+                            onChange={handlePassword1Change}
+                            onBlur={handlePassword1Blur}
+                            required
+                        />
+                        {password1HasError && (
+                            <FormHelperText>
+                                <InfoOutlined />
+                                Password must be 8-40 characters.
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+                    <FormControl
+                        name="password2"
+                        value={password2Value}
+                        error={password2HasError}
+                    >
+                        <FormLabel>Confirm password</FormLabel>
+                        <Input
+                            type="password"
+                            onChange={handlePassword2Change}
+                            onBlur={handlePassword2Blur}
+                            required
+                        />
+                        {password2HasError && (
+                            <FormHelperText>
+                                <InfoOutlined />
+                                Passwords must match.
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+                    <Button 
+                        type="submit"
+                        loading={isSubmitting}
+                    >
+                        Submit
+                    </Button> 
                 </Stack>
-                <FormControl
-                    name="email"
-                    value={emailValue}
-                    error={emailHasError}
-                >
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                        type="email"
-                        onChange={handleEmailChange}
-                        onBlur={handleEmailBlur}
-                        required
-                    />
-                    {emailHasError && (
-                        <FormHelperText>
-                            <InfoOutlined />
-                            Please enter a valid email address.
-                        </FormHelperText>
-                    )}
-                </FormControl>
-                <FormControl
-                    name="password1"
-                    value={password1Value}
-                    error={password1HasError}
-                >
-                    <FormLabel>Enter password</FormLabel>
-                    <Input
-                        type="password"
-                        onChange={handlePassword1Change}
-                        onBlur={handlePassword1Blur}
-                        required
-                    />
-                    {password1HasError && (
-                        <FormHelperText>
-                            <InfoOutlined />
-                            Password must be 8-40 characters.
-                        </FormHelperText>
-                    )}
-                </FormControl>
-                <FormControl
-                    name="password2"
-                    value={password2Value}
-                    error={password2HasError}
-                >
-                    <FormLabel>Confirm password</FormLabel>
-                    <Input
-                        type="password"
-                        onChange={handlePassword2Change}
-                        onBlur={handlePassword2Blur}
-                        required
-                    />
-                    {password2HasError && (
-                        <FormHelperText>
-                            <InfoOutlined />
-                            Passwords must match.
-                        </FormHelperText>
-                    )}
-                </FormControl>
-                <Button 
-                    type="submit"
-                    onClick={handleSubmitRegister}
-                    loading={isSubmitting}
-                >
-                    Submit
-                </Button> 
-            </Stack>
+            </form>
         </Sheet>      
     );
 }
