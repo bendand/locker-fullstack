@@ -17,12 +17,26 @@ https://www.storagecafe.com/blog/self-storage-use-and-main-demand-drivers/
 ### How to install this project on your local machine
 1. Clone the project into your editor, preferably a JavaScript friendly editor such as VSCode or Sublime Text
 2. When the project is properly cloned and has been copied to your local machine, open the subfolder 'locker-backend' in a Java friendly IDE such as IntelliJ
-3. In the application.properties file in the resources package, modify the DB_USERNAME, DB_PASSWORD, and DB_URL and either replace these values with your own credentials or create DB_USERNAME, DB_PASSWORD, and DB_URL as environment variable keys and your actual credentials as values
+3. In src/main/resources/application.properties:
+```
+spring.application.name=locker-backend
+
+# Database connection settings
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+
+spring.jpa.hibernate.ddl-auto=update
+```
+Modify the DB_USERNAME, DB_PASSWORD, and DB_URL and either replace these values with your own credentials or create DB_USERNAME, DB_PASSWORD, and DB_URL as environment variable keys and your actual credentials as values
 4. In order to use features enabled by Google Maps API, creating your own Google Maps API key is necessary
 https://developers.google.com/maps
-5. In the root of the locker-frontend directory, create a .env file and declare your API key like this -
-VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
-6. In your editor with locker-frontend open, run 'npm install' on your command line to download project's dependencies, and run 'npm run dev' to start the local host instance
+5. In the root of the locker-frontend directory, create a .env file and declare your API key
+`VITE_GOOGLE_MAPS_API_KEY=your_api_key_here`
+6. In your editor with locker-frontend open, download the project's dependencies.
+`npm install` 
+Start the local host instance.
+`npm run dev`
 7. To run the server in IntelliJ, navigate to 'LockerBackendApplication' and press the play button at the top of the screen
 
 
