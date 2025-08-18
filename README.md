@@ -2,7 +2,7 @@
 
 ### Fully functional physical storage management app using Java REST API, React frontend, MySQL database. Basic user authentication has been enabled, and application allows users to create and manage lockers, containers, and items in storage, and have full CRUD capabilities for each
 
-Locker was an idea born out of the desire to better organize my stuff. As someone who has had to move their belongings from place to place many times and has had items get lost in the move, I wanted to think up a way to keep track of my items in a way that ensures nothing is left behind. In that spirit, Locker is an ongoing project that aims to outsource the cognitive overhead of physical storage management to a simple organizational tool.
+Locker was an idea born out of the desire to better organize my stuff. As someone who has had to move their belongings from place to place many times and has had items get lost in the move, I wanted to think up a way to keep track of my items in a way that ensures nothing is left behind. To that end, Locker is an ongoing project that aims to outsource the cognitive overhead of physical storage management to a simple organizational tool.
 https://www.storagecafe.com/blog/self-storage-use-and-main-demand-drivers/
 
 
