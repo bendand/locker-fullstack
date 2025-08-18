@@ -32,11 +32,17 @@ Modify the DB_USERNAME, DB_PASSWORD, and DB_URL and either replace these values 
 4. In order to use features enabled by Google Maps API, creating your own Google Maps API key is necessary
 https://developers.google.com/maps
 5. In the root of the locker-frontend directory, create a .env file and declare your API key
-```VITE_GOOGLE_MAPS_API_KEY=your_api_key_here```
+```
+VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
+```
 6. In your editor with locker-frontend open, download the project's dependencies.
-```npm install```
+```
+npm install
+```
 Start the local host instance.
-```npm run dev```
+```
+npm run dev
+```
 7. To run the server in IntelliJ, navigate to 'LockerBackendApplication' and press the play button at the top of the screen
 
 
