@@ -97,6 +97,15 @@ footer {
   }
 }
 
+
+/* (copilot generated this) */
+@media (prefers-color-scheme) {
+  body {
+    background-color: var(--joy-palette-background);
+    color: var(--joy-palette-text-primary);
+  }
+}
+
 @keyframes fadeIn {
   to { opacity: 1; }
 }

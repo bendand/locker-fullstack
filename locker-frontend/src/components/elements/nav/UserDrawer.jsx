@@ -8,6 +8,9 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import Person from '@mui/icons-material/Person';
 import LogoutForm from '../form/LogoutForm';
+import Switch from '@mui/joy/Switch';
+import Typography from '@mui/joy/Typography';
+import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
@@ -15,7 +18,10 @@ export default function UserDrawer() {
     const [open, setOpen] = useState(false);
     // hanldes open/close of logout modal
     const [openLogout, setOpenLogout] = useState(false);
+    const [darkModeOn, setDarkModeOn] = useState(false);
+    // const { mode, setMode } = useColorScheme();
     const navigate = useNavigate();
+
 
     function handleViewProfile() {
         navigate("/profile");
@@ -32,6 +38,19 @@ export default function UserDrawer() {
         toast("Logout successful");
     }
 
+    function handleToggleDarkMode() {
+        console.log('Dark mode state before toggling:', darkModeOn);
+        setDarkModeOn((prev) => !prev); 
+        console.log('Dark mode toggled:', darkModeOn);
+
+        // if (mode === 'light') {
+        //     setMode('dark');
+        //     console.log('Mode set to dark');
+        // } else {
+        //     setMode('light');
+        //     console.log('Mode set to light');
+        // }
+    }
 
     // this component uses a Drawer component from material UI
     return (
@@ -51,9 +70,9 @@ export default function UserDrawer() {
                 anchor='right'
             >
                 <Box
-                role="presentation"
-                onClick={() => setOpen(false)}
-                onKeyDown={() => setOpen(false)}
+                    role="presentation"
+                    onClick={() => setOpen(false)}
+                    onKeyDown={() => setOpen(false)}
                 >
                 <List>
                     <ListItem onClick={() => handleViewProfile()}>
@@ -64,6 +83,18 @@ export default function UserDrawer() {
                     </ListItem>                    
                     <ListItem onClick={() => setOpenLogout(true)}>
                         <ListItemButton>Log out</ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <Typography 
+                            component="label" 
+                            endDecorator={<Switch 
+                                            sx={{ ml: 1 }} 
+                                            checked={darkModeOn} 
+                                            onChange={handleToggleDarkMode}
+                                        />}
+                        >
+                            Dark Mode
+                        </Typography>
                     </ListItem>
                 </List>
                 </Box>

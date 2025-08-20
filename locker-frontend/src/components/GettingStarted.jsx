@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useColorScheme } from '@mui/joy/styles';
 import RegisterForm from './elements/form/RegisterForm';
 import MainNav from './elements/nav/MainNav';
 import Footer from '../components/Footer';
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify';
 export default function GettingStarted() {
     // state that communicates with login and register modals to toggle authentication state
     const [authStatus, setAuthStatus] = useState('default');
+    // const { mode, systemMode } = useColorScheme();
     const navigate = useNavigate();
     const userId = sessionStorage.getItem('userId');
 

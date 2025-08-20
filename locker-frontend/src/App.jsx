@@ -1,6 +1,7 @@
 import { Routes, Route} from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import { CssVarsProvider } from '@mui/joy/styles';
+import { extendTheme } from '@mui/joy/styles';
 import About from './components/About';
 import LockerDetails from './components/lockers/LockerDetails';
 import ContainerDetails from './components/containers/ContainerDetails';
@@ -10,10 +11,13 @@ import Feedback from "./components/elements/form/Feedback"
 import UserProfile from "./components/UserProfile";
 import LockerMap from "./components/LockerMap";
 
+// const theme = extendTheme({
+//   colorSchemeSelector: 'light',
+// });
+
 function App() {
   return (
-    <>
-      <CssVarsProvider>
+      <>
         <Routes>
           <Route path="/" element={<GettingStarted />} />
           <Route path="about" element={<About />} />
@@ -25,8 +29,7 @@ function App() {
           <Route path="lockerlist/:lockerId/:lockerName/:containerId/:containerName" element={<ContainerDetails />} />
         </Routes> 
         <ToastContainer />
-      </CssVarsProvider>
-    </>
+      </>
     );
 
 }
