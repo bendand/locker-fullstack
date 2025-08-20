@@ -10,14 +10,15 @@ import GettingStarted from "./components/GettingStarted";
 import Feedback from "./components/elements/form/Feedback"
 import UserProfile from "./components/UserProfile";
 import LockerMap from "./components/LockerMap";
+import { Css } from "@mui/icons-material";
 
-// const theme = extendTheme({
-//   colorSchemeSelector: 'light',
-// });
+const theme = extendTheme({
+  colorSchemeSelector: 'light',
+});
 
 function App() {
   return (
-      <>
+      <CssVarsProvider theme={theme}>
         <Routes>
           <Route path="/" element={<GettingStarted />} />
           <Route path="about" element={<About />} />
@@ -29,7 +30,7 @@ function App() {
           <Route path="lockerlist/:lockerId/:lockerName/:containerId/:containerName" element={<ContainerDetails />} />
         </Routes> 
         <ToastContainer />
-      </>
+      </ CssVarsProvider>
     );
 
 }

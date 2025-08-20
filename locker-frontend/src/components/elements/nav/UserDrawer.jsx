@@ -10,18 +10,19 @@ import Person from '@mui/icons-material/Person';
 import LogoutForm from '../form/LogoutForm';
 import Switch from '@mui/joy/Switch';
 import Typography from '@mui/joy/Typography';
+import DarkModeToggle from '../../DarkModeToggle';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 export default function UserDrawer() {
     const [open, setOpen] = useState(false);
+    const { mode, setMode } = useColorScheme();
     // hanldes open/close of logout modal
     const [openLogout, setOpenLogout] = useState(false);
     const [darkModeOn, setDarkModeOn] = useState(false);
     // const { mode, setMode } = useColorScheme();
     const navigate = useNavigate();
-
 
     function handleViewProfile() {
         navigate("/profile");
@@ -39,17 +40,13 @@ export default function UserDrawer() {
     }
 
     function handleToggleDarkMode() {
-        console.log('Dark mode state before toggling:', darkModeOn);
-        setDarkModeOn((prev) => !prev); 
-        console.log('Dark mode toggled:', darkModeOn);
-
-        // if (mode === 'light') {
-        //     setMode('dark');
-        //     console.log('Mode set to dark');
-        // } else {
-        //     setMode('light');
-        //     console.log('Mode set to light');
-        // }
+        if (darkModeOn) {
+            setMode('light');
+        } else {
+            setMode('dark');
+        }
+        setDarkModeOn(!darkModeOn);
+        setOpen(false); // close the drawer after toggling dark mode 
     }
 
     // this component uses a Drawer component from material UI
@@ -85,16 +82,10 @@ export default function UserDrawer() {
                         <ListItemButton>Log out</ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <Typography 
-                            component="label" 
-                            endDecorator={<Switch 
-                                            sx={{ ml: 1 }} 
-                                            checked={darkModeOn} 
-                                            onChange={handleToggleDarkMode}
-                                        />}
-                        >
-                            Dark Mode
-                        </Typography>
+                        <DarkModeToggle
+                            onChange={handleToggleDarkMode}
+                            checked={darkModeOn}
+                        />
                     </ListItem>
                 </List>
                 </Box>

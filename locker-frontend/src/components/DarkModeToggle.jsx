@@ -1,19 +1,9 @@
 import Switch from '@mui/joy/Switch';
 import Typography from '@mui/joy/Typography';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function DarkModeToggle() {
-    const { mode, setMode } = useColorScheme();
-    // const [ mounted, setMounted ] = useState(false);
-
-    // useEffect(() => {
-    //     setMounted(true);
-    // }, []);
-
-    // if (!mounted) {
-    //     return null;
-    // }
+export default function DarkModeToggle({ onChange, checked }) {
 
     return (
         // <Typography 
@@ -33,14 +23,14 @@ export default function DarkModeToggle() {
                             slotProps={{
                                 track: {
                                     children: (
-                                        <div>
+                                        <React.Fragment>
                                             <Typography component="span" level="inherit" sx={{ ml: '10px' }}>
-                                            On
+                                                On
                                             </Typography>
                                             <Typography component="span" level="inherit" sx={{ mr: '8px' }}>
-                                            Off
+                                                Off
                                             </Typography>
-                                        </div>
+                                        </React.Fragment>
                                     ),
                                 },
                             }}
@@ -49,6 +39,8 @@ export default function DarkModeToggle() {
                                 '--Switch-trackWidth': '64px',
                                 '--Switch-trackHeight': '31px',
                             }}
+                            onChange={onChange}
+                            checked={checked}
                         />}
         >
             Dark
