@@ -5,6 +5,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import Stack from "@mui/joy/Stack";
+import Box from '@mui/joy/Box';
 import Button from "@mui/joy/Button";
 
 export default function Feedback() {
@@ -34,7 +35,15 @@ export default function Feedback() {
     return (
         <>
             <MainNav  />
-            <main>
+            <Box
+                sx={{
+                    backgroundColor: 'background.body',
+                    minHeight: '100vh',
+                    minWidth: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}            
+            >
                 <form>
                     <Stack
                         direction='column'
@@ -98,7 +107,7 @@ export default function Feedback() {
                         </Button>
                     </Stack>
                 </form>
-            </main>
+            </Box>
         </>
     );
 }

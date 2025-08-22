@@ -57,7 +57,6 @@ function App() {
             <Route path="lockerlist/:lockerId/:lockerName" element={<LockerDetails />} />
             <Route path="lockerlist/:lockerId/:lockerName/:containerId/:containerName" element={<ContainerDetails />} />
           </Routes> 
-          {/* <UserDrawer /> */}
           <ToastContainer />
         </ThemeProvider>
       </CssVarsProvider>

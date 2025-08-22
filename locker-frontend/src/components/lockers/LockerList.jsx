@@ -68,14 +68,22 @@ export default function LockerList() {
     return (
         <>
             <MainNav/>
-            <main>
+            <Box
+                sx={{
+                    backgroundColor: 'background.body',
+                    minHeight: '100vh',
+                    minWidth: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
                 <Box
                     sx={{
                         width: '80%',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: 2
+                        gap: 2,
                     }}
                 >
                     <Breadcrumb 
@@ -159,7 +167,7 @@ export default function LockerList() {
                         </Grid>
                     )}
                 </Box>
-            </main>
+            </Box>
             <Footer />
         </>
     );

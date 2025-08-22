@@ -1,5 +1,6 @@
 import {APIProvider, Map, Marker} from '@vis.gl/react-google-maps';
 import MainNav from "./elements/nav/MainNav";
+import Footer from '../components/Footer'
 import Box from '@mui/joy/Box';
 
 export default function LockerMap() {
@@ -13,18 +14,31 @@ export default function LockerMap() {
     return (
         <>
             <MainNav />
-            <main>
+            <Box
+                component={'main'}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',        
+                    width: '100%',
+                    backgroundColor: 'background.body',
+                }}                
+            >
+                <br />
                 <Box
                     sx={{ 
                         justifyContent: 'center',
-                        height: '85%',
+                        alignItems: 'center',
+                        height: '80%',
                         width: '60%',
+                        backgroundColor: 'background.body',
                     }}                
                 >
                     <div>
                         <p><em>Live LockerMap with geocoded markers soon</em></p>
                     </div>
-                    <br />
                     <APIProvider apiKey={apiKey}>
                         <Map
                             defaultCenter={{lat: 22.54992, lng: 0}}
@@ -39,7 +53,8 @@ export default function LockerMap() {
                         </Map>
                     </APIProvider>
                 </Box>
-            </main>
+            </Box>
+            <Footer />
         </>
     );
 }

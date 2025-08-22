@@ -6,6 +6,8 @@ import MainNav from './elements/nav/MainNav';
 import Footer from '../components/Footer';
 import Modal from '@mui/joy/Modal';
 import Button from '@mui/joy/Button';
+import Box from '@mui/joy/Box';
+import Stack from '@mui/joy/Stack';
 import LoginForm from './elements/form/LoginForm'
 import { toast } from 'react-toastify';
 
@@ -34,7 +36,16 @@ export default function GettingStarted() {
     return (
         <>
             <MainNav/>
-            <main>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100%',
+                minWidth: '100%',
+                padding: '20px',
+                backgroundColor: 'background.body',
+            }}>
                 <section className="homepage-content">
                     <div className="left-homepage">
                         <img 
@@ -85,7 +96,7 @@ export default function GettingStarted() {
                         </div>
                     </div>
                 </section>
-            </main>
+            </Box>
             <Footer />
         </>
     );

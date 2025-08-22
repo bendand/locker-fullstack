@@ -7,6 +7,7 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import User from "../classes/User";
+import Footer from "../../src/components/Footer";
 import CircularProgress from '@mui/joy/CircularProgress';
 import { useState, useEffect } from "react";
 
@@ -59,10 +60,19 @@ export default function UserProfile() {
     return (
         <>
             <MainNav />
-            <main>
+            <Box
+                sx={{
+                    backgroundColor: 'background.body',
+                    minHeight: '100vh',
+                    minWidth: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}            
+            >
                 <Box 
                     sx={{ 
                         justifyContent: 'center',
+                        alignItems: 'center',
                         height: '75%',
                         width: '60%',
                     }}
@@ -133,7 +143,8 @@ export default function UserProfile() {
                     </>
                 )}
                 </Box>
-            </main>
+            </Box>
+            <Footer />
         </>
     );
 }

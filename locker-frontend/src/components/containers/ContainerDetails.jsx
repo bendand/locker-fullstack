@@ -121,7 +121,15 @@ export default function ContainerDetails() {
     return (
         <>
             <MainNav />
-            <main>
+            <Box
+                sx={{
+                    backgroundColor: 'background.body',
+                    minHeight: '100vh',
+                    minWidth: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
                 <Box
                     sx={{
                         width: '80%',
@@ -263,7 +271,7 @@ export default function ContainerDetails() {
                         </>
                     )}
                 </Box>
-            </main>
+            </Box>
             <Footer />
         </>
     );

@@ -18,129 +18,132 @@ export default function MainNav() {
     const [openSearch, setOpenSearch] = useState(false);
 
     return (
-        <header>
-        {!userId && (
-            <Stack
-                direction="row"
-                spacing={{ xs: 1, sm: 2, md: 4 }}
-                sx={{
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    p: 2,
-                }}>
-                <div>
-                    <Link 
-                        to={'/'}
-                        component={RouterLink}
-                        level='title-lg'
-                        underline='none'
-                        color='black'
-                    >
-                        <h4>Locker</h4>
-                    </Link>
-                </div>
-                <List
-                    role="menubar"
-                    orientation="horizontal"
-                >
-                    <ListItem
-                        role="none"
-                        component={RouterLink}
-                        to={'/about'}
-                    >
-                        <ListItemButton role='menuitem'>
-                            About
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Stack>
-        )}
-        {userId && (
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    maxWidth: 1300,
-                    margin: '0 auto',
-                    p: 2,
-                }}
-            >
-                <div>
-                    <Link 
-                        to={'/'}
-                        component={RouterLink}
-                        level='title-lg'
-                        underline='none'
-                        color='black'
-                    >
-                        <h4>Locker</h4>
-                    </Link>
-                </div>
+        <>
+            {!userId && (
                 <Stack
                     direction="row"
                     spacing={{ xs: 1, sm: 2, md: 4 }}
-                >
+                    sx={{
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        p: 2,
+                        minWidth: '100%',
+                        borderBottom: '1px solid',
+                        backgroundColor: 'background.body',
+                    }}>
+                    <div>
+                        <Link 
+                            to={'/'}
+                            component={RouterLink}
+                            level='title-lg'
+                            underline='none'
+                            color='black'
+                        >
+                            <h4>Locker</h4>
+                        </Link>
+                    </div>
                     <List
                         role="menubar"
                         orientation="horizontal"
-
-                        spacing={1}
                     >
-                        <ListItem 
+                        <ListItem
                             role="none"
                             component={RouterLink}
-                            to={'/lockerlist'}
-                            padding={1}
-
+                            to={'/about'}
                         >
-                            <ListItemButton role="menuitem">
-                                My Lockers
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem 
-                            role="none"
-                            component={RouterLink}
-                            to={'/feedback'}
-                            padding={1}
-
-                        >
-                            <ListItemButton role="menuitem">
-                                Leave Feedback
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem 
-                            role="none"
-                            component={RouterLink}
-                            padding={1}
-                        >
-                            <ListItemButton role="menuitem" onClick={() => setOpenSearch(true)}>
-                                Find Item
-                                <SearchOutlined />
+                            <ListItemButton role='menuitem'>
+                                About
                             </ListItemButton>
                         </ListItem>
                     </List>
                 </Stack>
-                <Stack
-                    direction="row"
-                    spacing={2}
+            )}
+            {userId && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid',
+                        alignItems: 'center',
+                        minWidth: '100%',
+                        margin: '0 auto',
+                        p: 2,
+                        backgroundColor: 'background.body',
+                    }}
                 >
-                    <UserDrawer />
-                </Stack>
-            </Box>
-        )}
-        <Modal 
-            open={openSearch} 
-            onClose={() => setOpenSearch(false)}
-        >
-            <SearchItemForm
-                onSubmission={{
-                    closeModal: () => setOpenSearch(false)
-                }}
-            />
-        </Modal>
-        </header>
+                    <div>
+                        <Link 
+                            to={'/'}
+                            component={RouterLink}
+                            level='title-lg'
+                            underline='none'
+                            color='black'
+                        >
+                            <h4>Locker</h4>
+                        </Link>
+                    </div>
+                    <Stack
+                        direction="row"
+                        spacing={{ xs: 1, sm: 2, md: 4 }}
+                    >
+                        <List
+                            role="menubar"
+                            orientation="horizontal"
 
+                            spacing={1}
+                        >
+                            <ListItem 
+                                role="none"
+                                component={RouterLink}
+                                to={'/lockerlist'}
+                                padding={1}
+
+                            >
+                                <ListItemButton role="menuitem">
+                                    My Lockers
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem 
+                                role="none"
+                                component={RouterLink}
+                                to={'/feedback'}
+                                padding={1}
+
+                            >
+                                <ListItemButton role="menuitem">
+                                    Leave Feedback
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem 
+                                role="none"
+                                component={RouterLink}
+                                padding={1}
+                            >
+                                <ListItemButton role="menuitem" onClick={() => setOpenSearch(true)}>
+                                    Find Item
+                                    <SearchOutlined />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </Stack>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                    >
+                        <UserDrawer />
+                    </Stack>
+                </Box>
+            )}
+            <Modal 
+                open={openSearch} 
+                onClose={() => setOpenSearch(false)}
+            >
+                <SearchItemForm
+                    onSubmission={{
+                        closeModal: () => setOpenSearch(false)
+                    }}
+                />
+            </Modal>
+        </>
     );
 }

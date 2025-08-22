@@ -1,3 +1,4 @@
+import { Box } from "@mui/joy";
 import Footer from "./Footer";
 import MainNav from "./elements/nav/MainNav";
 
@@ -6,7 +7,17 @@ export default function About() {
     return (
         <>
             <MainNav/>
-            <main>
+            <Box
+                component={'main'}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    height: '100vh',        
+                    width: '100%',
+                    backgroundColor: 'background.body',
+                }}                 
+            >
                 <div className="about-container">
                     <div className="about-page">
                         <img 
@@ -28,7 +39,7 @@ export default function About() {
                         </div>
                     </div>
                 </div>
-            </main>
+            </Box>
             <Footer />
         </>
 
