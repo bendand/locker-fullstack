@@ -8,21 +8,18 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import Person from '@mui/icons-material/Person';
 import LogoutForm from '../form/LogoutForm';
-import Switch from '@mui/joy/Switch';
-import Typography from '@mui/joy/Typography';
+import { ThemeContext } from '../../../App.jsx';
 import DarkModeToggle from '../../DarkModeToggle';
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import { useColorScheme } from '@mui/joy/styles';
 import { useNavigate } from 'react-router';
+import { useContext } from 'react';
 import { toast } from 'react-toastify';
 
 export default function UserDrawer() {
     const [open, setOpen] = useState(false);
-    const { mode, setMode } = useColorScheme();
-    // hanldes open/close of logout modal
     const [openLogout, setOpenLogout] = useState(false);
-    const [darkModeOn, setDarkModeOn] = useState(false);
-    // const { mode, setMode } = useColorScheme();
     const navigate = useNavigate();
+    const { darkModeOn, toggleDarkMode } = useContext(ThemeContext);
 
     function handleViewProfile() {
         navigate("/profile");
@@ -40,13 +37,8 @@ export default function UserDrawer() {
     }
 
     function handleToggleDarkMode() {
-        if (darkModeOn) {
-            setMode('light');
-        } else {
-            setMode('dark');
-        }
-        setDarkModeOn(!darkModeOn);
-        setOpen(false); // close the drawer after toggling dark mode 
+        toggleDarkMode();
+        setOpen(true);
     }
 
     // this component uses a Drawer component from material UI

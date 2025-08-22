@@ -6,17 +6,6 @@ import React, { useState, useEffect } from 'react';
 export default function DarkModeToggle({ onChange, checked }) {
 
     return (
-        // <Typography 
-        //     component="label" 
-        //     endDecorator={<Switch 
-        //                     sx={{ ml: 1 }} 
-        //                     checked={darkModeOn} 
-        //                     onChange={handleToggleDarkMode}
-        //                 />}
-        // >
-        //     Dark Mode
-        // </Typography>
-
         <Typography 
             component="label" 
             endDecorator={<Switch 
